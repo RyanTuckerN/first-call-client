@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Route, Link, Switch, BrowserRouter as Router } from "react-router-dom";
+import { Route, Link, Switch, RouteComponentProps, withRouter } from "react-router-dom";
 
 import GigIndex from './Gig/GigsIndex';
 import Profile from './Profile/Profile';
 import Settings from './Settings/Settings';
 
-interface MainViewProps {
+interface MainViewProps extends RouteComponentProps {
   
 }
  
@@ -19,16 +19,27 @@ class MainView extends Component<MainViewProps, MainViewState> {
     super(props);
     // this.state = { :  };
   }
+
+  
+  
   render() { 
     return ( 
     <div>
       Hello from MainView.tsx
-      <Profile />
-      <Settings />
-      <GigIndex />
+      <Switch>
+        <Route path={`${this.props.match.path}/profile`}>
+          <Profile />
+        </Route>
+        <Route path={`${this.props.match.path}/settings`}>
+          <Settings />
+        </Route>
+        <Route path={`${this.props.match.path}/gigs`}>
+          <GigIndex />
+        </Route>
+      </Switch>
     </div> 
     );
   }
 }
  
-export default MainView;
+export default withRouter(MainView);
