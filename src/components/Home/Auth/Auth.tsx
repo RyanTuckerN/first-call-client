@@ -9,7 +9,11 @@ import {
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import API_URL from '../../_helpers/environment'
+import API_URL from "../../_helpers/environment";
+import { LoginSignupProps, UserResponse } from "./Auth.types";
+import { fetchHandler } from "../../_helpers/fetchHandler";
+import { properize } from "../../_helpers/helpers";
+import { UserCtx } from "../../Context/MainContext";
 
 interface AuthProps extends RouteComponentProps {}
 
@@ -19,22 +23,14 @@ interface AuthState {
   last: string;
   password: string;
 }
-
-interface PropsToPass {
-  handleEmail: any;
-  handlePassword: any;
-  handleFirst: any;
-  handleLast: any;
-  handleLogin: any;
-  handleSignup: any;
-  clearState: any;
-}
 class Auth extends Component<AuthProps, AuthState> {
+  static contextType = UserCtx;
+
   constructor(props: AuthProps) {
     super(props);
     this.state = { email: "", first: "", last: "", password: "" };
   }
-  functions: PropsToPass = {
+  functions: LoginSignupProps = {
     handleEmail: (e: React.ChangeEvent<HTMLInputElement>) =>
       this.setState({ email: e.target.value }),
     handleFirst: (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -43,46 +39,66 @@ class Auth extends Component<AuthProps, AuthState> {
       this.setState({ last: e.target.value }),
     handlePassword: (e: React.ChangeEvent<HTMLInputElement>) =>
       this.setState({ password: e.target.value }),
-    handleLogin: async(e: React.FormEvent<HTMLInputElement>) => {
+    handleLogin: async (e: React.FormEvent<HTMLInputElement>) => {
       const { email, password } = this.state;
+      const { setUser, setToken } = this.context;
       e.preventDefault();
       if (!email || !password) {
         alert("please fill out all fields!");
+        return;
+      }
+      const json: UserResponse = await fetchHandler({
+        url: `${API_URL}/user/login`,
+        method: "post",
+        body: { email, password },
+      });
+      if(!json.user || !json.sessionToken){
+        alert(json.message)
         return
       }
-      const res = await fetch(`${API_URL}/user/login`, {
-        method: "POST",
-        body: JSON.stringify({ email, password }),
-        headers: new Headers({
-          "Content-Type": "application/json",
-        }),
-      })
-      const json = await res.json()
-      console.log(json)
-      alert(json.message)
+      setUser(json.user);
+      setToken(json.sessionToken);
+      this.props.history.push('/main')
+      alert(json.message);
+
     },
-    handleSignup: async(e: React.FormEvent<HTMLInputElement>) => {
+    handleSignup: async (e: React.FormEvent<HTMLInputElement>) => {
       const { email, password, first, last } = this.state;
+      const { setUser, setToken } = this.context;
       e.preventDefault();
       if (!email || !password || !first || !last) {
         alert("please fill out all fields!");
+        return;
+      }
+      const json: UserResponse = await fetchHandler({
+        url: `${API_URL}/user/signup`,
+        method: "post",
+        body: {
+          email,
+          password,
+          name: `${properize(first)} ${properize(last)}`,
+        },
+      });
+      console.log(json);
+      if(!json.user || !json.sessionToken){
+        alert(json.message)
         return
       }
-      const res = await fetch(`${API_URL}/user/signup`, {
-        method: "POST",
-        body: JSON.stringify({ email, password, name: first + " " + last }),
-        headers: new Headers({
-          "Content-Type": "application/json",
-        }),
-      })
-      const json = await res.json()
-      console.log(json)
-      alert(json.message)
+      setUser(json.user);
+      setToken(json.sessionToken);
+      this.props.history.push('/main')
+      alert(json.message);
     },
-
     clearState: () =>
       this.setState({ email: "", first: "", last: "", password: "" }),
   };
+
+  componentDidMount() {
+    const context = this.context;
+    console.log(context);
+    
+  }
+
   render() {
     return (
       <div>

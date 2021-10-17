@@ -25,7 +25,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
   render() { 
     return ( 
     <div>
-      Hello from MainView.tsx
+      {/* Hello from MainView.tsx */}
       <Switch>
         <Route path={`${this.props.match.path}/profile`}>
           <Profile />

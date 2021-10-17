@@ -108,9 +108,9 @@ const Signup = (props:SignupProps) => {
               <Grid item>
                 <Link to='/auth/login'>
 
-                <MuiLink href="#" onClick={clearState} variant="body2">
+                <div onClick={clearState}>
                   Already have an account? Sign in
-                </MuiLink>
+                </div>
                 </Link>
               </Grid>
             </Grid>

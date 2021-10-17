@@ -19,7 +19,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
     return ( 
       <div>
         Hello from Profile.tsx
-        <EditProfile />
+        {/* <EditProfile /> */}
       </div>
      );
   }

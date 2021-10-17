@@ -8,6 +8,7 @@ import {
   RouteComponentProps,
   Redirect,
 } from "react-router-dom";
+import "./Home.css";
 import Auth from "./Auth/Auth";
 import MainView from "./MainView/MainView";
 import Respond from "./Respond/Respond";
@@ -25,70 +26,159 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
+import HomeIcon from "@mui/icons-material/Home";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { UserCtx } from "../Context/MainContext";
+import Notifications from "./components/Notifications";
+import { Notification } from "../../types/API.types";
+import { AppState } from "../../App";
+import { fetchHandler } from "../_helpers/fetchHandler";
+import API_URL from "../_helpers/environment";
 
-interface HomeProps extends RouteComponentProps {}
+interface HomeProps extends RouteComponentProps {
+  logout: VoidFunction;
+}
 
 interface HomeState {
   anchorEl: HTMLElement | null;
-  userAuth: boolean;
   isMenuOpen: boolean;
+  isNotificationsOpen: boolean;
+  open: boolean;
+  messages: Notification[];
+  notifications: Notification[];
 }
 
 class Home extends Component<HomeProps, HomeState> {
+  static contextType = UserCtx;
   menuId = "primary-account-menu";
 
   constructor(props: HomeProps) {
     super(props);
     this.state = {
       anchorEl: null,
-      userAuth: false,
-      // userAuth: true,
       isMenuOpen: false,
+      isNotificationsOpen: false,
+      open: true,
+      messages: [],
+      notifications: [],
     };
   }
 
-  componentDidMount() {
-    console.log(this.props);
+  fetchNotficiations = async () =>{
+    const json = await fetchHandler({
+      url: `${API_URL}/user/notifications`,
+      auth: localStorage.getItem('token') ?? '',
+    })
+    json.auth && this.setState({
+      messages:
+        json.notifications?.filter(
+          (n: Notification) => n.details.code === 100 || n.details.code >= 300
+        ) ?? [],
+      notifications:
+        json.notifications?.filter(
+          (n: Notification) => n.details.code > 100 && n.details.code < 300
+        ) ?? [],
+    })
   }
+
+  fetchOffers = async() => {
+    const json = await fetchHandler({
+      url: `${API_URL}/user/offers`,
+      auth: localStorage.getItem('token') ?? ''
+    })
+    console.log(json)
+  }
+
+  componentDidMount() {
+    this.authorize();
+    this.fetchNotficiations()
+    this.fetchOffers()
+  }
+
+  componentDidUpdate(prevProps: HomeProps, prevState: HomeState) {}
+
+  //protect unauthorized views
+  authorize = (): void => {
+    const { auth } = this.context;
+
+    const pathRoot = this.props.location.pathname.split("/")[1];
+    if (pathRoot === "auth" || pathRoot === "respond") {
+      return;
+    }
+    !auth && this.props.history.push("/welcome");
+  };
+  handleNotificationsOpen = (event: any) =>
+    this.setState({ anchorEl: event.currentTarget, isNotificationsOpen: true });
+
   handleProfileMenuOpen = (event: any) =>
     this.setState({ anchorEl: event.currentTarget, isMenuOpen: true });
 
-  handleMenuClose = () => this.setState({ anchorEl: null, isMenuOpen: false });
+  handleMenuClose = () => {
+    this.setState({
+      anchorEl: null,
+      isMenuOpen: false,
+      isNotificationsOpen: false,
+    });
+    console.log(this.state.anchorEl?.id);
+  };
+
+  handleLogout = () => {
+    this.props.logout();
+    this.handleMenuClose();
+    this.props.history.push("/");
+  };
+
+  //for the backdrop:
+  handleClose = () => this.setState({ open: false });
 
   render() {
+    const { auth } = this.context;
+
     return (
       <>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" color='secondary'>
+          <AppBar position="static" color="primary">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <Link to="/">FirstCall</Link>
+                <Link to="/welcome">FirstCall</Link>
               </Typography>
-              {this.state.userAuth ? (
+              {auth ? (
                 <>
                   <Box sx={{ display: { xs: "flex" } }}>
                     <IconButton
                       size="large"
-                      aria-label="show 4 new mails"
+                      id="mail-menu-button"
+                      aria-label={`show ${this.state.messages.length} new mails`}
                       color="inherit"
+                      onClick={this.handleNotificationsOpen}
                     >
-                      <Badge badgeContent={4} color="error">
+                      <Badge
+                        badgeContent={this.state.messages.length}
+                        color="error"
+                      >
                         <MailIcon />
                       </Badge>
                     </IconButton>
                     <IconButton
                       size="large"
-                      aria-label="show 17 new notifications"
+                      id="notification-menu-button"
+                      aria-label={`show ${this.state.notifications.length} new notifications`}
                       color="inherit"
+                      onClick={this.handleNotificationsOpen}
                     >
-                      <Badge badgeContent={17} color="error">
+                      <Badge
+                        badgeContent={this.state.notifications.length}
+                        color="error"
+                      >
                         <NotificationsIcon />
                       </Badge>
                     </IconButton>
                     <IconButton
                       size="large"
                       edge="end"
+                      id="account-menu-button"
                       aria-label="account of current user"
                       aria-controls={this.menuId}
                       aria-haspopup="true"
@@ -113,6 +203,9 @@ class Home extends Component<HomeProps, HomeState> {
                     open={this.state.isMenuOpen}
                     onClose={this.handleMenuClose}
                   >
+                    <Link to={`${this.props.match.path}main/`}>
+                      <MenuItem onClick={this.handleMenuClose}>Home</MenuItem>
+                    </Link>
                     <Link to={`${this.props.match.path}main/profile`}>
                       <MenuItem onClick={this.handleMenuClose}>
                         Profile
@@ -123,10 +216,36 @@ class Home extends Component<HomeProps, HomeState> {
                         Settings
                       </MenuItem>
                     </Link>
-                    <MenuItem onClick={this.handleMenuClose}>Logout</MenuItem>
+                    <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                  </Menu>
+                  <Menu
+                    anchorEl={this.state.anchorEl}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    id="notifications-menu"
+                    PaperProps={{ style: { maxHeight: 500 } }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "bottom",
+                      horizontal: "left",
+                    }}
+                    open={this.state.isNotificationsOpen}
+                    onClose={this.handleMenuClose}
+                  >
+                    <Notifications
+                      notifications={
+                        this.state.anchorEl?.id === "notification-menu-button"
+                          ? this.state.notifications
+                          : this.state.anchorEl?.id === "mail-menu-button"
+                          ? this.state.messages
+                          : []
+                      }
+                    />
                   </Menu>
                 </>
-              ) : (
+              ) : auth === false ? (
                 <>
                   <Link to={`${this.props.match.path}auth/login/`}>
                     <Button color="inherit">Login</Button>
@@ -135,6 +254,17 @@ class Home extends Component<HomeProps, HomeState> {
                     <Button color="inherit">Signup</Button>
                   </Link>
                 </>
+              ) : (
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={this.state.open}
+                  // onClick={this.handleClose}
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
               )}
             </Toolbar>
           </AppBar>
@@ -151,7 +281,7 @@ class Home extends Component<HomeProps, HomeState> {
                 exact
                 path="/"
                 render={() => {
-                  return this.state.userAuth ? (
+                  return auth ? (
                     <Redirect to="main" />
                   ) : (
                     <Redirect to="welcome" />

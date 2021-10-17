@@ -98,15 +98,15 @@ const Login = (props: LoginProps) => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <MuiLink href="#" variant="body2">
+              {/* <MuiLink href="#" variant="body2">
                 Forgot password?
-              </MuiLink>
+              </MuiLink> */}
             </Grid>
             <Grid item>
               <Link to="/auth/signup">
-                <MuiLink href="#" onClick={clearState} variant="body2">
+                <div onClick={clearState} >
                   {"Don't have an account? Sign Up"}
-                </MuiLink>
+                </div>
               </Link>
             </Grid>
           </Grid>
