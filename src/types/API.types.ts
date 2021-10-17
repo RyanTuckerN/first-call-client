@@ -9,6 +9,7 @@ export interface User {
   specialties?: string[];
   createdAt?: string;
   updatedAt?: string;
+  emails?: boolean;
   gigs?: Gig[];
   posts?: Post[];
   notifications?: Notification[]
@@ -23,12 +24,16 @@ export interface Gig {
   token: string; //uuid
   openCalls: string[];
   optionalInfo?: { [key: string]: string };
+  createdAt?: string;
+  updatedAt?: string;
   posts?: Post[];
 }
 export interface CallStack {
   gigId: number;
   filled: boolean;
   stackTable: { [key: string]: any };
+  createdAt?: string;
+  updatedAt?: string;
 }
 export interface Post {
   id: number;
@@ -36,6 +41,8 @@ export interface Post {
   text: string;
   childOf: number;
   upvotes: number;
+  createdAt?: string;
+  updatedAt?: string;
   voters: number[];
   details: PostDetails;
   children: Post[];
@@ -45,6 +52,8 @@ export interface Notification {
   userId: number;
   text: string;
   details: NotificationDetails;
+  createdAt?: string;
+  updatedAt?: string;
 }
 export interface UserAuth {
   auth: boolean;

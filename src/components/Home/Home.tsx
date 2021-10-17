@@ -26,16 +26,19 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
-import HomeIcon from "@mui/icons-material/Home";
+// import HomeIcon from "@mui/icons-material/Home";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { UserCtx } from "../Context/MainContext";
 import Notifications from "./components/Notifications";
 import { Notification } from "../../types/API.types";
-import { AppState } from "../../App";
+// import { AppState } from "../../App";
 import { fetchHandler } from "../_helpers/fetchHandler";
+// import { MainViewProps } from "./MainView/MainView";
 import API_URL from "../_helpers/environment";
+import { HomeFunctions, WindowDimensions } from "./Home.types";
+import { Paper } from "@mui/material";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
@@ -46,13 +49,15 @@ interface HomeState {
   isMenuOpen: boolean;
   isNotificationsOpen: boolean;
   open: boolean;
+  windowDimensions: WindowDimensions;
   messages: Notification[];
   notifications: Notification[];
 }
 
 class Home extends Component<HomeProps, HomeState> {
   static contextType = UserCtx;
-  menuId = "primary-account-menu";
+  menuId: string = "primary-account-menu";
+  appBarHeight: number = 75;
 
   constructor(props: HomeProps) {
     super(props);
@@ -61,40 +66,54 @@ class Home extends Component<HomeProps, HomeState> {
       isMenuOpen: false,
       isNotificationsOpen: false,
       open: true,
+      windowDimensions: {
+        height: window.innerHeight,
+        width: window.innerWidth,
+      },
       messages: [],
       notifications: [],
     };
   }
 
-  fetchNotficiations = async () =>{
-    const json = await fetchHandler({
-      url: `${API_URL}/user/notifications`,
-      auth: localStorage.getItem('token') ?? '',
-    })
-    json.auth && this.setState({
-      messages:
-        json.notifications?.filter(
-          (n: Notification) => n.details.code === 100 || n.details.code >= 300
-        ) ?? [],
-      notifications:
-        json.notifications?.filter(
-          (n: Notification) => n.details.code > 100 && n.details.code < 300
-        ) ?? [],
-    })
-  }
+  functions: HomeFunctions = {
+    fetchNotifications: async (): Promise<any> => {
+      const json = await fetchHandler({
+        url: `${API_URL}/user/notifications`,
+        auth: localStorage.getItem("token") ?? "",
+      });
+      json.auth &&
+        this.setState({
+          messages:
+            json.notifications?.filter(
+              (n: Notification) =>
+                n.details.code === 100 || n.details.code >= 300
+            ) ?? [],
+          notifications:
+            json.notifications?.filter(
+              (n: Notification) => n.details.code > 100 && n.details.code < 300
+            ) ?? [],
+        });
+    },
 
-  fetchOffers = async() => {
-    const json = await fetchHandler({
-      url: `${API_URL}/user/offers`,
-      auth: localStorage.getItem('token') ?? ''
-    })
-    console.log(json)
-  }
+    fetchOffers: async (): Promise<any> => {
+      const json = await fetchHandler({
+        url: `${API_URL}/user/offers`,
+        auth: localStorage.getItem("token") ?? "",
+      });
+      console.log(json);
+    },
+  };
 
+  handleResize = (): void =>
+    this.setState({
+      windowDimensions: {
+        height: window.innerHeight,
+        width: window.innerWidth,
+      },
+    });
   componentDidMount() {
     this.authorize();
-    this.fetchNotficiations()
-    this.fetchOffers()
+    window.addEventListener("resize", this.handleResize);
   }
 
   componentDidUpdate(prevProps: HomeProps, prevState: HomeState) {}
@@ -139,9 +158,17 @@ class Home extends Component<HomeProps, HomeState> {
     return (
       <>
         <Box sx={{ flexGrow: 1 }}>
-          <AppBar position="static" color="primary">
+          <AppBar
+            position="static"
+            color="secondary"
+            style={{ height: this.appBarHeight }}
+          >
             <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ flexGrow: 1, zIndex: 9999 }}
+              >
                 <Link to="/welcome">FirstCall</Link>
               </Typography>
               {auth ? (
@@ -227,10 +254,7 @@ class Home extends Component<HomeProps, HomeState> {
                     id="notifications-menu"
                     PaperProps={{ style: { maxHeight: 500 } }}
                     keepMounted
-                    transformOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
+                    transformOrigin={{ vertical: "bottom", horizontal: "left" }}
                     open={this.state.isNotificationsOpen}
                     onClose={this.handleMenuClose}
                   >
@@ -275,34 +299,42 @@ class Home extends Component<HomeProps, HomeState> {
 
           <Container maxWidth="md">
             {/* box is just to show layout, should be removed */}
-            {/* <Box sx={{ bgcolor: "#e6e8eb", minHeight: 50 }} />  */}
-            <Switch>
-              <Route
-                exact
-                path="/"
-                render={() => {
-                  return auth ? (
-                    <Redirect to="main" />
-                  ) : (
-                    <Redirect to="welcome" />
-                  );
-                }}
-              />
-              <Route path="/respond">
-                <Respond />
-              </Route>
-              <Route path="/main">
-                <MainView />
-              </Route>
+            <Paper
+              sx={{
+                padding: 1,
+                minHeight:
+                  this.state.windowDimensions.height - this.appBarHeight - 20,
+                zIndex: 1,
+              }}
+            >
+              <Switch>
+                <Route
+                  exact
+                  path="/"
+                  render={() => {
+                    return auth ? (
+                      <Redirect to="main" />
+                    ) : (
+                      <Redirect to="welcome" />
+                    );
+                  }}
+                />
+                <Route path="/respond">
+                  <Respond />
+                </Route>
+                <Route path="/main">
+                  <MainView functions={this.functions} />
+                </Route>
 
-              <Route path="/welcome">
-                <Welcome />
-              </Route>
+                <Route path="/welcome">
+                  <Welcome />
+                </Route>
 
-              <Route path="/auth">
-                <Auth />
-              </Route>
-            </Switch>
+                <Route path="/auth">
+                  <Auth />
+                </Route>
+              </Switch>
+            </Paper>
           </Container>
         </>
       </>

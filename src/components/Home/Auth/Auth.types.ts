@@ -3,10 +3,13 @@ import { User } from '../../../types/API.types'
 export declare type ChangeHandler = (
   e: React.ChangeEvent<HTMLInputElement>
 ) => void;
+
 export declare type FormHandler = (
   e: React.FormEvent<HTMLInputElement>
 ) => void;
+
 export declare type StateHandler = () => void;
+
 export interface LoginSignupProps {
   handleEmail: ChangeHandler;
   handlePassword: ChangeHandler;

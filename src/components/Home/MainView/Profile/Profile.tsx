@@ -1,6 +1,6 @@
-import * as React from 'react';
+// import * as React from 'react';
 import { Component } from 'react';
-import EditProfile from './EditProfile';
+// import EditProfile from './EditProfile';
 
 interface ProfileProps {
   

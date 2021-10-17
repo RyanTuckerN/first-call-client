@@ -4,7 +4,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import {
   Route,
-  Link,
+  // Link,
   Switch,
   RouteComponentProps,
   withRouter,
@@ -30,6 +30,7 @@ class Auth extends Component<AuthProps, AuthState> {
     super(props);
     this.state = { email: "", first: "", last: "", password: "" };
   }
+
   functions: LoginSignupProps = {
     handleEmail: (e: React.ChangeEvent<HTMLInputElement>) =>
       this.setState({ email: e.target.value }),
@@ -39,6 +40,7 @@ class Auth extends Component<AuthProps, AuthState> {
       this.setState({ last: e.target.value }),
     handlePassword: (e: React.ChangeEvent<HTMLInputElement>) =>
       this.setState({ password: e.target.value }),
+
     handleLogin: async (e: React.FormEvent<HTMLInputElement>) => {
       const { email, password } = this.state;
       const { setUser, setToken } = this.context;
@@ -47,6 +49,7 @@ class Auth extends Component<AuthProps, AuthState> {
         alert("please fill out all fields!");
         return;
       }
+
       const json: UserResponse = await fetchHandler({
         url: `${API_URL}/user/login`,
         method: "post",
@@ -56,8 +59,9 @@ class Auth extends Component<AuthProps, AuthState> {
         alert(json.message)
         return
       }
-      setUser(json.user);
+      
       setToken(json.sessionToken);
+      setUser(json.user);
       this.props.history.push('/main')
       alert(json.message);
 
@@ -84,8 +88,8 @@ class Auth extends Component<AuthProps, AuthState> {
         alert(json.message)
         return
       }
-      setUser(json.user);
       setToken(json.sessionToken);
+      setUser(json.user);
       this.props.history.push('/main')
       alert(json.message);
     },
