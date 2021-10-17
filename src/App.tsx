@@ -3,11 +3,11 @@ import { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 // import "./App.css";
 import Home from "./components/Home/Home";
-import { ThemeProvider } from "@mui/styles";
 import { UserCtx } from "./components/Context/MainContext";
 import { UserSetter, TokenSetter } from "./App.types";
 import { User, UserAuth } from "./types/API.types";
-import theme from "./components/Theme/Theme";
+import {light} from "./components/Theme/Theme";
+import {ThemeProvider} from '@mui/material/styles'
 import { fetchHandler } from "./components/_helpers/fetchHandler";
 import API_URL from "./components/_helpers/environment";
 
@@ -69,7 +69,7 @@ class App extends Component<AppProps, AppState> {
       <div>
         {/* Hello from App.tsx! */}
         <Router>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={light}>
             <UserCtx.Provider value={this.state}>
               {/* replace null with loading screen if load times increase! */}
               {typeof this.state.auth === "boolean" ? (

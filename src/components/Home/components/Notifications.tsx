@@ -21,7 +21,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
       <MenuList dense>
         <MenuItem style={{ whiteSpace: "normal" }}>
           <ListItemText key={n.id}>
-            <Typography variant="inherit" color="black">
+            <Typography variant="inherit" >
               {n.text}
             </Typography>
           </ListItemText>
