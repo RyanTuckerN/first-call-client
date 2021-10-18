@@ -1,12 +1,24 @@
 import * as React from "react";
 import { User } from "../../../../types/API.types";
-import { Avatar, Divider, Box, Typography, Button } from "@mui/material";
+import {
+  Avatar,
+  Divider,
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Container,
+} from "@mui/material";
+import { AddCircle, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import "./Settings.css";
-const avatarSize: number = 60;
+import { StringSetter } from "../../../../App.types";
+import { height } from "@mui/system";
+const avatarSize: number = 120;
 
 interface HeaderProps {
   user: User;
+  handlePhoto: StringSetter;
 }
 
 function stringToColor(string: string) {
@@ -39,7 +51,24 @@ function stringAvatar(name: string) {
     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
   };
 }
-const Header: React.FunctionComponent<HeaderProps> = ({ user }) => {
+const Header: React.FunctionComponent<HeaderProps> = ({
+  user,
+  handlePhoto,
+}) => {
+  // const addOrEditProps: any = {
+  //   style: {
+  //     position: "relative",
+  //     top: 80,
+  //     right: 31,
+  //     backgroundColor: "#51abcb",
+  //     borderRadius: '50%',
+  //     height: 30,
+  //     width: 30,
+  //     display: 'flex',
+  //     justifyContent: 'center',
+  //     alignItems: 'center'
+  //   },
+  // };
   const defaultAvatarProps: any = {
     src: user.photo,
     alt: user.name,
@@ -50,9 +79,35 @@ const Header: React.FunctionComponent<HeaderProps> = ({ user }) => {
       <div className="flexbox">
         <div className="user-container left">
           {user.photo ? (
-            <Avatar {...defaultAvatarProps} />
+            <>
+              <Avatar {...defaultAvatarProps} />
+              <input
+                accept="image/*"
+                onChange={handlePhoto}
+                style={{ display: "none" }}
+                id="raised-button-file"
+                type="file"
+              />
+              {/* <IconButton {...addOrEditProps}> */}
+              <label htmlFor="raised-button-file" id="image-edit-button">
+                <Edit fontSize="small" style={{color: 'white'}} />
+              </label>
+              {/* </IconButton> */}
+            </>
           ) : (
-            <Avatar {...stringAvatar(user.name)} />
+            <>
+              <Avatar {...stringAvatar(user.name)} />
+              <input
+                accept="image/*"
+                onChange={handlePhoto}
+                style={{ display: "none" }}
+                id="raised-button-file"
+                type="file"
+              />
+              <label htmlFor="raised-button-file" id="image-edit-button">
+                <AddCircle style={{color: 'white'}} />
+              </label>
+            </>
           )}
           <div className="header-text">
             <Typography variant="h5">{user.name}</Typography>

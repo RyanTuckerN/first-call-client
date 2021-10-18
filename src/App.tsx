@@ -110,7 +110,9 @@ class App extends Component<AppProps, AppState> {
     return (
       <div>
         {/* Hello from App.tsx! */}
-        <Router>
+        <Router
+        //  getUserConfirmation={()=>{}}
+         >
           <ThemeProvider
             theme={this.state.darkModeOn === "true" ? dark : light}
           >

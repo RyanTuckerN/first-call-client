@@ -4,6 +4,7 @@
  * @returns {String} Properized string
  */
  export const properize = (s: string ): string => s[0].toUpperCase() + s.slice(1).trim();
+ export const properizeNoTrim = (s: string ): string => s[0].toUpperCase() + s.slice(1);
 
 /**
  *
@@ -41,3 +42,9 @@
   return Object.keys(object).find((key: any) => object[key] === value);
 };
 
+export const formControl = {
+  validateEmail : (emailAddress: string) : boolean =>
+    emailAddress.split("").includes("@") && emailAddress.length >= 6,
+  validatePasswordsMatch : (p1:string, p2:string):boolean => p1 === p2,
+  validatePassword : (p1: string) :boolean => p1.length>=8
+}

@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Component } from "react";
 import { UserCtx } from "../../../Context/MainContext";
-import { properize } from "../../../_helpers/helpers";
-
+import { properize, properizeNoTrim } from "../../../_helpers/helpers";
+import { Prompt } from "react-router-dom";
 import {
   FormControl,
   FormHelperText,
@@ -32,14 +32,16 @@ interface EditProfileState extends User {
   platform?: string;
   snackBarOpen: boolean;
   success: boolean | null;
+  // stateChanged: boolean
   // user: User
 }
 
 //state-agnostic flag
-let stateChanged: boolean = false;
+// let stateChanged: boolean = false;
 
 class EditProfile extends Component<EditProfileProps, EditProfileState> {
   static contextType = UserCtx;
+  stateChanged: boolean = false
 
   constructor(props: EditProfileProps, context: any) {
     super(props, context);
@@ -49,6 +51,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
       platform: this.context.user.paymentPreference?.platform ?? "",
       snackBarOpen: false,
       success: null,
+      // stateChanged: false
       // user: this.
     };
   }
@@ -57,6 +60,8 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
     this.setState({ name: e.target.value });
   handleEmail = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ email: e.target.value });
+  handleRole = (e: React.ChangeEvent<HTMLInputElement>): void =>
+    this.setState({ role: e.target.value });
   handleLocation = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ location: e.target.value });
   handleBio = (e: React.ChangeEvent<HTMLInputElement>): void =>
@@ -68,6 +73,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
   // addPayment = ()
 
   handleSave = async (): Promise<void> => {
+    if (!this.stateChanged) return;
     const user: EditProfileState = {
       ...this.state,
       paymentPreference: {
@@ -75,24 +81,39 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
         platform: this.state.platform ?? "",
       },
     };
-    const { name, email, location, description, paymentPreference } = user;
-    const body = { name, email, location, description, paymentPreference };
+    const { name, email, location, description, paymentPreference, role } =
+      user;
+    const body = {
+      name,
+      email,
+      location,
+      description,
+      paymentPreference,
+      role,
+    };
     if (await this.context.updateProfile(body)) {
+      this.stateChanged = false;
       this.handleSuccess();
-      stateChanged = false;
     } else this.handleFailure();
   };
 
+  componentDidMount() {
+    this.stateChanged = false;
+
+  }
   componentDidUpdate(prevProps: EditProfileProps, prevState: EditProfileState) {
     if (prevState !== this.state) {
-      stateChanged = true;
+      this.stateChanged = true;
+
+
     }
   }
 
-  componentWillUnmount() {
-    stateChanged &&
-      Swal.fire({ text: "You have unsaved changed!", icon: "question" });
-  }
+  // componentWillUnmount() {
+  //   stateChanged &&
+  //     Swal.fire({ text: "You have unsaved changed!", icon: "question" });
+  // }
+  // shou
 
   handleSuccess = () => this.setState({ success: true, snackBarOpen: true });
   handleFailure = () => this.setState({ success: false, snackBarOpen: true });
@@ -105,11 +126,15 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
 
   render() {
     // console.log("STATE HERE HERE HEARE!!", this.state);
-    console.log(stateChanged);
+    console.log(this.stateChanged);
     // const { user } = this.context;
     return (
       <Grid container spacing={2}>
-        <Grid item xs={12}>
+        <Prompt
+          when={this.stateChanged}
+          message={"You have unsaved changes! Continue anyway?"}
+        />
+        <Grid item xs={12} sm={7}>
           <Typography variant="h6">Name</Typography>
           <TextField
             onChange={this.handleName}
@@ -121,7 +146,20 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             // label="Name"
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={5}>
+          <Typography variant="h6">Role</Typography>
+          <TextField
+            onChange={this.handleRole}
+            fullWidth
+            variant="outlined"
+            placeholder="Guitarist"
+            id="role"
+            name="role"
+            value={this.state.role ? properize(this.state.role) : ""}
+            // label="Name"
+          />
+        </Grid>
+        <Grid item xs={12} sm={5}>
           <Typography variant="h6">Email Address</Typography>
           <TextField
             onChange={this.handleEmail}
@@ -132,7 +170,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             value={this.state.email}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={7}>
           <Typography variant="h6">Location</Typography>
           <TextField
             fullWidth
@@ -141,7 +179,9 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             id="location"
             placeholder="Chicago, IL"
             name="location"
-            value={this.state.location}
+            value={
+              this.state.location ? properizeNoTrim(this.state.location) : ""
+            }
             // label="Name"
           />
         </Grid>
