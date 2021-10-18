@@ -9,7 +9,7 @@ import {
   IconButton,
   Container,
 } from "@mui/material";
-import { AddCircle, Edit } from "@mui/icons-material";
+import { AddAPhoto, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import "./Settings.css";
 import { StringSetter } from "../../../../App.types";
@@ -90,7 +90,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               />
               {/* <IconButton {...addOrEditProps}> */}
               <label htmlFor="raised-button-file" id="image-edit-button">
-                <Edit fontSize="small" style={{color: 'white'}} />
+                <AddAPhoto style={{color: 'white'}} />
               </label>
               {/* </IconButton> */}
             </>
@@ -105,7 +105,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
                 type="file"
               />
               <label htmlFor="raised-button-file" id="image-edit-button">
-                <AddCircle style={{color: 'white'}} />
+                <AddAPhoto  style={{color: 'white'}} />
               </label>
             </>
           )}

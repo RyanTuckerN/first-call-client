@@ -21,6 +21,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import { Avatar, ListItemIcon } from "@mui/material";
+import {
+  Settings,
+  Person,
+  Home as HomeIcon,
+  Logout,
+  ArrowDropDown,
+  Add,
+} from "@mui/icons-material";
 import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -50,7 +59,6 @@ interface HomeState {
   isNotificationsOpen: boolean;
   open: boolean;
   windowDimensions: WindowDimensions;
-  messages: Notification[];
   notifications: Notification[];
 }
 
@@ -70,7 +78,6 @@ class Home extends Component<HomeProps, HomeState> {
         height: window.innerHeight,
         width: window.innerWidth,
       },
-      messages: [],
       notifications: [],
     };
   }
@@ -83,15 +90,7 @@ class Home extends Component<HomeProps, HomeState> {
       });
       json.auth &&
         this.setState({
-          messages:
-            json.notifications?.filter(
-              (n: Notification) =>
-                n.details.code === 100 || n.details.code >= 300
-            ) ?? [],
-          notifications:
-            json.notifications?.filter(
-              (n: Notification) => n.details.code > 100 && n.details.code < 300
-            ) ?? [],
+          notifications: json.notifications,
         });
     },
 
@@ -111,7 +110,7 @@ class Home extends Component<HomeProps, HomeState> {
         width: window.innerWidth,
       },
     });
-    
+
   componentDidMount() {
     this.authorize();
     window.addEventListener("resize", this.handleResize);
@@ -175,11 +174,20 @@ class Home extends Component<HomeProps, HomeState> {
               {auth ? (
                 <>
                   <Box sx={{ display: { xs: "flex" } }}>
-                    <IconButton
-                      size="large"
+                    <Link to={`${this.props.match.path}main/`}>
+                      <IconButton
+                        size="medium"
+                        id="home-button"
+                        color="inherit"
+                      >
+                        <HomeIcon />
+                      </IconButton>
+                    </Link>
+                    {/* <IconButton
+                      size="medium"
                       id="mail-menu-button"
-                      aria-label={`show ${this.state.messages.length} new mails`}
                       color="inherit"
+                      aria-label={`show ${this.state.messages.length} new mails`}
                       onClick={this.handleNotificationsOpen}
                     >
                       <Badge
@@ -188,9 +196,9 @@ class Home extends Component<HomeProps, HomeState> {
                       >
                         <MailIcon />
                       </Badge>
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton
-                      size="large"
+                      size="medium"
                       id="notification-menu-button"
                       aria-label={`show ${this.state.notifications.length} new notifications`}
                       color="inherit"
@@ -198,13 +206,15 @@ class Home extends Component<HomeProps, HomeState> {
                     >
                       <Badge
                         badgeContent={this.state.notifications.length}
+                        variant="dot"
                         color="error"
                       >
                         <NotificationsIcon />
                       </Badge>
                     </IconButton>
+
                     <IconButton
-                      size="large"
+                      size="medium"
                       edge="end"
                       id="account-menu-button"
                       aria-label="account of current user"
@@ -213,38 +223,67 @@ class Home extends Component<HomeProps, HomeState> {
                       onClick={this.handleProfileMenuOpen}
                       color="inherit"
                     >
-                      <AccountCircle />
+                      {this.context.user.photo ? (
+                        <Avatar src={this.context.user.photo} sx={{height: 25, width: 25}} />
+                      ) : (
+                        <AccountCircle />
+                      )}
                     </IconButton>
+                    <ArrowDropDown
+                      className="arrow-dropdown"
+                      fontSize="small"
+                    />
+                    <IconButton
+                      size="small"
+                      edge="end"
+                      id="account-menu-button"
+                      aria-label="account of current user"
+                      style={{ marginLeft: -10 }}
+                    >
+                      <Add />
+                    </IconButton>
+                    <ArrowDropDown
+                      className="arrow-dropdown"
+                      fontSize="small"
+                    />
                   </Box>
                   <Menu
                     anchorEl={this.state.anchorEl}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
                     id={this.menuId}
                     keepMounted
-                    transformOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
                     open={this.state.isMenuOpen}
                     onClose={this.handleMenuClose}
                   >
                     <Link to={`${this.props.match.path}main/`}>
-                      <MenuItem onClick={this.handleMenuClose}>Home</MenuItem>
+                      <MenuItem onClick={this.handleMenuClose}>
+                        <ListItemIcon>
+                          <HomeIcon />
+                        </ListItemIcon>
+                        Home
+                      </MenuItem>
                     </Link>
                     <Link to={`${this.props.match.path}main/profile`}>
                       <MenuItem onClick={this.handleMenuClose}>
+                        <ListItemIcon>
+                          <Person />
+                        </ListItemIcon>
                         Profile
                       </MenuItem>
                     </Link>
                     <Link to={`${this.props.match.path}main/settings`}>
                       <MenuItem onClick={this.handleMenuClose}>
+                        <ListItemIcon>
+                          <Settings />
+                        </ListItemIcon>
                         Settings
                       </MenuItem>
                     </Link>
-                    <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+                    <MenuItem onClick={this.handleLogout}>
+                      <ListItemIcon>
+                        <Logout />
+                      </ListItemIcon>
+                      Logout
+                    </MenuItem>
                   </Menu>
                   <Menu
                     anchorEl={this.state.anchorEl}
@@ -259,15 +298,7 @@ class Home extends Component<HomeProps, HomeState> {
                     open={this.state.isNotificationsOpen}
                     onClose={this.handleMenuClose}
                   >
-                    <Notifications
-                      notifications={
-                        this.state.anchorEl?.id === "notification-menu-button"
-                          ? this.state.notifications
-                          : this.state.anchorEl?.id === "mail-menu-button"
-                          ? this.state.messages
-                          : []
-                      }
-                    />
+                    <Notifications notifications={this.state.notifications} />
                   </Menu>
                 </>
               ) : auth === false ? (
