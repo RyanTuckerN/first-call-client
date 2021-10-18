@@ -111,6 +111,7 @@ class Home extends Component<HomeProps, HomeState> {
         width: window.innerWidth,
       },
     });
+    
   componentDidMount() {
     this.authorize();
     window.addEventListener("resize", this.handleResize);
@@ -302,8 +303,9 @@ class Home extends Component<HomeProps, HomeState> {
             <Paper
               sx={{
                 padding: 1,
+                marginBottom: 2,
                 minHeight:
-                  this.state.windowDimensions.height - this.appBarHeight - 20,
+                  this.state.windowDimensions.height - this.appBarHeight - 30,
                 zIndex: 1,
               }}
             >

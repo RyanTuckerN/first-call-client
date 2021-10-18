@@ -52,8 +52,11 @@ export const light = createTheme({
       main: '#449dbf',
     },
     secondary: {
-      main: '#8031e8',
+      main: '#1f1e21',
     },
+    // error: {
+    //   main: '#006eedc9'
+    // }
   },
   typography: {
     fontFamily: 'Oswald',
@@ -108,6 +111,12 @@ export const dark = createTheme({
     secondary: {
       main: '#8031e8',
     },
+    // error: {
+    //   main: '#006eedc9'
+    // },
+    background: {
+      main: '#cfddccc9'
+    }
   },
   typography: {
     fontFamily: 'Oswald',

@@ -37,7 +37,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
         {/* Hello from MainView.tsx */}
         <Switch>
           <Route path={`${this.props.match.path}/profile`}>
-            <Profile />
+            <Profile  />
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
             <Settings />

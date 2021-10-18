@@ -4,12 +4,13 @@ import { BrowserRouter as Router } from "react-router-dom";
 // import "./App.css";
 import Home from "./components/Home/Home";
 import { UserCtx } from "./components/Context/MainContext";
-import { UserSetter, TokenSetter, ColorSetter, EmailSetter } from "./App.types";
+import { UserSetter, TokenSetter, ColorSetter, EmailSetter, StateSetter } from "./App.types";
 import { User, UserAuth } from "./types/API.types";
 import { light, dark } from "./components/Theme/Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { fetchHandler } from "./components/_helpers/fetchHandler";
 import API_URL from "./components/_helpers/environment";
+import {Snackbar} from '@mui/material'
 
 interface AppProps {}
 
@@ -18,9 +19,10 @@ export interface AppState {
   token: string;
   auth: boolean | null;
   darkModeOn: string;
+  updateProfile: UserSetter;
   toggleDark: ColorSetter;
   toggleEmail: EmailSetter;
-  setUser: UserSetter;
+  setUser: StateSetter;
   setToken: TokenSetter;
 }
 
@@ -32,6 +34,7 @@ class App extends Component<AppProps, AppState> {
       token: "",
       auth: null,
       darkModeOn: localStorage.getItem("darkModeOn") ?? "false",
+      updateProfile: this.updateProfile,
       toggleDark: this.toggleDark,
       toggleEmail: this.toggleEmail,
       setUser: this.setUser,
@@ -40,6 +43,18 @@ class App extends Component<AppProps, AppState> {
   }
 
   setUser = (user: User): void => this.setState({ user });
+
+  updateProfile = async(user: User):Promise<boolean> => {
+    const json = await fetchHandler({
+      url: `${API_URL}/user/profile`,
+      method: "PUT",
+      auth: this.state.token,
+      body: user ,
+    });
+    console.log(json)
+    json.user && this.setUser(json.user); 
+    return json.success ? true : false 
+  }
 
   setToken = (token: string): void => {
     localStorage.setItem("token", token);

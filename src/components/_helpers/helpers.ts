@@ -3,7 +3,7 @@
  * @param {String} s string to Properize
  * @returns {String} Properized string
  */
- export const properize = (s: string): string => s[0].toUpperCase() + s.slice(1).trim();
+ export const properize = (s: string ): string => s[0].toUpperCase() + s.slice(1).trim();
 
 /**
  *

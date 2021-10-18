@@ -5,14 +5,15 @@ export interface User {
   role?: string;
   description?: string;
   location?: string;
-  paymentPreference?: { [key: string]: string };
+  paymentPreference?: { platform?: string; handle?: string } | null;
   specialties?: string[];
   createdAt?: string;
   updatedAt?: string;
   emails?: boolean;
   gigs?: Gig[];
   posts?: Post[];
-  notifications?: Notification[]
+  notifications?: Notification[];
+  photo?: string;
 }
 export interface Gig {
   id: number;
@@ -61,7 +62,7 @@ export interface UserAuth {
   err?: any;
 }
 interface NotificationDetails {
-  to: string; 
+  to: string;
   code: number;
   role: string;
   gigId: number;
