@@ -54,6 +54,9 @@ export const light = createTheme({
     secondary: {
       main: '#1f1e21',
     },
+    background: {
+      default: '#e9f0ef'
+    }
     // error: {
     //   main: '#006eedc9'
     // }

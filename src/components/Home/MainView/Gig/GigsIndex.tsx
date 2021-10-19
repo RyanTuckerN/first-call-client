@@ -10,10 +10,14 @@ import GigInvite from "./components/GigInvite";
 import GigPage from "./components/GigPage";
 import GigDashBoard from "./components/GigDashboard";
 import { NotificationsHash } from "./Gig.types";
+import { WindowDimensions } from "../../Home.types";
 import GigWelcome from "./components/GigWelcome";
+import { BottomNav } from "./components/Navigation";
 
 interface GigIndexProps {
   notifications: Notification[];
+  setHomeState: (key:string, value: any) => void
+
 }
 
 export interface GigIndexState {
@@ -21,9 +25,11 @@ export interface GigIndexState {
   gigs: Gig[];
   notifications: Notification[];
   notificationsHash: NotificationsHash;
-  user: User
+  user: User;
+  windowDimensions: WindowDimensions;
+  messageCode: number | null;
+  setHomeState: (key:string, value: any) => void
   setGigState: (key: string, value: any) => void;
-  messageCode: number | null
 }
 
 class GigIndex extends Component<GigIndexProps, GigIndexState> {
@@ -38,6 +44,11 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       notificationsHash: this.notificationHash(this.props.notifications),
       user: this.context.user,
       messageCode: null,
+      windowDimensions: {
+        height: window.innerHeight,
+        width: window.innerWidth,
+      },
+      setHomeState: this.props.setHomeState,
       setGigState: this.setGigState,
     };
   }
@@ -65,23 +76,33 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       obj[id].push(note);
       return obj;
     }, {});
+
+  handleResize = (): void =>
+    this.setState({
+      windowDimensions: {
+        height: window.innerHeight,
+        width: window.innerWidth,
+      },
+    });
+
   componentDidUpdate(prevProps: GigIndexProps, prevState: GigIndexState) {
     if (prevProps.notifications !== this.props.notifications) {
       this.setState({
         notificationsHash: this.notificationHash(this.props.notifications),
-        notifications: this.props.notifications
+        notifications: this.props.notifications,
       });
     }
-    if(prevState.notificationsHash !== this.state.notificationsHash){
-      
+    if (prevState.notificationsHash !== this.state.notificationsHash) {
     }
-    console.log(Object.entries(this.state.notificationsHash))
+    // console.log(Object.entries(this.state.notificationsHash));
   }
 
   componentDidMount() {
     this.fetchOffers();
+    window.addEventListener("resize", this.handleResize);
   }
   render() {
+    const { width } = this.state.windowDimensions;
     return (
       <div>
         <GigWelcome {...this.state} />

@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 // import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 // import Check from "@mui/icons-material/Check";
-import { Typography } from "@mui/material";
+import { Typography, Box, IconButton } from "@mui/material";
 import {
   MailOutlineOutlined,
   ReportOutlined,
@@ -15,33 +15,50 @@ import {
   InsertInvitationOutlined,
   SentimentVeryDissatisfiedOutlined,
   SentimentVerySatisfiedOutlined,
+  HighlightOffOutlined,
 } from "@mui/icons-material";
+import { fetchHandler } from "../../_helpers/fetchHandler";
+import API_URL from "../../_helpers/environment";
 
 interface NotificationsProps {
   notifications: Notification[];
-
+  setHomeState: (key: string, value: any) => void;
 }
 
 const Notifications: React.FunctionComponent<NotificationsProps> = ({
   notifications,
+  setHomeState
 }) => {
-  const invite = "#2374D2"
+  const invite = "#2374D2";
   const hash: any = {
     "100": { color: invite, icon: <InsertInvitationOutlined /> },
-    "200": { color: '#ff9800', icon: <SentimentVeryDissatisfiedOutlined color='warning' /> },
-    "201": { color: '#66bb6a', icon: <SentimentVerySatisfiedOutlined /> },
+    "200": {
+      color: "#ff9800",
+      icon: <SentimentVeryDissatisfiedOutlined color="warning" />,
+    },
+    "201": { color: "#66bb6a", icon: <SentimentVerySatisfiedOutlined /> },
     "300": { color: "#66bb6a", icon: <CelebrationOutlined color="success" /> },
     "301": { color: "#f44336", icon: <ReportOutlined color="error" /> },
-    "400": { color: '', icon: <MailOutlineOutlined /> },
+    "400": { color: "", icon: <MailOutlineOutlined /> },
   };
 
   const mapper = (notifications: Notification[]): any =>
     notifications.map((n, i) => {
-      // console.log(n,i);
       const { code } = n.details;
 
+      const handleDelete = async (): Promise<boolean | null> => {
+        const json = await fetchHandler({
+          url: `${API_URL}/notification/${n.id}`,
+          method: "delete",
+          auth: localStorage.getItem('token') ?? ''
+        });
+        alert(json.message)
+        json.success && setHomeState('notifications', json.notifications)
+        return json.success;
+      };
+
       return (
-        <MenuList  key={n.id}>
+        <MenuList key={n.id}>
           <MenuItem dense style={{ whiteSpace: "normal" }}>
             <ListItemText
               style={{
@@ -52,14 +69,17 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                   hash[code.toString()].color
                 }30 0%, rgba(255,255,255,0) 100%)`,
               }}
-              >
+            >
               {hash[code.toString()].icon}
-              <Typography
+              <IconButton sx={{ float: "right", marginLeft: 10 }} onClick={handleDelete}>
+                <HighlightOffOutlined fontSize="small" />
+              </IconButton>
+              {/* <Typography
                 variant="inherit"
                 sx={{ fontSize: 11, float: "right", marginLeft: 10 }}
               >
                 {n.details.sender}
-              </Typography>
+              </Typography> */}
               <div />
               <Typography variant="inherit">{n.text}</Typography>
               <Typography variant="overline">
@@ -72,7 +92,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
       );
     });
 
-  return <Paper >{mapper(notifications)}</Paper>;
+  return <Paper>{mapper(notifications)}</Paper>;
 };
 
 export default Notifications;

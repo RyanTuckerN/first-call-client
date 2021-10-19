@@ -15,7 +15,8 @@ import Settings from "./Settings/Settings";
 
 export interface MainViewProps extends RouteComponentProps {
   functions: HomeFunctions;
-  notifications: Notification[]
+  notifications: Notification[];
+  setHomeState: (key:string, value: any) => void
 }
 
 interface MainViewState {}
@@ -44,7 +45,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
             <Settings />
           </Route>
           <Route path={`${this.props.match.path}/`}>
-            <GigIndex notifications={this.props.notifications} />
+            <GigIndex {...this.props} />
           </Route>
         </Switch>
       </>

@@ -82,6 +82,12 @@ class Home extends Component<HomeProps, HomeState> {
     };
   }
 
+  setHomeState = (key: string, value: any):void =>{
+    const stateObj:any={}
+    stateObj[key]=value
+    this.setState(stateObj)
+  }
+
   functions: HomeFunctions = {
     fetchNotifications: async (): Promise<any> => {
       const json = await fetchHandler({
@@ -99,7 +105,7 @@ class Home extends Component<HomeProps, HomeState> {
         url: `${API_URL}/user/offers`,
         auth: localStorage.getItem("token") ?? "",
       });
-      console.log(json);
+      // console.log(json);
     },
   };
 
@@ -142,7 +148,7 @@ class Home extends Component<HomeProps, HomeState> {
       isMenuOpen: false,
       isNotificationsOpen: false,
     });
-    console.log(this.state.anchorEl?.id);
+    // console.log(this.state.anchorEl?.id);
   };
 
   handleLogout = () => {
@@ -199,7 +205,7 @@ class Home extends Component<HomeProps, HomeState> {
                         <MailIcon />
                       </Badge>
                     </IconButton> */}
-                    <IconButton
+                    {/* <IconButton
                       size="medium"
                       id="notification-menu-button"
                       aria-label={`show ${this.state.notifications.length} new notifications`}
@@ -213,7 +219,7 @@ class Home extends Component<HomeProps, HomeState> {
                       >
                         <NotificationsIcon />
                       </Badge>
-                    </IconButton>
+                    </IconButton> */}
 
                     <IconButton
                       size="medium"
@@ -226,7 +232,10 @@ class Home extends Component<HomeProps, HomeState> {
                       color="inherit"
                     >
                       {this.context.user.photo ? (
-                        <Avatar src={this.context.user.photo} sx={{height: 25, width: 25}} />
+                        <Avatar
+                          src={this.context.user.photo}
+                          sx={{ height: 26, width: 26, border: 'solid white 1px' }}
+                        />
                       ) : (
                         <AccountCircle />
                       )}
@@ -238,6 +247,7 @@ class Home extends Component<HomeProps, HomeState> {
                     <IconButton
                       size="small"
                       edge="end"
+                      color='inherit'
                       id="account-menu-button"
                       aria-label="account of current user"
                       style={{ marginLeft: -10 }}
@@ -287,7 +297,7 @@ class Home extends Component<HomeProps, HomeState> {
                       Logout
                     </MenuItem>
                   </Menu>
-                  <Menu
+                  {/* <Menu
                     anchorEl={this.state.anchorEl}
                     anchorOrigin={{
                       vertical: "bottom",
@@ -301,7 +311,7 @@ class Home extends Component<HomeProps, HomeState> {
                     onClose={this.handleMenuClose}
                   >
                     <Notifications notifications={this.state.notifications} />
-                  </Menu>
+                  </Menu> */}
                 </>
               ) : auth === false ? (
                 <>
@@ -358,7 +368,11 @@ class Home extends Component<HomeProps, HomeState> {
                   <Respond />
                 </Route>
                 <Route path="/main">
-                  <MainView functions={this.functions} notifications={this.state.notifications} />
+                  <MainView
+                    functions={this.functions}
+                    notifications={this.state.notifications}
+                    setHomeState={this.setHomeState}
+                  />
                 </Route>
 
                 <Route path="/welcome">

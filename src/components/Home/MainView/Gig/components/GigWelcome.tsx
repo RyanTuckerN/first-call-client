@@ -1,39 +1,80 @@
+import React, { useState } from "react";
 import { GigIndexState } from "../GigsIndex";
 import { Notification } from "../../../../../types/API.types";
 import { Button, Grid, Paper, Typography, Box } from "@mui/material";
 import { HashCode } from "../Gig.types";
-import GigDashBoard from "./GigDashboard";
+import NotificationsDashBoard from "./GigDashboard";
 import Notifications from "../../../components/Notifications";
-import GigSidebar from './GigSidebar'
+import { GigSidebar, BottomNav } from "./Navigation";
+import GigsDash from "./GigsDash";
+import GigsMapper from "./mappers/GigsMapper";
 
 interface GigWelcomeProps extends GigIndexState {}
 
 const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
   props: GigWelcomeProps
 ) => {
-  const { user, notifications, messageCode, setGigState } = props;
+  const [route, setRoute] = useState("offers");
+  const { user, notifications, messageCode, windowDimensions, setGigState } =
+    props;
+  const { width } = windowDimensions;
+
+  const routes: any = {
+    notifications: {
+      body: (
+        <Notifications
+          notifications={filterNotifications(messageCode, notifications)}
+          setHomeState={props.setHomeState}
+        />
+      ),
+      dash: <NotificationsDashBoard {...props} />,
+    },
+    gigs: {
+      body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="gigs" />,
+      dash: <GigsDash {...props} gigsOrOffers="gigs" />,
+    },
+    offers: {
+      body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="offers" />,
+      dash: <GigsDash {...props} gigsOrOffers="offers" />,
+    },
+  };
 
   return (
     <>
-      <Typography variant="h5" paddingBottom={3}>
-        {`Welcome back, ${user.name.split(" ")[0]}!`}
-      </Typography>
-      <GigDashBoard {...props} />
-      <Grid container spacing={2} >
-        <Grid item xs={3} sm={3} >
-          <GigSidebar {...props}/>
-        </Grid>
-        <Grid item xs={9} sm={9}>
-          <Box display='flex' justifyContent='flex-end'>
-            <Button onClick={() => setGigState("messageCode", null)}>
-              show all notifications
-            </Button>
+      <Paper
+        elevation={15}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <Typography variant="h5" paddingBottom={2} paddingTop={1}>
+          {`Welcome back, ${user.name.split(" ")[0]}!`}
+        </Typography>
+      </Paper>
+      {routes[route].dash}
+      <Grid container spacing={2} display="flex" justifyContent="center">
+        {width >= 600 && (
+          <Grid item xs={3} sm={3}>
+            <GigSidebar {...props} setRoute={setRoute} route={route} />
+          </Grid>
+        )}
+        <Grid item xs={12} sm={9}>
+          {routes[route].body}
+          <Box display="flex" justifyContent="center">
+            {route === "notifications" && notifications.length ? (
+              <Button onClick={() => setGigState("messageCode", null)}>
+                show all notifications
+              </Button>
+            ) : route === "notifications" ? (
+              <Button disabled>No Notifications!</Button>
+            ) : null}
           </Box>
-          <Notifications
-            notifications={filterNotifications(messageCode, notifications)}
-          />
         </Grid>
       </Grid>
+      {width < 600 && (
+        <>
+          <div id="spacer" style={{ height: 40 }} />{" "}
+          <BottomNav {...props} setRoute={setRoute} route={route} />
+        </>
+      )}
     </>
   );
 };

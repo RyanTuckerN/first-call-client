@@ -51,7 +51,7 @@ class App extends Component<AppProps, AppState> {
       auth: this.state.token,
       body: user ,
     });
-    console.log(json)
+    // console.log(json)
     json.user && this.setUser(json.user); 
     return json.success ? true : false 
   }
