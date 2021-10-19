@@ -80,7 +80,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
         <div className="user-container left">
           {user.photo ? (
             <>
-              <Avatar {...defaultAvatarProps} />
+              <Avatar {...defaultAvatarProps} alt={user.name} />
               <input
                 accept="image/*"
                 onChange={handlePhoto}
@@ -96,7 +96,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
             </>
           ) : (
             <>
-              <Avatar {...stringAvatar(user.name)} />
+              <Avatar {...stringAvatar(user.name)} alt={user.name} />
               <input
                 accept="image/*"
                 onChange={handlePhoto}

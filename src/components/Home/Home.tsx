@@ -121,13 +121,15 @@ class Home extends Component<HomeProps, HomeState> {
   //protect unauthorized views
   authorize = (): void => {
     const { auth } = this.context;
-
     const pathRoot = this.props.location.pathname.split("/")[1];
+    //these paths are allowed
     if (pathRoot === "auth" || pathRoot === "respond") {
       return;
     }
+    //otherwise redirect to welcome screen
     !auth && this.props.history.push("/welcome");
   };
+
   handleNotificationsOpen = (event: any) =>
     this.setState({ anchorEl: event.currentTarget, isNotificationsOpen: true });
 
@@ -356,7 +358,7 @@ class Home extends Component<HomeProps, HomeState> {
                   <Respond />
                 </Route>
                 <Route path="/main">
-                  <MainView functions={this.functions} />
+                  <MainView functions={this.functions} notifications={this.state.notifications} />
                 </Route>
 
                 <Route path="/welcome">

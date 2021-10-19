@@ -28,6 +28,7 @@ export interface Gig {
   createdAt?: string;
   updatedAt?: string;
   posts?: Post[];
+  callStack?: CallStack
 }
 export interface CallStack {
   gigId: number;
@@ -47,6 +48,18 @@ export interface Post {
   voters: number[];
   details: PostDetails;
   children: Post[];
+}
+interface PostDetails {
+  edited?: boolean;
+  deleted?: boolean;
+  editedAt?: string;
+  deletedAt?: string;
+  originalText?: string;
+  editHistory?: PostHistoryObject[];
+}
+interface PostHistoryObject {
+  editedAt: "string";
+  originalText: "string";
 }
 export interface Notification {
   id: number;
@@ -71,15 +84,4 @@ interface NotificationDetails {
   recieverExists: boolean;
   nextUser?: string;
 }
-interface PostDetails {
-  edited?: boolean;
-  deleted?: boolean;
-  editedAt?: string;
-  deletedAt?: string;
-  originalText?: string;
-  editHistory?: PostHistoryObject[];
-}
-interface PostHistoryObject {
-  editedAt: "string";
-  originalText: "string";
-}
+

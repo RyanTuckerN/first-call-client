@@ -8,13 +8,14 @@ import {
   withRouter,
 } from "react-router-dom";
 import { HomeFunctions } from "../Home.types";
-
+import {Notification} from '../../../types/API.types'
 import GigIndex from "./Gig/GigsIndex";
 import Profile from "./Profile/Profile";
 import Settings from "./Settings/Settings";
 
 export interface MainViewProps extends RouteComponentProps {
   functions: HomeFunctions;
+  notifications: Notification[]
 }
 
 interface MainViewState {}
@@ -42,8 +43,8 @@ class MainView extends Component<MainViewProps, MainViewState> {
           <Route path={`${this.props.match.path}/settings`}>
             <Settings />
           </Route>
-          <Route path={`${this.props.match.path}/gigs`}>
-            <GigIndex />
+          <Route path={`${this.props.match.path}/`}>
+            <GigIndex notifications={this.props.notifications} />
           </Route>
         </Switch>
       </>
