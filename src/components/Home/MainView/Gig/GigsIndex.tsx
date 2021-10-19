@@ -23,6 +23,7 @@ export interface GigIndexState {
   notificationsHash: NotificationsHash;
   user: User
   setGigState: (key: string, value: any) => void;
+  messageCode: number | null
 }
 
 class GigIndex extends Component<GigIndexProps, GigIndexState> {
@@ -36,6 +37,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       notifications: this.props.notifications,
       notificationsHash: this.notificationHash(this.props.notifications),
       user: this.context.user,
+      messageCode: null,
       setGigState: this.setGigState,
     };
   }
@@ -78,7 +80,6 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
 
   componentDidMount() {
     this.fetchOffers();
-    console.log(this.notificationHash);
   }
   render() {
     return (
