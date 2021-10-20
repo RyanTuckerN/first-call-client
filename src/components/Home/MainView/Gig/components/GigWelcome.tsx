@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { GigIndexState } from "../GigsIndex";
 import { Notification } from "../../../../../types/API.types";
 import { Button, Grid, Paper, Typography, Box } from "@mui/material";
-import { HashCode } from "../Gig.types";
+import { HashCode, RouteOption, Routes } from "../Gig.types";
 import NotificationsDashBoard from "./GigDashboard";
 import Notifications from "../../../components/Notifications";
 import { GigSidebar, BottomNav } from "./Navigation";
@@ -14,12 +14,12 @@ interface GigWelcomeProps extends GigIndexState {}
 const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
   props: GigWelcomeProps
 ) => {
-  const [route, setRoute] = useState("notifications");
+  const [route, setRoute] = useState<RouteOption>("notifications");
   const { user, notifications, messageCode, windowDimensions, setGigState } =
     props;
   const { width } = windowDimensions;
 
-  const routes: any = {
+  const routes: Routes = {
     notifications: {
       body: (
         <Notifications
@@ -37,6 +37,14 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="offers" />,
       dash: <GigsDash {...props} gigsOrOffers="offers" />,
     },
+    gig: {
+      body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="offers" />,
+      dash: <GigsDash {...props} gigsOrOffers="offers" />,
+    },
+    callStack: {
+      body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="offers" />,
+      dash: <GigsDash {...props} gigsOrOffers="offers" />,
+    },
   };
 
 
@@ -50,7 +58,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
           {user && `Welcome back, ${user.name.split(" ")[0]}!`}
         </Typography>
       </Paper>
-      {routes[route].dash}
+      {routes[route]?.dash}
       <Grid container spacing={2} display="flex" justifyContent="center">
         {width >= 600 && (
           <Grid item xs={3} sm={3}>
@@ -58,7 +66,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
           </Grid>
         )}
         <Grid item xs={12} sm={9}>
-          {routes[route].body}
+          {routes[route]?.body}
           <Box display="flex" justifyContent="center">
             {route === "notifications" && notifications.length ? (
               <Button onClick={() => setGigState("messageCode", null)}>

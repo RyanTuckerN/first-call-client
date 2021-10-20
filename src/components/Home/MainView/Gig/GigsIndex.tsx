@@ -1,37 +1,35 @@
 import * as React from "react";
 import { Component } from "react";
+import { withRouter, Link, Route, Switch, RouteComponentProps } from "react-router-dom";
 import { Gig, Notification, User } from "../../../../types/API.types";
 import API_URL from "../../../_helpers/environment";
 import { UserCtx } from "../../../Context/MainContext";
 import { fetchHandler } from "../../../_helpers/fetchHandler";
-import GigCreate from "./components/GigCreate";
-import GigEdit from "./components/GigEdit";
 import GigInvite from "./components/GigInvite";
-import GigPage from "./components/GigPage";
+import GigPage from "./components/GigView/GigPage";
 import GigDashBoard from "./components/GigDashboard";
 import { DetailedGig, NotificationsHash } from "./Gig.types";
 import { WindowDimensions } from "../../Home.types";
 import GigWelcome from "./components/GigWelcome";
 import { BottomNav } from "./components/Navigation";
 
-interface GigIndexProps {
+interface GigIndexProps extends RouteComponentProps {
   notifications: Notification[];
-  user: User | null,
-  setHomeState: (key:string, value: any) => void
-
+  user: User | null;
+  setHomeState: (key: string, value: any) => void;
 }
 
 export interface GigIndexState {
   offers: Gig[];
   gigs: Gig[];
-  detailedGigs: {[key: string]: DetailedGig};
-  detailedOffers: {[key: string]: DetailedGig};
+  detailedGigs: { [key: string]: DetailedGig } | null;
+  detailedOffers: { [key: string]: DetailedGig } | null;
   notifications: Notification[];
   notificationsHash: NotificationsHash;
-  user: User | null,
+  user: User | null;
   windowDimensions: WindowDimensions;
   messageCode: number | null;
-  setHomeState: (key:string, value: any) => void
+  setHomeState: (key: string, value: any) => void;
   setGigState: (key: string, value: any) => void;
 }
 
@@ -43,8 +41,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     this.state = {
       offers: [],
       gigs: this.props.user?.gigs ?? [],
-      detailedGigs: {},
-      detailedOffers: {},
+      detailedGigs: null,
+      detailedOffers: null,
       notifications: this.props.notifications,
       notificationsHash: this.notificationHash(this.props.notifications),
       user: this.props.user,
@@ -58,8 +56,6 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     };
   }
 
-
-
   fetchOffers = async (): Promise<boolean> => {
     const json = await fetchHandler({
       url: `${API_URL}/user/offers`,
@@ -70,15 +66,12 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     return success;
   };
 
-  
-
   fetchGigsDetails = async () => {
     const gigsHash: any = {};
     this.state.gigs.forEach(async (gig) => {
       const info = await fetchHandler({
         url: `${API_URL}/gig/${gig.id}`,
         auth: localStorage.getItem("token") ?? "",
-        
       });
       gigsHash[gig.id] = info.gigInfo;
     });
@@ -92,7 +85,6 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
         url: `${API_URL}/gig/${gig.id}`,
         auth: localStorage.getItem("token") ?? "",
       });
-      console.log(offersHash)
       offersHash[gig.id] = info.gigInfo;
     });
     this.setState({ detailedOffers: offersHash });
@@ -111,8 +103,6 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       obj[id].push(note);
       return obj;
     }, {});
-
-  
 
   handleResize = (): void =>
     this.setState({
@@ -137,17 +127,21 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   async componentDidMount() {
     window.addEventListener("resize", this.handleResize);
     await this.fetchOffers();
-    await this.fetchGigsDetails()
-    await this.fetchOffersDetails()
+    await this.fetchGigsDetails();
+    await this.fetchOffersDetails();
   }
   render() {
     const { width } = this.state.windowDimensions;
+
     return (
       <div>
-
-        {this.state.user && <GigWelcome {...this.state} />}
-        {/* <GigPage {...this.state} />
-        <GigCreate {...this.state} />
+        <Route exact path='/main' >
+          <GigWelcome {...this.state} />
+        </Route>
+        <Route exact path='/main/:gigId'>  
+          <GigPage {...this.state}/>
+        </Route>
+        {/* <GigCreate {...this.state} />
         <GigInvite {...this.state} />
         <GigEdit {...this.state} /> */}
       </div>
@@ -155,4 +149,4 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   }
 }
 
-export default GigIndex;
+export default withRouter(GigIndex);

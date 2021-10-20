@@ -1,0 +1,59 @@
+import * as React from "react";
+import { GigPageState } from "./GigPage";
+import {
+  Grid,
+  Paper,
+  Container,
+  Box,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import { returnTime } from "../../../../../_helpers/helpers";
+import { Settings } from "@mui/icons-material";
+
+interface GigHeaderProps extends GigPageState {}
+
+const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
+  authorizedView,
+  description,
+  date,
+  photo,
+}) => {
+  const d = new Date(date);
+
+  return (
+    <Grid
+      item
+      container
+      xs={12}
+      // spacing={2}
+      letterSpacing={1.5}
+      id="gig-header"
+      sx={{ background: photo ?? "#bada5540", padding: 1.5,  paddingBottom: 2 }}
+    >
+      <Grid item xs={11}>
+        <Typography
+          variant="overline"
+          fontSize="medium"
+          color="GrayText"
+        >{`${d.toLocaleDateString()} AT ${returnTime(d)}`}</Typography>
+        <Typography variant="h4">{description}</Typography>
+      </Grid>
+      {authorizedView && (
+        <Grid
+          item
+          xs={1}
+          display="flex"
+          justifyContent={"flex-end"}
+          alignItems="flex-start"
+        >
+          <IconButton>
+            <Settings fontSize="large" />
+          </IconButton>
+        </Grid>
+      )}
+    </Grid>
+  );
+};
+
+export default GigHeader;

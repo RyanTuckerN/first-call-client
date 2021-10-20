@@ -25,7 +25,7 @@ import { LocationOn, AttachMoney, Event } from "@mui/icons-material";
 import "../../../Gig.css";
 
 interface GigProps extends Gig {
-  detailsHash: { [key: string]: DetailedGig };
+  detailsHash: { [key: string]: DetailedGig } | null ;
   userId: number | null;
 }
 
@@ -42,14 +42,12 @@ const GigCard: FunctionComponent<GigProps> = ({
 }) => {
   const gigDate: Date = new Date(date);
   const avatarSize: number = 50;
-  // const gigInfo = detailsHash[id] ?? {};
 
-  console.log(detailsHash);
-  const { bandLeader } = detailsHash[id] ?? {};
+  const bandLeader  = detailsHash? detailsHash[id]?.bandLeader : null;
 
   const defaultAvatarProps: any = {
-    src: bandLeader.photo,
-    alt: bandLeader.name,
+    src: bandLeader?.photo,
+    alt: bandLeader?.name,
     sx: { height: avatarSize, width: avatarSize },
   };
 
@@ -61,52 +59,50 @@ const GigCard: FunctionComponent<GigProps> = ({
     }
     return color;
   };
-  const color = getRandomColor()
 
   return bandLeader ? (
     <Card elevation={5} sx={{ margin: 1, borderRadius: 4 }}>
+        
         <CardActionArea>
-        <CardHeader
-          sx={{
-            // maxHeight: 75,
-            // backgroundImage: photo ?? "url(https://source.unsplash.com/random)",
-            background: '#fe3964' + "40",
-          }}
-          avatar={
-            bandLeader.photo ? (
-              <Avatar
-                {...defaultAvatarProps}
-                src={bandLeader.photo}
-                alt={bandLeader.name}
-              />
-            ) : (
-              // ** *** TERNARY *** ** //
-              // ** *** TERNARY *** ** //
-              <>
+          <CardHeader
+            sx={{
+              // maxHeight: 75,
+              // backgroundImage: photo ?? "url(https://source.unsplash.com/random)",
+              background: '#fe3964' + "40",
+            }}
+            avatar={
+              bandLeader?.photo ? (
                 <Avatar
-                  // sx={{height: 50}}
-                  {...stringAvatar(bandLeader.name, avatarSize)}
+                  {...defaultAvatarProps}
+                  src={bandLeader.photo}
                   alt={bandLeader.name}
                 />
-              </>
-            )
-          }
-          action={
-            <IconButton aria-label="settings">
-              <MoreVertIcon />
-            </IconButton>
-          }
-          title={
-            <div className="justify">
-              <Typography>{description}</Typography>
-              <AttachMoney fontSize="inherit" color="success" sx={{marginLeft: 'auto', position: 'relative', top: 3}} />
-              <Typography variant="caption" display="inline">
-                {payment}
-              </Typography>
-            </div>
-          }
-          subheader={`${gigDate.toLocaleDateString()}, ${returnTime(gigDate)}`}
-        />
+              ) : (
+                // ** *** TERNARY *** ** //
+                // ** *** TERNARY *** ** //
+                <>
+                  <Avatar
+                    // sx={{height: 50}}
+                    {...stringAvatar(bandLeader.name, avatarSize)}
+                    alt={bandLeader.name}
+                  />
+                </>
+              )
+            }
+          
+            title={
+              <div className="justify">
+                <Typography>{description}</Typography>
+                <AttachMoney fontSize="inherit" color="success" sx={{marginLeft: 'auto', position: 'relative', top: 3}} />
+                <Typography variant="caption" display="inline">
+                  {payment}
+                </Typography>
+              </div>
+          
+            }
+            subheader={`${gigDate.toLocaleDateString()}, ${returnTime(gigDate)}`}
+          />
+        </CardActionArea>
         {userId === bandLeader.id ? (
           <>
             <CardContent
@@ -197,7 +193,6 @@ const GigCard: FunctionComponent<GigProps> = ({
             </Grid>
           </>
         )}
-    </CardActionArea>
       </Card>
   ) : null;
 };

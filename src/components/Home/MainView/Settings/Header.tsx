@@ -51,6 +51,7 @@ export function stringAvatar(name: string, size: number) {
     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
   };
 }
+
 const Header: React.FunctionComponent<HeaderProps> = ({
   user,
   handlePhoto,
