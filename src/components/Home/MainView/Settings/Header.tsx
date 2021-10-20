@@ -13,8 +13,8 @@ import { AddAPhoto, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import "./Settings.css";
 import { StringSetter } from "../../../../App.types";
-import { height } from "@mui/system";
-const avatarSize: number = 120;
+
+const avatarSize: number = 100;
 
 interface HeaderProps {
   user: User;
@@ -41,12 +41,12 @@ function stringToColor(string: string) {
   return color;
 }
 
-function stringAvatar(name: string) {
+export function stringAvatar(name: string, size: number) {
   return {
     sx: {
       bgcolor: stringToColor(name),
-      height: avatarSize,
-      width: avatarSize,
+      height: size,
+      width: size,
     },
     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
   };
@@ -55,20 +55,6 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   user,
   handlePhoto,
 }) => {
-  // const addOrEditProps: any = {
-  //   style: {
-  //     position: "relative",
-  //     top: 80,
-  //     right: 31,
-  //     backgroundColor: "#51abcb",
-  //     borderRadius: '50%',
-  //     height: 30,
-  //     width: 30,
-  //     display: 'flex',
-  //     justifyContent: 'center',
-  //     alignItems: 'center'
-  //   },
-  // };
   const defaultAvatarProps: any = {
     src: user.photo,
     alt: user.name,
@@ -76,6 +62,8 @@ const Header: React.FunctionComponent<HeaderProps> = ({
   };
   return (
     <Box sx={{ padding: 2 }}>
+      <Typography variant="h5">{user.name}</Typography>
+      <Typography variant="body2">Your account</Typography>
       <div className="flexbox">
         <div className="user-container left">
           {user.photo ? (
@@ -90,13 +78,16 @@ const Header: React.FunctionComponent<HeaderProps> = ({
               />
               {/* <IconButton {...addOrEditProps}> */}
               <label htmlFor="raised-button-file" id="image-edit-button">
-                <AddAPhoto style={{color: 'white'}} />
+                <AddAPhoto style={{ color: "white" }} />
               </label>
               {/* </IconButton> */}
             </>
           ) : (
             <>
-              <Avatar {...stringAvatar(user.name)} alt={user.name} />
+              <Avatar
+                {...stringAvatar(user.name, avatarSize)}
+                alt={user.name}
+              />
               <input
                 accept="image/*"
                 onChange={handlePhoto}
@@ -105,20 +96,15 @@ const Header: React.FunctionComponent<HeaderProps> = ({
                 type="file"
               />
               <label htmlFor="raised-button-file" id="image-edit-button">
-                <AddAPhoto  style={{color: 'white'}} />
+                <AddAPhoto style={{ color: "white" }} />
               </label>
             </>
           )}
-          <div className="header-text">
-            <Typography variant="h5">{user.name}</Typography>
-            <Typography variant="body2">Your account</Typography>
-          </div>
+          <div className="header-text"></div>
         </div>
-        <div className="right">
           <Link to="/main/profile">
-            <Button>Go to your profile</Button>
+            <Button sx={{marginLeft: -2}}>Go to your profile</Button>
           </Link>
-        </div>
       </div>
     </Box>
   );

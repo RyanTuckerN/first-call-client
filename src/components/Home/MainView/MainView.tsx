@@ -8,7 +8,7 @@ import {
   withRouter,
 } from "react-router-dom";
 import { HomeFunctions } from "../Home.types";
-import {Notification} from '../../../types/API.types'
+import {Notification, User} from '../../../types/API.types'
 import GigIndex from "./Gig/GigsIndex";
 import Profile from "./Profile/Profile";
 import Settings from "./Settings/Settings";
@@ -16,7 +16,9 @@ import Settings from "./Settings/Settings";
 export interface MainViewProps extends RouteComponentProps {
   functions: HomeFunctions;
   notifications: Notification[];
-  setHomeState: (key:string, value: any) => void
+  user: User | null,
+  auth: boolean | null;
+  setHomeState: (key:string, value: any) => void,
 }
 
 interface MainViewState {}
@@ -35,6 +37,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
 
   render() {
     return (
+      this.props.auth ?
       <>
         {/* Hello from MainView.tsx */}
         <Switch>
@@ -45,10 +48,11 @@ class MainView extends Component<MainViewProps, MainViewState> {
             <Settings />
           </Route>
           <Route path={`${this.props.match.path}/`}>
-            <GigIndex {...this.props} />
+            
+            {this.props.user?.gigs && this.props.notifications ? <GigIndex {...this.props} /> : null}
           </Route>
         </Switch>
-      </>
+      </> : null
     );
   }
 }

@@ -28,12 +28,14 @@ class GigDashBoard extends React.Component<
           padding={1}
           display="flex"
           justifyContent="space-around"
+          
         >
           <BlockMapper
             {...this.props}
             code={"100"}
             color="#2374D2"
             notifications={notificationsHash["100"] ?? []}
+
           />
           <BlockMapper
             {...this.props}
@@ -69,6 +71,7 @@ class GigDashBoard extends React.Component<
           padding={0}
           display="flex"
           justifyContent="space-around"
+          marginBottom={10}
         >
           <BarMapper
             {...this.props}

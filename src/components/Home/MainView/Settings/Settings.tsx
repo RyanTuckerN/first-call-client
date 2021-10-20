@@ -76,16 +76,20 @@ class Settings extends Component<SettingsProps, SettingsState> {
   // handleEmail = ():void =>
 
   componentDidMount() {
-    console.log(this.context);
+    // console.log(this.context);
   }
   render() {
     return (
       <>
-        <Header
-          user={this.context.user}
-          handlePhoto={this.uploadImage}
-          {...this.props}
-        />
+        <Grid container spacing={0}>
+          <Grid item xs={6} sm={5} >
+            <Header
+              user={this.context.user}
+              handlePhoto={this.uploadImage}
+              {...this.props}
+            />
+          </Grid>
+        </Grid>
 
         <Grid container spacing={2} flexWrap="wrap-reverse">
           <Grid item xs={12} sm={5} md={3}>

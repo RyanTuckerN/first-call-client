@@ -41,7 +41,7 @@ import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { UserCtx } from "../Context/MainContext";
 import Notifications from "./components/Notifications";
-import { Notification } from "../../types/API.types";
+import { Notification, User } from "../../types/API.types";
 // import { AppState } from "../../App";
 import { fetchHandler } from "../_helpers/fetchHandler";
 // import { MainViewProps } from "./MainView/MainView";
@@ -51,6 +51,8 @@ import { Paper } from "@mui/material";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
+  auth: boolean | null;
+  user: User | null
 }
 
 interface HomeState {
@@ -191,36 +193,6 @@ class Home extends Component<HomeProps, HomeState> {
                         <HomeIcon />
                       </IconButton>
                     </Link>
-                    {/* <IconButton
-                      size="medium"
-                      id="mail-menu-button"
-                      color="inherit"
-                      aria-label={`show ${this.state.messages.length} new mails`}
-                      onClick={this.handleNotificationsOpen}
-                    >
-                      <Badge
-                        badgeContent={this.state.messages.length}
-                        color="error"
-                      >
-                        <MailIcon />
-                      </Badge>
-                    </IconButton> */}
-                    {/* <IconButton
-                      size="medium"
-                      id="notification-menu-button"
-                      aria-label={`show ${this.state.notifications.length} new notifications`}
-                      color="inherit"
-                      onClick={this.handleNotificationsOpen}
-                    >
-                      <Badge
-                        badgeContent={this.state.notifications.length}
-                        variant="dot"
-                        color="error"
-                      >
-                        <NotificationsIcon />
-                      </Badge>
-                    </IconButton> */}
-
                     <IconButton
                       size="medium"
                       edge="end"
@@ -297,21 +269,6 @@ class Home extends Component<HomeProps, HomeState> {
                       Logout
                     </MenuItem>
                   </Menu>
-                  {/* <Menu
-                    anchorEl={this.state.anchorEl}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
-                    id="notifications-menu"
-                    PaperProps={{ style: { maxHeight: 500 } }}
-                    keepMounted
-                    transformOrigin={{ vertical: "bottom", horizontal: "left" }}
-                    open={this.state.isNotificationsOpen}
-                    onClose={this.handleMenuClose}
-                  >
-                    <Notifications notifications={this.state.notifications} />
-                  </Menu> */}
                 </>
               ) : auth === false ? (
                 <>
@@ -341,7 +298,7 @@ class Home extends Component<HomeProps, HomeState> {
         <>
           <CssBaseline />
 
-          <Container maxWidth="md">
+          <Container maxWidth="lg">
             {/* box is just to show layout, should be removed */}
             <Paper
               sx={{
@@ -372,6 +329,7 @@ class Home extends Component<HomeProps, HomeState> {
                     functions={this.functions}
                     notifications={this.state.notifications}
                     setHomeState={this.setHomeState}
+                    {...this.props}
                   />
                 </Route>
 

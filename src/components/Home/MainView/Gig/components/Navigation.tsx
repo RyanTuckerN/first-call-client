@@ -10,11 +10,17 @@ import {
   BottomNavigationAction,
 } from "@mui/material";
 import { Event, DeviceHub, Notifications } from "@mui/icons-material";
+
+
+
+
+// *** *** SIDEBAR *** ***
 interface GigSidebarProps extends GigIndexState {
   setRoute: any;
   route: string;
 }
 const activeColor: string = "#bfbfbf55"
+
 
 export const GigSidebar: React.FunctionComponent<GigSidebarProps> = ({
   setRoute,
@@ -26,22 +32,22 @@ export const GigSidebar: React.FunctionComponent<GigSidebarProps> = ({
       <div style={{ height: 40 }} />
       <List sx={{ display: "flex", flexDirection: "column" }}>
         <ListItemButton
-          onClick={() => setRoute("notifications")}
           sx={{ backgroundColor: route === "notifications" ? activeColor : "", borderRadius: 10 }}
+          onClick={() => setRoute("notifications")}
         >
           <Notifications sx={{ padding: 0.5, margin: 1 }} />
           <Typography variant="body1">Alerts</Typography>
         </ListItemButton>
         <ListItemButton
-          onClick={() => setRoute("gigs")}
           sx={{ backgroundColor: route === "gigs" ? activeColor : "", borderRadius: 10 }}
+          onClick={() => setRoute("gigs")}
         >
           <DeviceHub sx={{ padding: 0.5, margin: 1 }} />
           <Typography variant="body1">Gigs</Typography>
         </ListItemButton>
         <ListItemButton
-          onClick={() => setRoute("offers")}
           sx={{ backgroundColor: route === "offers" ? activeColor : "", borderRadius: 10 }}
+          onClick={() => setRoute("offers")}
         >
           <Event sx={{ padding: 0.5, margin: 1 }} />
           <Typography variant="body1">Offers</Typography>
@@ -51,6 +57,9 @@ export const GigSidebar: React.FunctionComponent<GigSidebarProps> = ({
   );
 };
 
+
+
+/// *** *** BOTTOM NAV *** *** ///
 interface BottomNavProps extends GigIndexState {
   setRoute: any;
   route: string;

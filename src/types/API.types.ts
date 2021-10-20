@@ -24,6 +24,7 @@ export interface Gig {
   payment: number;
   token: string; //uuid
   openCalls: string[];
+  photo?: string;
   optionalInfo?: { [key: string]: string };
   createdAt?: string;
   updatedAt?: string;
@@ -71,7 +72,7 @@ export interface Notification {
 }
 export interface UserAuth {
   auth: boolean;
-  user?: User;
+  user: User;
   err?: any;
 }
 interface NotificationDetails {

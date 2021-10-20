@@ -14,7 +14,7 @@ interface GigWelcomeProps extends GigIndexState {}
 const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
   props: GigWelcomeProps
 ) => {
-  const [route, setRoute] = useState("offers");
+  const [route, setRoute] = useState("notifications");
   const { user, notifications, messageCode, windowDimensions, setGigState } =
     props;
   const { width } = windowDimensions;
@@ -39,6 +39,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
     },
   };
 
+
   return (
     <>
       <Paper
@@ -46,7 +47,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
         <Typography variant="h5" paddingBottom={2} paddingTop={1}>
-          {`Welcome back, ${user.name.split(" ")[0]}!`}
+          {user && `Welcome back, ${user.name.split(" ")[0]}!`}
         </Typography>
       </Paper>
       {routes[route].dash}
@@ -64,7 +65,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                 show all notifications
               </Button>
             ) : route === "notifications" ? (
-              <Button disabled>No Notifications!</Button>
+              <Button disabled sx={{marginTop: 4}}>No Notifications!</Button>
             ) : null}
           </Box>
         </Grid>

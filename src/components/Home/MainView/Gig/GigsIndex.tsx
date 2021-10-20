@@ -9,13 +9,14 @@ import GigEdit from "./components/GigEdit";
 import GigInvite from "./components/GigInvite";
 import GigPage from "./components/GigPage";
 import GigDashBoard from "./components/GigDashboard";
-import { NotificationsHash } from "./Gig.types";
+import { DetailedGig, NotificationsHash } from "./Gig.types";
 import { WindowDimensions } from "../../Home.types";
 import GigWelcome from "./components/GigWelcome";
 import { BottomNav } from "./components/Navigation";
 
 interface GigIndexProps {
   notifications: Notification[];
+  user: User | null,
   setHomeState: (key:string, value: any) => void
 
 }
@@ -23,9 +24,11 @@ interface GigIndexProps {
 export interface GigIndexState {
   offers: Gig[];
   gigs: Gig[];
+  detailedGigs: {[key: string]: DetailedGig};
+  detailedOffers: {[key: string]: DetailedGig};
   notifications: Notification[];
   notificationsHash: NotificationsHash;
-  user: User;
+  user: User | null,
   windowDimensions: WindowDimensions;
   messageCode: number | null;
   setHomeState: (key:string, value: any) => void
@@ -39,10 +42,12 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     super(props, context);
     this.state = {
       offers: [],
-      gigs: this.context.user.gigs ?? [],
+      gigs: this.props.user?.gigs ?? [],
+      detailedGigs: {},
+      detailedOffers: {},
       notifications: this.props.notifications,
       notificationsHash: this.notificationHash(this.props.notifications),
-      user: this.context.user,
+      user: this.props.user,
       messageCode: null,
       windowDimensions: {
         height: window.innerHeight,
@@ -53,6 +58,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     };
   }
 
+
+
   fetchOffers = async (): Promise<boolean> => {
     const json = await fetchHandler({
       url: `${API_URL}/user/offers`,
@@ -61,6 +68,34 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     const { offers, message, success } = json;
     success ? this.setState({ offers }) : console.log(message);
     return success;
+  };
+
+  
+
+  fetchGigsDetails = async () => {
+    const gigsHash: any = {};
+    this.state.gigs.forEach(async (gig) => {
+      const info = await fetchHandler({
+        url: `${API_URL}/gig/${gig.id}`,
+        auth: localStorage.getItem("token") ?? "",
+        
+      });
+      gigsHash[gig.id] = info.gigInfo;
+    });
+    this.setState({ detailedGigs: gigsHash });
+  };
+
+  fetchOffersDetails = async () => {
+    const offersHash: any = {};
+    this.state.offers.forEach(async (gig) => {
+      const info = await fetchHandler({
+        url: `${API_URL}/gig/${gig.id}`,
+        auth: localStorage.getItem("token") ?? "",
+      });
+      console.log(offersHash)
+      offersHash[gig.id] = info.gigInfo;
+    });
+    this.setState({ detailedOffers: offersHash });
   };
 
   setGigState = (key: string, value: any) => {
@@ -76,6 +111,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       obj[id].push(note);
       return obj;
     }, {});
+
+  
 
   handleResize = (): void =>
     this.setState({
@@ -97,15 +134,18 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     // console.log(Object.entries(this.state.notificationsHash));
   }
 
-  componentDidMount() {
-    this.fetchOffers();
+  async componentDidMount() {
     window.addEventListener("resize", this.handleResize);
+    await this.fetchOffers();
+    await this.fetchGigsDetails()
+    await this.fetchOffersDetails()
   }
   render() {
     const { width } = this.state.windowDimensions;
     return (
       <div>
-        <GigWelcome {...this.state} />
+
+        {this.state.user && <GigWelcome {...this.state} />}
         {/* <GigPage {...this.state} />
         <GigCreate {...this.state} />
         <GigInvite {...this.state} />

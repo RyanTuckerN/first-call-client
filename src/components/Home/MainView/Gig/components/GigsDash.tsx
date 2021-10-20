@@ -14,15 +14,17 @@ const GigsDash: React.FunctionComponent<GigsDashProps> = ({
   // setGigState,
 }) => {
   return (
+    gigs ?
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={12} display="flex" justifyContent="center">
         <Typography variant='h4' paddingY={4}>
           {gigsOrOffers === "gigs"
-            ? `${gigs.length} GIGS`
-            : `${offers.length} OFFERS`}
+            ? `${gigs?.length ?? 0} GIGS`
+            : `${offers?.length ?? 0} OFFERS`}
         </Typography>
       </Grid>
     </Grid>
+    :null
   );
 };
 

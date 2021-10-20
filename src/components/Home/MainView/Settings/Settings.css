@@ -4,13 +4,14 @@
 }
 
 .header-text{
-  margin-left: 15px;
+  /* margin-left: 15px; */
 }
 
 .flexbox{
   display: flex;
-  justify-content: space-between;
-  flex-flow: row wrap;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  /* flex-flow: row wrap; */
 }
 
 .toggle{

@@ -25,9 +25,7 @@ const BarMapper: React.FunctionComponent<BarMapperProps> = ({
             sx={{
               borderRadius: 0,
               width: "100%",
-              // maxWidth: 220,
-              height: 20,
-              padding: 1,
+              height: 24,
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-around",

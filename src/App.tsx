@@ -90,7 +90,7 @@ class App extends Component<AppProps, AppState> {
       auth: token,
     });
     if (json.auth) {
-      this.setState({ auth: true, user: json.user ?? null, token });
+      this.setState({ auth: true, user: json.user, token });
     } else {
       this.setState({ auth: false });
       localStorage.removeItem("token");
@@ -122,7 +122,7 @@ class App extends Component<AppProps, AppState> {
               </div> */}
               {/* replace null with loading screen if load times increase! */}
               {typeof this.state.auth === "boolean" ? (
-                <Home logout={this.logout} />
+                <Home logout={this.logout} {...this.state} />
               ) : null}
             </UserCtx.Provider>
           </ThemeProvider>
