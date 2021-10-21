@@ -5,9 +5,9 @@ import Divider from "@mui/material/Divider";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 // import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import {Link} from 'react-router-dom'
 // import Check from "@mui/icons-material/Check";
-import { Typography, Box, IconButton } from "@mui/material";
+import { Typography, Box, IconButton, List, ListItem, ListItemText } from "@mui/material";
 import {
   MailOutlineOutlined,
   ReportOutlined,
@@ -58,8 +58,8 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
       };
 
       return (
-        <MenuList key={n.id}>
-          <MenuItem dense style={{ whiteSpace: "normal" }}>
+        <List key={n.id}>
+          <ListItem dense style={{ whiteSpace: "normal" }}>
             <ListItemText
               style={{
                 // marginLeft: 15,
@@ -70,7 +70,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                 }30 0%, rgba(255,255,255,0) 100%)`,
               }}
             >
-              {hash[code.toString()].icon}
+              <Link to={`/main/gig/${n.details.gigId}`}>{hash[code.toString()].icon}</Link>
               <IconButton sx={{ float: "right", marginLeft: 10 }} onClick={handleDelete}>
                 <HighlightOffOutlined fontSize="small" />
               </IconButton>
@@ -86,9 +86,9 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                 {n.createdAt && new Date(n.createdAt).toLocaleDateString()}
               </Typography>
             </ListItemText>
-          </MenuItem>
+          </ListItem>
           {i < notifications.length - 1 && <Divider />}
-        </MenuList>
+        </List>
       );
     });
 

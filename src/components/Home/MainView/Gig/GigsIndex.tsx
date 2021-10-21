@@ -11,6 +11,7 @@ import GigDashBoard from "./components/GigDashboard";
 import { DetailedGig, NotificationsHash } from "./Gig.types";
 import { WindowDimensions } from "../../Home.types";
 import GigWelcome from "./components/GigWelcome";
+import { Button } from "@mui/material";
 import { BottomNav } from "./components/Navigation";
 
 interface GigIndexProps extends RouteComponentProps {
@@ -138,7 +139,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
         <Route exact path='/main' >
           <GigWelcome {...this.state} />
         </Route>
-        <Route exact path='/main/:gigId'>  
+        <Route exact path='/main/gig/:gigId'>  
           <GigPage {...this.state}/>
         </Route>
         {/* <GigCreate {...this.state} />

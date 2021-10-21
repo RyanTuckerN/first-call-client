@@ -20,7 +20,7 @@ import { Settings, AttachMoney, LocationOn, CalendarToday } from "@mui/icons-mat
 import { DetailedGig } from "../../Gig.types";
 import { stringAvatar } from "../../../Settings/Header";
 
-const avatarSize: number = 100;
+const avatarSize: number = 50;
 
 interface GigInfoProps extends GigPageState {
   details: DetailedGig;
@@ -60,7 +60,7 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
             <ListItem>
               <ListItemAvatar>
                 {bandLeader.photo ? (
-                  <Avatar src={bandLeader.photo} alt={bandLeader.name}  />
+                  <Avatar src={bandLeader.photo} alt={bandLeader.name} sx={{height: avatarSize, width: avatarSize}} />
                 ) : (
                   <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
                 )}

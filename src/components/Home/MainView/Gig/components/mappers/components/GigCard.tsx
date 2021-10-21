@@ -11,6 +11,7 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import {Link} from 'react-router-dom'
 import { red } from "@mui/material/colors";
 import { Grid } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -63,46 +64,48 @@ const GigCard: FunctionComponent<GigProps> = ({
   return bandLeader ? (
     <Card elevation={5} sx={{ margin: 1, borderRadius: 4 }}>
         
-        <CardActionArea>
-          <CardHeader
-            sx={{
-              // maxHeight: 75,
-              // backgroundImage: photo ?? "url(https://source.unsplash.com/random)",
-              background: '#fe3964' + "40",
-            }}
-            avatar={
-              bandLeader?.photo ? (
-                <Avatar
-                  {...defaultAvatarProps}
-                  src={bandLeader.photo}
-                  alt={bandLeader.name}
-                />
-              ) : (
-                // ** *** TERNARY *** ** //
-                // ** *** TERNARY *** ** //
-                <>
+        <Link to={`/main/gig/${id}`}>
+          <CardActionArea>
+            <CardHeader
+              sx={{
+                // maxHeight: 75,
+                // backgroundImage: photo ?? "url(https://source.unsplash.com/random)",
+                background: '#fe3964' + "40",
+              }}
+              avatar={
+                bandLeader?.photo ? (
                   <Avatar
-                    // sx={{height: 50}}
-                    {...stringAvatar(bandLeader.name, avatarSize)}
+                    {...defaultAvatarProps}
+                    src={bandLeader.photo}
                     alt={bandLeader.name}
                   />
-                </>
-              )
-            }
+                ) : (
+                  // ** *** TERNARY *** ** //
+                  // ** *** TERNARY *** ** //
+                  <>
+                    <Avatar
+                      // sx={{height: 50}}
+                      {...stringAvatar(bandLeader.name, avatarSize)}
+                      alt={bandLeader.name}
+                    />
+                  </>
+                )
+              }
           
-            title={
-              <div className="justify">
-                <Typography>{description}</Typography>
-                <AttachMoney fontSize="inherit" color="success" sx={{marginLeft: 'auto', position: 'relative', top: 3}} />
-                <Typography variant="caption" display="inline">
-                  {payment}
-                </Typography>
-              </div>
+              title={
+                <div className="justify">
+                  <Typography>{description}</Typography>
+                  <AttachMoney fontSize="inherit" color="success" sx={{marginLeft: 'auto', position: 'relative', top: 3}} />
+                  <Typography variant="caption" display="inline">
+                    {payment}
+                  </Typography>
+                </div>
           
-            }
-            subheader={`${gigDate.toLocaleDateString()}, ${returnTime(gigDate)}`}
-          />
-        </CardActionArea>
+              }
+              subheader={`${gigDate.toLocaleDateString()}, ${returnTime(gigDate)}`}
+            />
+          </CardActionArea>
+        </Link>
         {userId === bandLeader.id ? (
           <>
             <CardContent
