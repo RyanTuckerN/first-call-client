@@ -106,6 +106,7 @@ const GigCard: FunctionComponent<GigProps> = ({
             />
           </CardActionArea>
         </Link>
+        {/* AUTHORIZE GIG OWNER */}
         {userId === bandLeader.id ? (
           <>
             <CardContent

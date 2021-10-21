@@ -1,3 +1,5 @@
+import {DetailedGig} from '../components/Home/MainView/Gig/Gig.types'
+
 export interface User {
   id: number;
   email: string;
@@ -86,3 +88,6 @@ interface NotificationDetails {
   nextUser?: string;
 }
 
+export interface DetailsHash{
+  [key: string|number]: DetailedGig
+}

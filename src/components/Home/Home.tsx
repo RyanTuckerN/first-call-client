@@ -48,6 +48,7 @@ import { fetchHandler } from "../_helpers/fetchHandler";
 import API_URL from "../_helpers/environment";
 import { HomeFunctions, WindowDimensions } from "./Home.types";
 import { Paper } from "@mui/material";
+import { DetailedGig } from "./MainView/Gig/Gig.types";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
@@ -62,6 +63,7 @@ interface HomeState {
   open: boolean;
   windowDimensions: WindowDimensions;
   notifications: Notification[];
+  detailsHash: {[key:string|number]: DetailedGig} | null
 }
 
 class Home extends Component<HomeProps, HomeState> {
@@ -72,6 +74,7 @@ class Home extends Component<HomeProps, HomeState> {
   constructor(props: HomeProps) {
     super(props);
     this.state = {
+      detailsHash: null,
       anchorEl: null,
       isMenuOpen: false,
       isNotificationsOpen: false,

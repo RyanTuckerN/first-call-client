@@ -12,6 +12,7 @@ import {Notification, User} from '../../../types/API.types'
 import GigIndex from "./Gig/GigsIndex";
 import Profile from "./Profile/Profile";
 import Settings from "./Settings/Settings";
+import { RouteOption } from "./Gig/Gig.types";
 
 export interface MainViewProps extends RouteComponentProps {
   functions: HomeFunctions;
@@ -21,13 +22,21 @@ export interface MainViewProps extends RouteComponentProps {
   setHomeState: (key:string, value: any) => void,
 }
 
-interface MainViewState {}
+interface MainViewState {
+  setMainState: any,
+  route: RouteOption
+}
 
 class MainView extends Component<MainViewProps, MainViewState> {
   constructor(props: MainViewProps) {
     super(props);
-    // this.state = { :  };
+    this.state = { route: 'notifications', setMainState: this.setMainState};
   }
+
+  setMainState = (key: string, value: any):void => {
+    const stateObj:any={}
+    stateObj[key]=value
+    this.setState(stateObj)}
 
   componentDidMount() {
     const { fetchOffers, fetchNotifications } = this.props.functions;

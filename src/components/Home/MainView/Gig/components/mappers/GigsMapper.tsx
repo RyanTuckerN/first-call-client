@@ -29,11 +29,7 @@ class GigsMapper extends Component<GigsMapperProps, GigsMapperState> {
             <GigCard
               {...gig}
               userId={this.props.user?.id ?? null}
-              detailsHash={
-                this.props.gigsOrOffers === "gigs"
-                  ? this.props.detailedGigs
-                  : this.props.detailedOffers
-              }
+              detailsHash={{...this.props.detailedGigs, ...this.props.detailedOffers}}
             />
           </Grid>
         ))}
