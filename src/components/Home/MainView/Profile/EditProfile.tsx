@@ -106,6 +106,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
   }
   componentDidUpdate(prevProps: EditProfileProps, prevState: EditProfileState) {
     if (prevState !== this.state) {
+
       this.stateChanged = true;
 
 
@@ -125,6 +126,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
       return;
     }
     this.setState({ snackBarOpen: false });
+    this.stateChanged = false
   };
 
   render() {

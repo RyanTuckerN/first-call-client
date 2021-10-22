@@ -191,7 +191,7 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
           ) : this.state.success === false ? (
             <Alert severity="error">Something went wrong.</Alert>
           ) : (
-            <Alert severity="warning">Passwords don't match.</Alert>
+            <Alert severity="warning">Passwords don&#39;t match.</Alert>
           )}
         </Snackbar>
       </Grid>

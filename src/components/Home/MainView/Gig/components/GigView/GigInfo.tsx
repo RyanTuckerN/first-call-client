@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { GigPageState } from "./GigPage";
 import {
   Grid,
@@ -24,43 +24,60 @@ import {
   LocationOn,
   CalendarToday,
   ChevronRight,
+  CheckCircleOutline,
+  Circle,
+  ErrorOutline,
+  // Circle
 } from "@mui/icons-material";
 import { DetailedGig } from "../../Gig.types";
 import { stringAvatar } from "../../../Settings/Header";
-import { User } from "../../../../../../types/API.types";
+import { Gig, User } from "../../../../../../types/API.types";
 
-const avatarSize: number = 50;
+const avatarSize: number = 35;
 
 interface GigInfoProps extends GigPageState {
   details: DetailedGig;
   setAuth: (b: boolean) => void;
+  toggleEditMode: VoidFunction;
   user: User;
+  gig: Gig;
 }
 
 const GigInfo: React.FunctionComponent<GigInfoProps> = ({
   authorizedView,
   setAuth,
-  date,
-  // description,
-  callStack,
+  toggleEditMode,
   // openCalls,
-  optionalInfo,
+  // description,
   details,
-  payment,
-  location,
+  gig,
   user,
 }) => {
-  const d = new Date(date);
+  const [emptyStack, setEmptyStack] = useState(false);
+  const { date, callStack, optionalInfo, payment, location } = gig;
   const { bandLeader, bandMembers } = details;
+
+  const checkStack = (): void => {
+    setEmptyStack(
+      roles.map((r) => callStack?.stackTable[r].emptyStack).includes(true)
+    );
+  };
+
   useEffect(() => setAuth(user.id === details.bandLeader.id), []);
+  useEffect(checkStack, [callStack]);
+
+  const d = new Date(date);
   const entries = Object.entries(optionalInfo ?? {});
   const roles = Object.keys(callStack?.stackTable ?? {});
-  console.log(entries);
+  const filled = roles.filter((r) => callStack?.stackTable[r].filled);
+  const typoSx = { paddingTop: 3 };
 
   return (
-    <>
-      <Typography variant="h6">Details</Typography>
+    <Grid container display="flex" justifyContent="center">
       <List>
+        <Typography {...typoSx} variant="h6">
+          Details
+        </Typography>
         <ListItem>
           <ListItemAvatar>
             {bandLeader.photo ? (
@@ -111,7 +128,9 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
         {entries.length && (
           <>
             <Divider sx={{ paddingY: 1 }} />
-            <Typography variant="h6">Additional info</Typography>
+            <Typography {...typoSx} variant="h6">
+              Additional Info
+            </Typography>
           </>
         )}
 
@@ -127,26 +146,125 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
           );
         })}
         <Divider sx={{ paddingY: 1 }} />
-        <Typography variant="h6">Band</Typography>
+        <Grid
+          container
+          display="flex"
+          justifyContent="space-between"
+          {...typoSx}
+        >
+          <Grid item display="flex">
+            <Typography variant="h6">Band</Typography>
+            {emptyStack && authorizedView ? (
+              <ErrorOutline
+                color="error"
+                fontSize="small"
+                sx={{ marginLeft: 1 }}
+              />
+            ) : null}
+          </Grid>
+          <Grid item display="flex">
+            {filled.length === roles.length ? (
+              <>
+                <CheckCircleOutline color="success" />
+                <Typography>Band Filled!</Typography>
+              </>
+            ) : (
+              <>{`${filled.length}/${roles.length} filled`}</>
+            )}
+          </Grid>
+        </Grid>
 
-        
-        {roles.length ? (
-          roles.map((r) => (
-            <ListItem>
+        {roles.length && !authorizedView ? (
+          roles.map((r, i) => (
+            <ListItem key={i}>
               <Typography>
                 <strong>{properize(r)}:</strong> &nbsp;{" "}
                 {bandMembers.filter((p) => p.role === r)[0]?.name ??
                   callStack?.stackTable[r]?.confirmed?.name ??
-                  callStack?.stackTable[r]?.confirmed?.email ??
-                  "Not filled"}
+                  callStack?.stackTable[r]?.confirmed?.email ?? (
+                    <i>Not filled</i>
+                  )}
               </Typography>
             </ListItem>
           ))
+        ) : roles.length && authorizedView ? (
+          roles.map((r, i) => {
+            const role = callStack?.stackTable[r];
+            return (
+              <ListItem key={i}>
+                <ListItemIcon>
+                  {role.filled ? (
+                      <IconButton>
+                        <CheckCircleOutline sx={{fontSize: 17}} color="success" />
+                      </IconButton>
+                  ) : role.emptyStack ? (
+                    <IconButton onClick={toggleEditMode} >
+                      <ErrorOutline sx={{fontSize: 17}} color="error" />
+                    </IconButton>
+                  ) : (
+                    null
+                  )}
+                </ListItemIcon>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Typography>
+                      <strong>{properize(r)}:</strong> &nbsp;{" "}
+                      {bandMembers.filter((p) => p.role === r)[0]?.name ??
+                        role?.confirmed?.name ??
+                        role?.confirmed?.email ?? <i>Not filled</i>}
+                    </Typography>
+                  </Grid>
+                  <div>
+                    {!role.filled ? (
+                      !role.onCall && !role.calls?.length ? (
+                        <Typography variant="body2">Empty Stack!</Typography>
+                      ) : (
+                        <>
+                          <Typography display="inline" sx={{ marginLeft: 1 }}>
+                            On call:
+                          </Typography>
+                          <Typography
+                            display="inline"
+                            sx={{ marginLeft: 1 }}
+                            variant="body2"
+                          >
+                            {role.onCall}
+                          </Typography>
+                          <Box>
+                            {role.calls?.length ? (
+                              <Typography
+                                display="inline"
+                                sx={{ marginLeft: 1 }}
+                              >
+                                Stack:
+                              </Typography>
+                            ) : null}
+                            {role.calls?.length
+                              ? role.calls?.map((call: any, i: number) => (
+                                  <Typography
+                                    display="inline"
+                                    sx={{ marginLeft: 1 }}
+                                    variant="body2"
+                                    key={i}
+                                  >
+                                    {call}
+                                  </Typography>
+                                ))
+                              : null}
+                          </Box>
+                        </>
+                      )
+                    ) : null}
+                  </div>
+                </Grid>
+              </ListItem>
+            );
+          })
         ) : (
           <div>Nothing to display!</div>
         )}
       </List>
-    </>
+    </Grid>
   );
 };
 

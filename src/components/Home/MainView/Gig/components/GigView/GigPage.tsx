@@ -9,63 +9,71 @@ import GigHeader from "./GigHeader";
 import { RouteComponentProps, withRouter } from "react-router";
 import GigInfo from "./GigInfo";
 import { DetailedGig } from "../../Gig.types";
-import GigMembers from "./GigMembers";
+import GigEdit from "./GigEdit";
 
 interface RouteParams {
   gigId: string;
 }
 
 interface GigPageProps extends RouteComponentProps<RouteParams> {
-  // detailedGigs: { [key: string]: DetailedGig } | null;
-  // detailedOffers: { [key: string]: DetailedGig } | null;
   detailsHash: { [key: string]: DetailedGig };
   offers: Gig[];
   gigs: Gig[];
-  user: User 
+  user: User;
 }
 
-export interface GigPageState extends Gig {
+export interface GigPageState {
   authorizedView: boolean;
   editMode: boolean;
   gigId: string | number;
   details: DetailedGig | null;
+  gig: Gig | null;
 }
 
 class GigPage extends Component<GigPageProps, GigPageState> {
   constructor(props: GigPageProps) {
     super(props);
     this.state = {
-      ...[...this.props.offers, ...this.props.gigs].filter(
-        (g) => g.id === parseInt(this.props.match.params.gigId)
-      )[0],
+      gig: null,
       gigId: this.props.match.params.gigId,
       details: null,
       authorizedView: false,
       editMode: false,
     };
   }
+  setAuthorizedView = (b: boolean) => this.setState({ authorizedView: b });
+
+  // gigInfoProps = {
+  //   user: this.props.user,
+  //   authorizedView: this.state.authorizedView,
+  //   editMode: this.state.editMode,
+  //   gigId: this.state.gigId,
+  //   setAuth: this.setAuthorizedView
+  // }
 
   toggleEditMode = (): void =>
     this.setState({ editMode: !this.state.editMode });
-
-  setAuthorizedView = (b: boolean) => this.setState({authorizedView: b})
 
   componentDidUpdate(prevProps: GigPageProps, prevState: GigPageState) {
     prevProps.detailsHash !== this.props.detailsHash &&
       this.setState({
         details: this.props.detailsHash[this.state.gigId],
       });
-    
+
     prevProps !== this.props &&
       this.setState({
-        authorizedView: this.state.gigId === this.state.id.toString(),
+        authorizedView: this.state.gig?.ownerId === this.props.user.id,
       });
   }
 
   componentDidMount() {
     this.setState({
-      details: this.props.detailsHash[this.state.gigId],
-      authorizedView: this.state.gigId === this.state.id.toString(),
+      details: this.props.detailsHash[this.props.match.params.gigId],
+      authorizedView: this.state.gigId === this.state.gig?.id.toString(),
+      gig:
+        [...this.props.gigs, ...this.props.offers].filter(
+          (g) => g.id.toString() === this.state.gigId
+        )[0] ?? null,
     });
   }
 
@@ -74,36 +82,32 @@ class GigPage extends Component<GigPageProps, GigPageState> {
     return (
       <Grid container flexDirection="column">
         {/* Hello From GigPage.tsx! */}
-        <GigHeader {...this.state} toggleEditMode={this.toggleEditMode} />
-        {/* <Grid
-          item
-          container
-          xs={12}
-          // padding={1}
-          display="flex"
-          justifyContent="space-between"
-        > */}
-        <Grid item xs={12} sm={6} md={5}>
-          <Paper elevation={12} sx={{ paddingLeft: 3 }}>
-            {this.state.details && !this.state.editMode ? (
+        {this.state.gig && (
+          <GigHeader
+            {...this.state}
+            gig={this.state.gig}
+            toggleEditMode={this.toggleEditMode}
+          />
+        )}
+
+        <Grid item xs={12} md={6} sx={{ marginTop: 3 }}>
+          <Paper elevation={12} sx={{ }}>
+            {this.state.details && !this.state.editMode && this.state.gig ? (
               <GigInfo
-              {...this.props}
-              {...this.state}
+                {...{
+                  user: this.props.user,
+                  authorizedView: this.state.authorizedView,
+                  editMode: this.state.editMode,
+                  gigId: this.state.gigId,
+                  setAuth: this.setAuthorizedView,
+                }}
+                toggleEditMode={this.toggleEditMode}
                 details={this.state.details}
-                setAuth={this.setAuthorizedView}
+                gig={this.state.gig}
               />
-            ) : this.state.details ? (
-              <div>EDIT COMPONENT GO HERE</div>
+            ) : this.state.details && this.state.editMode && this.state.gig ? (
+              <GigEdit {...this.state.gig} details={this.state.details} />
             ) : null}
-            {/* {this.state.details && this.state.callStack ? (
-            <GigMembers
-              {...this.props}
-              {...this.state}
-              callStack={this.state.callStack}
-            />
-          ) : null} */}
-            {/* </Grid> */}
-            {/* <Board /> */}
           </Paper>
         </Grid>
       </Grid>

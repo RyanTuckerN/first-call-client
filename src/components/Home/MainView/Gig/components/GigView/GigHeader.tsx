@@ -10,20 +10,23 @@ import {
 } from "@mui/material";
 import { returnTime } from "../../../../../_helpers/helpers";
 import { Edit, HighlightOff, Save, Settings } from "@mui/icons-material";
+import { Gig } from "../../../../../../types/API.types";
 
 interface GigHeaderProps extends GigPageState {
   toggleEditMode: VoidFunction;
+  gig: Gig
 }
 
 const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
   authorizedView,
-  description,
-  date,
-  photo,
+  gig,
   editMode,
   toggleEditMode,
 }) => {
-  const d = new Date(date);
+  const {description,
+    date,
+    photo} = gig
+    const d = new Date(date);
 
   return (
     <Grid

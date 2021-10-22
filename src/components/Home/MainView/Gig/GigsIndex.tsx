@@ -138,9 +138,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   async componentDidMount() {
     window.addEventListener("resize", this.handleResize);
     await this.fetchOffers();
-    // await this.fetchGigsDetails();
-    // await this.fetchOffersDetails();
-    await this.fetchDetails()
+    if(!this.props.detailsHash)await this.fetchDetails()
   }
   render() {
     const { width } = this.state.windowDimensions;
