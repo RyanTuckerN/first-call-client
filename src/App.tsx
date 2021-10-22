@@ -19,11 +19,10 @@ export interface AppState {
   token: string;
   auth: boolean | null;
   darkModeOn: string;
-  updateProfile: UserSetter;
   toggleDark: ColorSetter;
-  toggleEmail: EmailSetter;
-  setUser: StateSetter;
   setToken: TokenSetter;
+  logout: ()=>void,
+  setAppState: (key: string, value: any) => void;
 }
 
 class App extends Component<AppProps, AppState> {
@@ -34,32 +33,27 @@ class App extends Component<AppProps, AppState> {
       token: "",
       auth: null,
       darkModeOn: localStorage.getItem("darkModeOn") ?? "false",
-      updateProfile: this.updateProfile,
+      logout: this.logout,
       toggleDark: this.toggleDark,
-      toggleEmail: this.toggleEmail,
-      setUser: this.setUser,
       setToken: this.setToken,
+      setAppState: this.setAppState
     };
   }
 
-  setUser = (user: User): void => this.setState({ user });
-
-  updateProfile = async(user: User):Promise<boolean> => {
-    const json = await fetchHandler({
-      url: `${API_URL}/user/profile`,
-      method: "PUT",
-      auth: this.state.token,
-      body: user ,
-    });
-    // console.log(json)
-    json.user && this.setUser(json.user); 
-    return json.success ? true : false 
+  setAppState = (key: string, value: any):void =>{
+    const stateObj:any={}
+    stateObj[key]=value
+    this.setState(stateObj)
   }
 
+  setUser = (user: User): void => this.setState({ user });
+  
   setToken = (token: string): void => {
     localStorage.setItem("token", token);
     this.setState({ token });
   };
+  
+  logout = (): void => this.setState({ user: null, token: "", auth: null });
 
   toggleDark = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { darkModeOn } = this.state;
@@ -71,18 +65,6 @@ class App extends Component<AppProps, AppState> {
     );
   };
 
-  toggleEmail = async (): Promise<void> => {
-    const emails = !this.state.user?.emails;
-    const json = await fetchHandler({
-      url: `${API_URL}/user/profile`,
-      method: "PUT",
-      auth: this.state.token,
-      body: { emails },
-    });
-    this.setUser(json.user);
-  };
-
-  logout = (): void => this.setState({ user: null, token: "", auth: null });
 
   authenticate = async (token: string): Promise<void> => {
     const json: UserAuth = await fetchHandler({
@@ -97,7 +79,7 @@ class App extends Component<AppProps, AppState> {
     }
   };
 
-  componentDidMount(): void {
+  componentDidMount() {
     const token: string | null = localStorage.getItem("token");
     token ? this.authenticate(token) : this.setState({ auth: false });
   }
@@ -122,7 +104,7 @@ class App extends Component<AppProps, AppState> {
               </div> */}
               {/* replace null with loading screen if load times increase! */}
               {typeof this.state.auth === "boolean" ? (
-                <Home logout={this.logout} {...this.state} />
+                <Home {...this.state} />
               ) : null}
             </UserCtx.Provider>
           </ThemeProvider>

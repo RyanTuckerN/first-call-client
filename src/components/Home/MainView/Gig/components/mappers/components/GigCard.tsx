@@ -26,8 +26,9 @@ import { LocationOn, AttachMoney, Event } from "@mui/icons-material";
 import "../../../Gig.css";
 
 interface GigProps extends Gig {
-  detailsHash: { [key: string]: DetailedGig } | null ;
+  detailsHash: { [key: string]: DetailedGig }  ;
   userId: number | null;
+  user: User
 }
 
 const GigCard: FunctionComponent<GigProps> = ({
@@ -40,11 +41,12 @@ const GigCard: FunctionComponent<GigProps> = ({
   payment,
   location,
   detailsHash,
+  user
 }) => {
   const gigDate: Date = new Date(date);
   const avatarSize: number = 50;
 
-  const bandLeader  = detailsHash? detailsHash[id]?.bandLeader : null;
+  const bandLeader = detailsHash[id]?.bandLeader ?? user;
 
   const defaultAvatarProps: any = {
     src: bandLeader?.photo,

@@ -9,15 +9,19 @@ import {
   IconButton,
 } from "@mui/material";
 import { returnTime } from "../../../../../_helpers/helpers";
-import { Settings } from "@mui/icons-material";
+import { Edit, HighlightOff, Save, Settings } from "@mui/icons-material";
 
-interface GigHeaderProps extends GigPageState {}
+interface GigHeaderProps extends GigPageState {
+  toggleEditMode: VoidFunction;
+}
 
 const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
   authorizedView,
   description,
   date,
   photo,
+  editMode,
+  toggleEditMode,
 }) => {
   const d = new Date(date);
 
@@ -29,7 +33,7 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
       // spacing={2}
       letterSpacing={1.5}
       id="gig-header"
-      sx={{ background: photo ?? "#bada5540", padding: 1.5,  paddingBottom: 2 }}
+      sx={{ background: photo ?? "#bada5540", padding: 1.5, paddingBottom: 2 }}
     >
       <Grid item xs={11}>
         <Typography
@@ -47,8 +51,14 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
           justifyContent={"flex-end"}
           alignItems="flex-start"
         >
-          <IconButton>
-            <Settings fontSize="large" />
+          {editMode && (
+            //save updates to gig
+            <IconButton>
+              <Save />
+            </IconButton>
+          )}
+          <IconButton onClick={toggleEditMode}>
+            {editMode ? <HighlightOff /> : <Edit />}
           </IconButton>
         </Grid>
       )}

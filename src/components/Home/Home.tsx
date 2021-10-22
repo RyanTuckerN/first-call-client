@@ -52,6 +52,9 @@ import { DetailedGig } from "./MainView/Gig/Gig.types";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
+  setAppState: (key: string, value: any) => void;
+  setToken: (token: string)=>void;
+  token: string;
   auth: boolean | null;
   user: User | null
 }
@@ -93,8 +96,7 @@ class Home extends Component<HomeProps, HomeState> {
     this.setState(stateObj)
   }
 
-  functions: HomeFunctions = {
-    fetchNotifications: async (): Promise<any> => {
+  fetchNotifications =  async (): Promise<void> => {
       const json = await fetchHandler({
         url: `${API_URL}/user/notifications`,
         auth: localStorage.getItem("token") ?? "",
@@ -103,16 +105,15 @@ class Home extends Component<HomeProps, HomeState> {
         this.setState({
           notifications: json.notifications,
         });
-    },
+  }
 
-    fetchOffers: async (): Promise<any> => {
-      const json = await fetchHandler({
-        url: `${API_URL}/user/offers`,
-        auth: localStorage.getItem("token") ?? "",
-      });
-      // console.log(json);
-    },
-  };
+    // fetchOffers: async (): Promise<any> => {
+    //   const json = await fetchHandler({
+    //     url: `${API_URL}/user/offers`,
+    //     auth: localStorage.getItem("token") ?? "",
+    //   });
+    //   this.setState({})
+    // },
 
   handleResize = (): void =>
     this.setState({
@@ -328,12 +329,13 @@ class Home extends Component<HomeProps, HomeState> {
                   <Respond />
                 </Route>
                 <Route path="/main">
-                  <MainView
-                    functions={this.functions}
+                  {this.props.user ? <MainView
+                    {...this.props} {...this.state}
+                    fetchNotifications={this.fetchNotifications}
                     notifications={this.state.notifications}
                     setHomeState={this.setHomeState}
-                    {...this.props}
-                  />
+                    user={this.props.user}
+                  /> : null}
                 </Route>
 
                 <Route path="/welcome">
@@ -341,7 +343,7 @@ class Home extends Component<HomeProps, HomeState> {
                 </Route>
 
                 <Route path="/auth">
-                  <Auth />
+                  <Auth {...this.props} />
                 </Route>
               </Switch>
             </Paper>

@@ -1,6 +1,12 @@
 import * as React from "react";
 import { Component } from "react";
-import { withRouter, Link, Route, Switch, RouteComponentProps } from "react-router-dom";
+import {
+  withRouter,
+  Link,
+  Route,
+  Switch,
+  RouteComponentProps,
+} from "react-router-dom";
 import { Gig, Notification, User } from "../../../../types/API.types";
 import API_URL from "../../../_helpers/environment";
 import { UserCtx } from "../../../Context/MainContext";
@@ -8,29 +14,31 @@ import { fetchHandler } from "../../../_helpers/fetchHandler";
 import GigInvite from "./components/GigInvite";
 import GigPage from "./components/GigView/GigPage";
 import GigDashBoard from "./components/GigDashboard";
-import { DetailedGig, NotificationsHash } from "./Gig.types";
+import { DetailedGig, NotificationsHash, RouteOption } from "./Gig.types";
 import { WindowDimensions } from "../../Home.types";
 import GigWelcome from "./components/GigWelcome";
 import { Button } from "@mui/material";
 import { BottomNav } from "./components/Navigation";
 
 interface GigIndexProps extends RouteComponentProps {
-  notifications: Notification[];
-  user: User | null;
+  notifications: Notification[]; //Home State
+  user: User | null; //App State
+  dashboardRoute: RouteOption; //Main state
+  detailsHash: { [key: string]: DetailedGig } | null;
+  setAppState: (key: string, value: any) => void;
   setHomeState: (key: string, value: any) => void;
+  setMainState: (key: string, value: any) => void;
 }
 
 export interface GigIndexState {
   offers: Gig[];
   gigs: Gig[];
-  detailedGigs: { [key: string]: DetailedGig } | null;
-  detailedOffers: { [key: string]: DetailedGig } | null;
   notifications: Notification[];
   notificationsHash: NotificationsHash;
   user: User | null;
   windowDimensions: WindowDimensions;
   messageCode: number | null;
-  setHomeState: (key: string, value: any) => void;
+  // setHomeState: (key: string, value: any) => void;
   setGigState: (key: string, value: any) => void;
 }
 
@@ -42,8 +50,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     this.state = {
       offers: [],
       gigs: this.props.user?.gigs ?? [],
-      detailedGigs: null,
-      detailedOffers: null,
+      // detailedGigs: null,
+      // detailedOffers: null,
       notifications: this.props.notifications,
       notificationsHash: this.notificationHash(this.props.notifications),
       user: this.props.user,
@@ -52,7 +60,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
         height: window.innerHeight,
         width: window.innerWidth,
       },
-      setHomeState: this.props.setHomeState,
+      // setHomeState: this.props.setHomeState,
       setGigState: this.setGigState,
     };
   }
@@ -67,29 +75,31 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     return success;
   };
 
-  fetchGigsDetails = async () => {
-    const gigsHash: any = {};
+  fetchDetails = async () => {
+    const hash: any = {...this.props.detailsHash};
     this.state.gigs.forEach(async (gig) => {
       const info = await fetchHandler({
         url: `${API_URL}/gig/${gig.id}`,
         auth: localStorage.getItem("token") ?? "",
       });
-      gigsHash[gig.id] = info.gigInfo;
+      console.log('gig', info)
+      hash[gig.id] = info.gigInfo;
     });
-    this.setState({ detailedGigs: gigsHash });
-  };
 
-  fetchOffersDetails = async () => {
-    const offersHash: any = {};
     this.state.offers.forEach(async (gig) => {
       const info = await fetchHandler({
         url: `${API_URL}/gig/${gig.id}`,
         auth: localStorage.getItem("token") ?? "",
       });
-      offersHash[gig.id] = info.gigInfo;
+      console.log('offer', info)
+      hash[gig.id] = info.gigInfo;
     });
-    this.setState({ detailedOffers: offersHash });
+
+    // this.setState({ detailedGigs: hash });
+    this.props.setHomeState("detailsHash", hash);
   };
+  
+  
 
   setGigState = (key: string, value: any) => {
     const obj: any = {};
@@ -128,19 +138,20 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   async componentDidMount() {
     window.addEventListener("resize", this.handleResize);
     await this.fetchOffers();
-    await this.fetchGigsDetails();
-    await this.fetchOffersDetails();
+    // await this.fetchGigsDetails();
+    // await this.fetchOffersDetails();
+    await this.fetchDetails()
   }
   render() {
     const { width } = this.state.windowDimensions;
 
     return (
       <div>
-        <Route exact path='/main' >
-          <GigWelcome {...this.state} />
+        <Route exact path="/main">
+          {this.props.detailsHash ? <GigWelcome {...this.props} {...this.state} detailsHash={this.props.detailsHash} /> : null}
         </Route>
-        <Route exact path='/main/gig/:gigId'>  
-          <GigPage {...this.state}/>
+        <Route exact path="/main/gig/:gigId">
+          {this.props.detailsHash && this.state.user ? <GigPage {...this.props}{...this.state} user={this.state.user} detailsHash={this.props.detailsHash} />:null}
         </Route>
         {/* <GigCreate {...this.state} />
         <GigInvite {...this.state} />

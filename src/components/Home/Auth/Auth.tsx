@@ -15,7 +15,10 @@ import { fetchHandler } from "../../_helpers/fetchHandler";
 import { properize } from "../../_helpers/helpers";
 import { UserCtx } from "../../Context/MainContext";
 
-interface AuthProps extends RouteComponentProps {}
+interface AuthProps extends RouteComponentProps {
+  setToken: (token: string)=>void,
+  setAppState: (key: string, value: any)=>void
+}
 
 interface AuthState {
   email: string;
@@ -43,7 +46,8 @@ class Auth extends Component<AuthProps, AuthState> {
 
     handleLogin: async (e: React.FormEvent<HTMLInputElement>) => {
       const { email, password } = this.state;
-      const { setUser, setToken } = this.context;
+      const { setToken, setAppState } = this.props;
+
       e.preventDefault();
       if (!email || !password) {
         alert("please fill out all fields!");
@@ -61,14 +65,15 @@ class Auth extends Component<AuthProps, AuthState> {
       }
       
       setToken(json.sessionToken);
-      setUser(json.user);
+      setAppState('user', json.user);
       this.props.history.push('/main')
       alert(json.message);
 
     },
     handleSignup: async (e: React.FormEvent<HTMLInputElement>) => {
       const { email, password, first, last } = this.state;
-      const { setUser, setToken } = this.context;
+      const { setToken, setAppState } = this.props;
+
       e.preventDefault();
       if (!email || !password || !first || !last) {
         alert("please fill out all fields!");
@@ -89,7 +94,7 @@ class Auth extends Component<AuthProps, AuthState> {
         return
       }
       setToken(json.sessionToken);
-      setUser(json.user);
+      setAppState('user', json.user);
       this.props.history.push('/main')
       alert(json.message);
     },
