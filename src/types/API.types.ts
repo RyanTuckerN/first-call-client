@@ -40,6 +40,7 @@ export interface CallStack {
   createdAt?: string;
   updatedAt?: string;
 }
+
 export interface Post {
   id: number;
   author: number;

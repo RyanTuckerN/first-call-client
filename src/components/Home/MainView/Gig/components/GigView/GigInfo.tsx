@@ -39,21 +39,19 @@ const avatarSize: number = 35;
 
 interface GigInfoProps extends GigPageState {
   details: DetailedGig;
-  setAuth: (b: boolean) => void;
-  toggleEditMode: VoidFunction;
   user: User;
   gig: Gig;
+  toggleEditMode: VoidFunction;
+  setAuth: (b: boolean) => void;
 }
 
 const GigInfo: React.FunctionComponent<GigInfoProps> = ({
   authorizedView,
-  setAuth,
-  toggleEditMode,
-  // openCalls,
-  // description,
   details,
   gig,
   user,
+  setAuth,
+  toggleEditMode,
 }) => {
   const [emptyStack, setEmptyStack] = useState(false);
   const { date, callStack, optionalInfo, payment, location } = gig;

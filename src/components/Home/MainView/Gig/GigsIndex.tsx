@@ -19,6 +19,7 @@ import { WindowDimensions } from "../../Home.types";
 import GigWelcome from "./components/GigWelcome";
 import { Button } from "@mui/material";
 import { BottomNav } from "./components/Navigation";
+import { AppState } from "../../../../App";
 
 interface GigIndexProps extends RouteComponentProps {
   notifications: Notification[]; //Home State
@@ -45,7 +46,7 @@ export interface GigIndexState {
 class GigIndex extends Component<GigIndexProps, GigIndexState> {
   static contextType = UserCtx;
 
-  constructor(props: GigIndexProps, context: any) {
+  constructor(props: GigIndexProps, context: AppState) {
     super(props, context);
     this.state = {
       offers: [],
@@ -68,7 +69,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   fetchOffers = async (): Promise<boolean> => {
     const json = await fetchHandler({
       url: `${API_URL}/user/offers`,
-      auth: localStorage.getItem("token") ?? "",
+      auth: localStorage.getItem("token") ?? this.context.token ?? '',
     });
     const { offers, message, success } = json;
     success ? this.setState({ offers }) : console.log(message);
@@ -80,7 +81,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     const hash = await fetchHandler({
       method: "post",
       url: `${API_URL}/gig/details`,
-      auth: localStorage.getItem("token") ?? "",
+      auth: localStorage.getItem("token") ?? this.context.token ?? '',
       body,
     });
     this.props.setHomeState("detailsHash", hash);

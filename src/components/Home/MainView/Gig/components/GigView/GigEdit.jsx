@@ -29,69 +29,61 @@ import {
   Circle,
   ErrorOutline,
   Add,
+  Backspace,
   // Circle
 } from "@mui/icons-material";
-import DateTimePicker from "react-datetime-picker";
-import { addHours } from "../../../../../_helpers/helpers";
+// import DateTimePicker from "react-datetime-picker";
+import { addHours, properizeNoTrim } from "../../../../../_helpers/helpers";
 import "../../Gig.css";
 import { Box } from "@mui/system";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import API_URL from "../../../../../_helpers/environment";
-// import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import { UserCtx } from "../../../../../Context/MainContext";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DateAdapter from "@mui/lab/AdapterMoment";
+// import moment from 'moment'
+// import DateAdapter from '@mui/lab/AdapterDayjs';
+// import DateAdapter from '@mui/lab/AdapterLuxon';
+import DateTimePicker from "@mui/lab/DateTimePicker";
 
-// interface GigEditProps extends Gig {
-//   details: DetailedGig;
-// }
-
-// interface GigEditState {
-//   id: number;
-//   ownerId: number;
-//   description: string;
-//   location: string;
-//   date: string; //date format
-//   payment: number;
-//   token: string; //uuid
-//   openCalls: string[];
-//   photo?: string;
-//   optionalInfo?: { [key: string]: string };
-//   createdAt?: string;
-//   updatedAt?: string;
-//   posts?: Post[];
-//   callStack?: CallStack;
-//   optionalKey?: string;
-//   optionalVal?: string;
-// }
-
-// class GigEdit extends Component<GigEditProps, GigEditState> {
-//   constructor(props: GigEditProps) {
-//     super(props);
-//     this.state = { ...this.props };
-//   }
 class GigEdit extends Component {
-  constructor(props) {
-    super(props);
+  static contextType = UserCtx;
+
+  constructor(props, context) {
+    super(props, context);
     this.state = {
       // ...this.props,
+      length: this.props.length ?? 1,
       gigId: this.props.id,
       date: this.props.date ?? "",
       description: this.props.description ?? "",
       payment: this.props.payment ?? 0,
       location: this.props.location ?? "",
       photo: this.props.photo ?? "",
-      dateValue: new Date(this.props.date ?? ""),
+      dateVal: new Date(this.props.date),
       optionalKey: "",
       optionalVal: "",
       optionalInfo: this.props.optionalInfo ?? {},
+      // testDate: moment(new Date())
     };
   }
 
-  handleDate = (val) => this.setState({ dateValue: val });
-  handleTitle = (e) => this.setState({ description: e.target.value });
-  handlePay = (e) => this.setState({ payment: e.target.value });
-  handleLocation = (e) => this.setState({ location: e.target.value });
-  handleKey = (e) => this.setState({ optionalKey: e.target.value });
-  handleVal = (e) => this.setState({ optionalVal: e.target.value });
-  handleOptional = () => {
+  handleTitle = (e) =>
+    this.setState({ description: properizeNoTrim(e.target.value) });
+  handlePay = (e) =>
+    this.setState({ payment: e.target.value < 1 ? 50 : e.target.value });
+  handleLength = (e) =>
+    this.setState({ length: e.target.value < 0 ? 1 : e.target.value });
+  handleDate = (val) =>
+    this.setState({ date: new Date(val).toISOString(), dateVal: val });
+  handleLocation = (e) =>
+    this.setState({ location: properizeNoTrim(e.target.value ?? "") });
+  handleKey = (e) =>
+    this.setState({ optionalKey: properizeNoTrim(e.target.value ?? "") });
+  handleVal = (e) =>
+    this.setState({ optionalVal: properizeNoTrim(e.target.value) ?? "" });
+  handleOptional = (e) => {
+    e.preventDefault();
     if (!this.state.optionalVal || !this.state.optionalKey) return;
     this.setState({
       optionalInfo: {
@@ -101,18 +93,28 @@ class GigEdit extends Component {
       optionalKey: "",
       optionalVal: "",
     });
+    this.optForm.focus();
+  };
+  handleOptionalDelete = (key) => {
+    const obj = this.state.optionalInfo;
+    console.log(obj);
+    console.log(key);
+    delete obj[key];
+    console.log(obj);
+    this.setState({ optionalInfo: obj });
   };
 
   handleSave = async () => {
-    const { description, date, payment, location, optionalInfo, gigId } = this.state;
+    const { description, date, payment, location, optionalInfo, gigId } =
+      this.state;
     const body = { description, date, payment, location, optionalInfo };
     const json = await fetchHandler({
       url: `${API_URL}/gig/${gigId}`,
       method: "put",
       body,
-      auth: localStorage.getItem("token" ?? ""),
+      auth: localStorage.getItem("token" ?? this.context.token ?? ""),
     });
-    console.log(json);
+    alert(json.message);
   };
 
   render() {
@@ -123,25 +125,34 @@ class GigEdit extends Component {
     return (
       <>
         {/* {width<900 && <Link href='#band'>Band</Link>} */}
-        <Grid container spacing={0} padding={2}>
+        <Grid
+          container
+          spacing={1}
+          padding={2}
+          display="flex"
+          justifyContent="space-between"
+        >
           <Grid item xs={12}>
             <Typography variant="h4">Details</Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">Title</Typography>
+          <Grid item xs={12} sm={9} lg={12}>
+            {/* <Typography variant="h6">Title</Typography> */}
 
             <TextField
               fullWidth
-              // placeholder="Wedding gig, Corporate event, etc... "
+              label="Title"
+              placeholder="Add a short, clear title"
               onChange={this.handleTitle}
               value={this.state.description}
             />
           </Grid>
-          <Grid item xs={12} sm={5}>
-            <Typography variant="h6">Pay</Typography>
+          <Grid item xs={12} sm={3}>
+            {/* <Typography variant="h6">Pay</Typography> */}
             {/* <AttachMoney /> */}
             <TextField
               type="number"
+              fullWidth
+              label="Pay"
               onChange={this.handlePay}
               value={this.state.payment}
               InputProps={{
@@ -153,47 +164,52 @@ class GigEdit extends Component {
               }}
             />
           </Grid>
-          <Grid item xs={12} sm={7}>
-            <Typography variant="h6">Date and Time</Typography>
-            {/* <CalendarToday /> */}
-            {/* <TextField type="datetime-local" /> */}
-            <DateTimePicker
-              value={this.state.dateValue}
-              onChange={this.handleDate}
-              minDate={new Date()}
-              disableClock={true}
-              // hourPlaceholder={19}
-              required={true}
-              className="datetime-picker"
-              clearIcon={null}
-            />
-            {/* <div style={{width: '100%'}}> */}
-            {/* <input
-                value={this.state.dateValue}
-                onChange={this.onChange}
+          <Grid item xs={12} sm={6}>
+            {/* <Typography variant="h6">Date and Time</Typography> */}
+            <LocalizationProvider dateAdapter={DateAdapter}>
+              <DateTimePicker
+                label="Date and Time"
+                fullWidth
+                disablePast
+                ampmInClock={true}
+                value={this.state.dateVal}
+                onChange={this.handleDate}
+                // onOpen
                 // minDate={new Date()}
-                // disableClock={true}
-                // hourPlaceholder={19}
-                required={true}
-                className='datetime-picker'
-                // clearIcon={null}
-                type='datetime-local'
-                min={new Date().toTimeString()}
-              /> */}
-            {/* </div> */}
+                renderInput={(params) => <TextField fullWidth {...params} />}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12} sm={6} lg={3}>
+            {/* <Typography variant="h6">Pay</Typography> */}
+            {/* <AttachMoney /> */}
+            <TextField
+              fullWidth
+              type="number"
+              label="Length(hrs)"
+              // placeholder="2"
+              onChange={this.handleLength}
+              value={this.state.length}
+              InputProps={{
+                endAdornment: <></>,
+              }}
+            />
           </Grid>
 
           <Grid item xs={12}>
-            <Typography variant="h6">Location</Typography>
+            {/* <Typography variant="h6">Location</Typography> */}
             {/* <LocationOn /> */}
             <TextField
               fullWidth
-              placeholder='Address or venue, eg. "Biltwell Event Center"'
+              label="Location"
+              placeholder="Include a place or address"
               onChange={this.handleLocation}
               value={this.state.location}
             />
           </Grid>
-          <Typography variant="h6">Optional Details</Typography>
+          <Grid item xs={12}>
+            <Typography variant="h5">Optional Details</Typography>
+          </Grid>
           <Grid
             container
             justifyContent="space-between"
@@ -202,34 +218,76 @@ class GigEdit extends Component {
             item
             xs={12}
           >
-            {keys.map((key, i) => (
-              <div key={i}>
-                <Typography variant="body1">
-                  <strong>{key}:</strong> {optionalInfo[key]}
-                </Typography>
-              </div>
-            ))}
-            <Box display="flex" flexDirection="row">
-              <IconButton onClick={this.handleOptional}>
-                <Add />
-              </IconButton>
-              <Grid item xs={3}>
-                <TextField
-                  onChange={this.handleKey}
-                  value={this.state.optionalKey}
-                  placeholder="Meal"
-                />
-              </Grid>
-              <Typography variant="h4">:</Typography>
-              <Grid item xs={6}>
-                <TextField
-                  onChange={this.handleVal}
-                  value={this.state.optionalVal}
-                  fullWidth
-                  placeholder="Surf and turf"
-                />
-              </Grid>
-            </Box>
+            <Grid
+              item
+              container
+              xs={12}
+              display="flex"
+              flexDirection="row"
+              justifyContent="space-between"
+            >
+              {keys.map((cat, i) => (
+                <React.Fragment key={i}>
+                  <Grid item xs={3}>
+                    <Typography variant="body1">
+                      <strong>{properizeNoTrim(cat)}</strong>
+                    </Typography>
+                  </Grid>
+                  <Grid
+                    item
+                    xs={8}
+                    display="flex"
+                    justifyContent="space-between"
+                  >
+                    <Typography variant="body1">
+                      {properizeNoTrim(optionalInfo[cat])}
+                    </Typography>
+                    <IconButton onClick={() => this.handleOptionalDelete(cat)}>
+                      <Backspace color="error" />
+                    </IconButton>
+                  </Grid>
+                </React.Fragment>
+              ))}
+              <form
+                action="submit"
+                onSubmit={this.handleOptional}
+                ref={(i) => (this.optForm = i)}
+              >
+                <Grid
+                  container
+                  display="flex"
+                  flexDirection="row"
+                  justifyContent="space-between"
+                >
+                  <Grid item xs={3}>
+                    <TextField
+                      ref={(i) => (this.optForm = i)}
+                      label="Category"
+                      onChange={this.handleKey}
+                      value={this.state.optionalKey}
+                      placeholder="Meal"
+                    />
+                  </Grid>
+                  {/* <Typography variant="h4">:</Typography> */}
+                  <Grid item xs={8}>
+                    <TextField
+                      label="Info"
+                      onChange={this.handleVal}
+                      value={this.state.optionalVal}
+                      fullWidth
+                      placeholder="Surf and turf"
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton type="submit">
+                            <Add />
+                          </IconButton>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              </form>
+            </Grid>
           </Grid>
           <Button onClick={this.handleSave}>Save</Button>
           <div id="band">

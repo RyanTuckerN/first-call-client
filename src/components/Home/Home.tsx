@@ -50,6 +50,7 @@ import API_URL from "../_helpers/environment";
 import { HomeFunctions, WindowDimensions } from "./Home.types";
 import { Paper } from "@mui/material";
 import { DetailedGig } from "./MainView/Gig/Gig.types";
+import { AppState } from "../../App";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
@@ -75,8 +76,8 @@ class Home extends Component<HomeProps, HomeState> {
   menuId: string = "primary-account-menu";
   appBarHeight: number = 75;
 
-  constructor(props: HomeProps) {
-    super(props);
+  constructor(props: HomeProps, context: AppState) {
+    super(props, context);
     this.state = {
       detailsHash: null,
       anchorEl: null,
@@ -100,7 +101,7 @@ class Home extends Component<HomeProps, HomeState> {
   fetchNotifications =  async (): Promise<void> => {
       const json = await fetchHandler({
         url: `${API_URL}/user/notifications`,
-        auth: localStorage.getItem("token") ?? "",
+        auth: localStorage.getItem("token") ?? this.context.token ?? '',
       });
       json.auth &&
         this.setState({

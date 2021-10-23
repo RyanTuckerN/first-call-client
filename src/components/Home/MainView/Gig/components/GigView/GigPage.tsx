@@ -6,11 +6,12 @@ import { Gig, User } from "../../../../../../types/API.types";
 import { GigIndexState } from "../../GigsIndex";
 import Board from "./Board";
 import GigHeader from "./GigHeader";
-import { RouteComponentProps, withRouter } from "react-router";
 import GigInfo from "./GigInfo";
-import { DetailedGig } from "../../Gig.types";
 import GigEdit from "./GigEdit";
+import { RouteComponentProps, withRouter } from "react-router";
+import { DetailedGig } from "../../Gig.types";
 import { WindowDimensions } from "../../../../Home.types";
+import CallStackCreate from "../../CallStack/CallStackCreate";
 
 interface RouteParams {
   gigId: string;
@@ -21,7 +22,7 @@ interface GigPageProps extends RouteComponentProps<RouteParams> {
   offers: Gig[];
   gigs: Gig[];
   user: User;
-  windowDimensions: WindowDimensions
+  windowDimensions: WindowDimensions;
 }
 
 export interface GigPageState {
@@ -80,10 +81,9 @@ class GigPage extends Component<GigPageProps, GigPageState> {
   }
 
   render() {
-    
     // console.log(this.props.match.params)
     return (
-      <Grid container flexDirection="column">
+      <Grid container >
         {/* Hello From GigPage.tsx! */}
         {this.state.gig && (
           <GigHeader
@@ -95,25 +95,32 @@ class GigPage extends Component<GigPageProps, GigPageState> {
 
         <Grid item xs={12} md={6} sx={{ marginTop: 3 }}>
           {/* <Paper elevation={12} sx={{ }}> */}
-            {this.state.details && !this.state.editMode && this.state.gig ? (
-              <GigInfo
-                {...{
-                  user: this.props.user,
-                  authorizedView: this.state.authorizedView,
-                  editMode: this.state.editMode,
-                  gigId: this.state.gigId,
-                  setAuth: this.setAuthorizedView,
-                  windowDimensions: this.props.windowDimensions
-                }}
-                toggleEditMode={this.toggleEditMode}
-                details={this.state.details}
-                gig={this.state.gig}
-              />
-              ) : this.state.details && this.state.editMode && this.state.gig ? (
-                <GigEdit {...this.state.gig} details={this.state.details} windowDimensions={this.props.windowDimensions} />
-                ) : null}
+          {this.state.details && !this.state.editMode && this.state.gig ? (
+            <GigInfo
+              {...{
+                user: this.props.user,
+                authorizedView: this.state.authorizedView,
+                editMode: this.state.editMode,
+                gigId: this.state.gigId,
+                setAuth: this.setAuthorizedView,
+                windowDimensions: this.props.windowDimensions,
+              }}
+              toggleEditMode={this.toggleEditMode}
+              details={this.state.details}
+              gig={this.state.gig}
+            />
+          ) : this.state.details && this.state.editMode && this.state.gig ? (
+            <GigEdit
+              {...this.state.gig}
+              details={this.state.details}
+              windowDimensions={this.props.windowDimensions}
+            />
+          ) : null}
           {/* </Paper> */}
-                </Grid>
+        </Grid>
+        <Grid item xs={12} md={6} sx={{ marginTop: 3 }}>
+          <CallStackCreate />
+        </Grid>
       </Grid>
     );
   }

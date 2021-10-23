@@ -28,6 +28,7 @@ import Header from "./Header";
 import Swal from "sweetalert2";
 import "./Settings.css";
 import EditProfile from "../Profile/EditProfile";
+import { AppState } from "../../../../App";
 
 interface SettingsProps extends RouteComponentProps {
   setAppState: any,
@@ -41,7 +42,7 @@ class Settings extends Component<SettingsProps, SettingsState> {
   static contextType = UserCtx;
   static header: string = "body1";
 
-  constructor(props: SettingsProps, context: any) {
+  constructor(props: SettingsProps, context: AppState) {
     super(props, context);
     this.state = { photo: this.context.user?.photo ?? "" };
   }
@@ -51,7 +52,7 @@ class Settings extends Component<SettingsProps, SettingsState> {
     const json = await fetchHandler({
       url: `${API_URL}/user/profile`,
       method: "PUT",
-      auth: this.props.token,
+      auth: localStorage.getItem('token') ?? this.context.token ?? '',
       body: { emails },
     });
     this.props.setAppState('user', json.user);
@@ -61,7 +62,7 @@ class Settings extends Component<SettingsProps, SettingsState> {
     const json = await fetchHandler({
       url: `${API_URL}/user/profile`,
       method: "PUT",
-      auth: localStorage.getItem('token') ?? '',
+      auth: localStorage.getItem('token') ?? this.context.token ?? '',
       body: user ,
     });
     // console.log(json)

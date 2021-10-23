@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 import { Notification } from "../../../types/API.types";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
@@ -19,6 +20,8 @@ import {
 } from "@mui/icons-material";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import API_URL from "../../_helpers/environment";
+import { AppState } from "../../../App";
+import { UserCtx } from "../../Context/MainContext";
 
 interface NotificationsProps {
   notifications: Notification[];
@@ -29,6 +32,8 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
   notifications,
   setHomeState
 }) => {
+
+  const context = useContext(UserCtx)
   const invite = "#2374D2";
   const hash: any = {
     "100": { color: invite, icon: <InsertInvitationOutlined /> },
@@ -50,7 +55,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
         const json = await fetchHandler({
           url: `${API_URL}/notification/${n.id}`,
           method: "delete",
-          auth: localStorage.getItem('token') ?? ''
+          auth: localStorage.getItem('token') ?? context?.token ?? ''
         });
         alert(json.message)
         json.success && setHomeState('notifications', json.notifications)

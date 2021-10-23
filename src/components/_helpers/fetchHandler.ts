@@ -24,6 +24,7 @@ interface FetchOptions {
  * @param options.body ?: {key: value}
  * @returns Promise: json response
  */
+
 export async function fetchHandler(options: FetchOptions): Promise<any> {
   const { url, method, body, auth } = options;
 

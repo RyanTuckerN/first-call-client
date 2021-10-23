@@ -3,7 +3,6 @@ import { GigIndexState } from "../../GigsIndex";
 import { UserCtx } from "../../../../../Context/MainContext";
 import { Grid } from "@mui/material";
 import GigCard from "./components/GigCard";
-import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import API_URL from "../../../../../_helpers/environment";
 import { DetailedGig } from "../../Gig.types";
 import { User } from "../../../../../../types/API.types";
