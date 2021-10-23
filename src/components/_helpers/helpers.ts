@@ -28,6 +28,7 @@
  * @returns {Date} javascript date object + hours
  */
  export const addHours = (d: Date, h: number): Date => {
+   
   d.setTime(d.getTime() + h * 60 * 60 * 1000);
   return d;
 };

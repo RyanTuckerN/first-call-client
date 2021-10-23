@@ -76,30 +76,15 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   };
 
   fetchDetails = async () => {
-    const hash: any = {...this.props.detailsHash};
-    this.state.gigs.forEach(async (gig) => {
-      const info = await fetchHandler({
-        url: `${API_URL}/gig/${gig.id}`,
-        auth: localStorage.getItem("token") ?? "",
-      });
-      console.log('gig', info)
-      hash[gig.id] = info.gigInfo;
+    const body = [...this.state.gigs, ...this.state.offers].map((g) => g.id);
+    const hash = await fetchHandler({
+      method: "post",
+      url: `${API_URL}/gig/details`,
+      auth: localStorage.getItem("token") ?? "",
+      body,
     });
-
-    this.state.offers.forEach(async (gig) => {
-      const info = await fetchHandler({
-        url: `${API_URL}/gig/${gig.id}`,
-        auth: localStorage.getItem("token") ?? "",
-      });
-      console.log('offer', info)
-      hash[gig.id] = info.gigInfo;
-    });
-
-    // this.setState({ detailedGigs: hash });
     this.props.setHomeState("detailsHash", hash);
   };
-  
-  
 
   setGigState = (key: string, value: any) => {
     const obj: any = {};
@@ -138,7 +123,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   async componentDidMount() {
     window.addEventListener("resize", this.handleResize);
     await this.fetchOffers();
-    if(!this.props.detailsHash)await this.fetchDetails()
+    if (!this.props.detailsHash) await this.fetchDetails();
   }
   render() {
     const { width } = this.state.windowDimensions;
@@ -146,10 +131,24 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     return (
       <div>
         <Route exact path="/main">
-          {this.props.detailsHash ? <GigWelcome {...this.props} {...this.state} detailsHash={this.props.detailsHash} /> : null}
+          {this.props.detailsHash ? (
+            <GigWelcome
+              {...this.props}
+              {...this.state}
+              detailsHash={this.props.detailsHash}
+            />
+          ) : null}
         </Route>
         <Route exact path="/main/gig/:gigId">
-          {this.props.detailsHash && this.state.user ? <GigPage {...this.props}{...this.state} user={this.state.user} detailsHash={this.props.detailsHash} />:null}
+          {this.props.detailsHash && this.state.user ? (
+            <GigPage
+              {...this.props}
+              {...this.state}
+              user={this.state.user}
+              detailsHash={this.props.detailsHash}
+              windowDimensions={this.state.windowDimensions}
+            />
+          ) : null}
         </Route>
         {/* <GigCreate {...this.state} />
         <GigInvite {...this.state} />

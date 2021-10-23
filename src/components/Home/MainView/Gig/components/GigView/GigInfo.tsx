@@ -27,6 +27,8 @@ import {
   CheckCircleOutline,
   Circle,
   ErrorOutline,
+  Build,
+  AddBoxOutlined
   // Circle
 } from "@mui/icons-material";
 import { DetailedGig } from "../../Gig.types";
@@ -154,23 +156,27 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
         >
           <Grid item display="flex">
             <Typography variant="h6">Band</Typography>
-            {emptyStack && authorizedView ? (
+            
+          </Grid>
+          <Grid item display="flex">
+            {filled.length ? (
+              filled.length === roles.length ? (
+                <>
+                  <CheckCircleOutline color="success" />
+                  <Typography>Band Filled!</Typography>
+                </>
+              ) : (
+                <>
+                {emptyStack && authorizedView ? (
               <ErrorOutline
                 color="error"
                 fontSize="small"
                 sx={{ marginLeft: 1 }}
               />
             ) : null}
-          </Grid>
-          <Grid item display="flex">
-            {filled.length === roles.length ? (
-              <>
-                <CheckCircleOutline color="success" />
-                <Typography>Band Filled!</Typography>
-              </>
-            ) : (
-              <>{`${filled.length}/${roles.length} filled`}</>
-            )}
+                {`${filled.length}/${roles.length} filled`}</>
+              )
+            ) : null}
           </Grid>
         </Grid>
 
@@ -194,16 +200,17 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
               <ListItem key={i}>
                 <ListItemIcon>
                   {role.filled ? (
-                      <IconButton>
-                        <CheckCircleOutline sx={{fontSize: 17}} color="success" />
-                      </IconButton>
-                  ) : role.emptyStack ? (
-                    <IconButton onClick={toggleEditMode} >
-                      <ErrorOutline sx={{fontSize: 17}} color="error" />
+                    <IconButton>
+                      <CheckCircleOutline
+                        sx={{ fontSize: 17 }}
+                        color="success"
+                      />
                     </IconButton>
-                  ) : (
-                    null
-                  )}
+                  ) : role.emptyStack ? (
+                    <IconButton onClick={toggleEditMode}>
+                      <ErrorOutline sx={{ fontSize: 17 }} color="error" />
+                    </IconButton>
+                  ) : null}
                 </ListItemIcon>
                 <Grid container>
                   <Grid item xs={12}>
@@ -261,7 +268,16 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
             );
           })
         ) : (
-          <div>Nothing to display!</div>
+          <ListItem>
+            {/* <ListItemIcon> */}
+              <IconButton onClick={toggleEditMode}>
+                <AddBoxOutlined />
+              </IconButton>
+            {/* </ListItemIcon> */}
+            <Typography display="inline" sx={{ marginLeft: 1 }} variant="body2">
+              Create your call lists!
+            </Typography>
+          </ListItem>
         )}
       </List>
     </Grid>

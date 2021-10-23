@@ -29,6 +29,7 @@ import {
   Logout,
   ArrowDropDown,
   Add,
+  Dashboard,
 } from "@mui/icons-material";
 import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
@@ -194,7 +195,7 @@ class Home extends Component<HomeProps, HomeState> {
                         id="home-button"
                         color="inherit"
                       >
-                        <HomeIcon />
+                        <Dashboard />
                       </IconButton>
                     </Link>
                     <IconButton

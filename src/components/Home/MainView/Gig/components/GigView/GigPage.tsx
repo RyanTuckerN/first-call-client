@@ -10,6 +10,7 @@ import { RouteComponentProps, withRouter } from "react-router";
 import GigInfo from "./GigInfo";
 import { DetailedGig } from "../../Gig.types";
 import GigEdit from "./GigEdit";
+import { WindowDimensions } from "../../../../Home.types";
 
 interface RouteParams {
   gigId: string;
@@ -20,6 +21,7 @@ interface GigPageProps extends RouteComponentProps<RouteParams> {
   offers: Gig[];
   gigs: Gig[];
   user: User;
+  windowDimensions: WindowDimensions
 }
 
 export interface GigPageState {
@@ -78,6 +80,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
   }
 
   render() {
+    
     // console.log(this.props.match.params)
     return (
       <Grid container flexDirection="column">
@@ -91,7 +94,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
         )}
 
         <Grid item xs={12} md={6} sx={{ marginTop: 3 }}>
-          <Paper elevation={12} sx={{ }}>
+          {/* <Paper elevation={12} sx={{ }}> */}
             {this.state.details && !this.state.editMode && this.state.gig ? (
               <GigInfo
                 {...{
@@ -100,16 +103,17 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                   editMode: this.state.editMode,
                   gigId: this.state.gigId,
                   setAuth: this.setAuthorizedView,
+                  windowDimensions: this.props.windowDimensions
                 }}
                 toggleEditMode={this.toggleEditMode}
                 details={this.state.details}
                 gig={this.state.gig}
               />
-            ) : this.state.details && this.state.editMode && this.state.gig ? (
-              <GigEdit {...this.state.gig} details={this.state.details} />
-            ) : null}
-          </Paper>
-        </Grid>
+              ) : this.state.details && this.state.editMode && this.state.gig ? (
+                <GigEdit {...this.state.gig} details={this.state.details} windowDimensions={this.props.windowDimensions} />
+                ) : null}
+          {/* </Paper> */}
+                </Grid>
       </Grid>
     );
   }
