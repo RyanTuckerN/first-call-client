@@ -20,6 +20,7 @@ import GigWelcome from "./components/GigWelcome";
 import { Button } from "@mui/material";
 import { BottomNav } from "./components/Navigation";
 import { AppState } from "../../../../App";
+import GigCreate from "./GigCreate";
 
 interface GigIndexProps extends RouteComponentProps {
   notifications: Notification[]; //Home State
@@ -150,6 +151,11 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
               windowDimensions={this.state.windowDimensions}
             />
           ) : null}
+        </Route>
+        <Route exact path='/main/gig/new'>
+            {this.state.user && this.state.windowDimensions ? (
+              <GigCreate {...this.state.user} windowDimensions={this.state.windowDimensions} />
+            ) : null}
         </Route>
         {/* <GigCreate {...this.state} />
         <GigInvite {...this.state} />

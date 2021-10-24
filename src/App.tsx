@@ -19,6 +19,7 @@ export interface AppState {
   token: string;
   auth: boolean | null;
   darkModeOn: string;
+  authenticate: (token: string)=> Promise<void>;
   toggleDark: ColorSetter;
   setToken: TokenSetter;
   logout: ()=>void,
@@ -33,6 +34,7 @@ class App extends Component<AppProps, AppState> {
       token: "",
       auth: null,
       darkModeOn: localStorage.getItem("darkModeOn") ?? "false",
+      authenticate: this.authenticate,
       logout: this.logout,
       toggleDark: this.toggleDark,
       setToken: this.setToken,

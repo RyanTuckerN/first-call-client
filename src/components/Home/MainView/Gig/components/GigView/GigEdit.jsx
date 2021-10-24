@@ -30,6 +30,8 @@ import {
   ErrorOutline,
   Add,
   Backspace,
+  PhotoCameraBackOutlined,
+  AddAPhoto,
   // Circle
 } from "@mui/icons-material";
 // import DateTimePicker from "react-datetime-picker";
@@ -60,10 +62,11 @@ class GigEdit extends Component {
       payment: this.props.payment ?? 0,
       location: this.props.location ?? "",
       photo: this.props.photo ?? "",
-      dateVal: new Date(this.props.date),
+      dateVal: new Date(this.props.date ?? new Date()),
       optionalKey: "",
       optionalVal: "",
       optionalInfo: this.props.optionalInfo ?? {},
+      gigCreate: this.props.gigCreate ?? false,
       // testDate: moment(new Date())
     };
   }
@@ -104,16 +107,86 @@ class GigEdit extends Component {
     this.setState({ optionalInfo: obj });
   };
 
+  uploadImage = async (e) => {
+    try {
+      const files = e.target.files;
+      if (!files) throw new Error("something went wrong!");
+      const data = new FormData();
+      data.append("file", files[0]);
+      data.append("upload_preset", "lvcrltpx");
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dpd08wa9g/image/upload",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const File = await res.json();
+      console.log(File);
+      // await this.setState({photo: File.secure_url});
+      // await this.updateProfile({ photo: File.secure_url });
+      if (this.state.gigCreate) {
+        this.setState({ photo: File.secure_url });
+        alert("done!");
+        return;
+      }
+      const json = await fetchHandler({
+        url: `${API_URL}/gig/${this.state.gigId}`,
+        method: "put",
+        auth: localStorage.getItem("token" ?? this.context.token ?? ""),
+        body: { photo: File.secure_url },
+      });
+      alert(json.message);
+      console.log(json);
+      json.success && this.props.setGig(json.gig);
+      return true;
+    } catch (err) {
+      console.error(err);
+      alert("There was an error! Please try again");
+      return false;
+    }
+  };
+
   handleSave = async () => {
     const { description, date, payment, location, optionalInfo, gigId } =
       this.state;
-    const body = { description, date, payment, location, optionalInfo };
+    const { callStackEmpty, gigCreate } = this.props;
+    if (
+      !description ||
+      !date ||
+      !payment ||
+      !location ||
+      !optionalInfo
+      // !gigId
+    ) {
+      alert("Empty field(s)!");
+      return;
+    }
+    if (callStackEmpty && gigCreate) {
+      alert("empty callStack! Fill out at least one role to submit.");
+      return;
+    }
+    const body = {
+      description,
+      date,
+      payment,
+      location,
+      optionalInfo,
+      [this.state.photo && "photo"]: this.state.photo,
+    };
+
     const json = await fetchHandler({
-      url: `${API_URL}/gig/${gigId}`,
-      method: "put",
+      url: `${API_URL}/gig/${this.state.gigCreate ? "" : gigId}`,
+      method: this.state.gigCreate ? "post" : "put",
       body,
       auth: localStorage.getItem("token" ?? this.context.token ?? ""),
     });
+    console.log(json)
+    json.success
+      ? this.state.gigCreate
+        ? this.props.setGigId(json.newGig.id)
+        : this.props.setGig(json.gig)
+      : null;
     alert(json.message);
   };
 
@@ -128,13 +201,20 @@ class GigEdit extends Component {
         <Grid
           container
           spacing={1}
-          padding={2}
+          padding={1}
           display="flex"
           justifyContent="space-between"
         >
-          <Grid item xs={12}>
+          <Grid item container xs={12}>
             <Typography variant="h4">Details</Typography>
+            {/* {!this.state.gigCreate ? ( */}
+            <Button onClick={this.handleSave}>Save</Button>
+            {/* ) : null} */}
           </Grid>
+          <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>
+            <Typography variant="body2">Give us the goods.</Typography>
+          </Grid>
+
           <Grid item xs={12} sm={9} lg={12}>
             {/* <Typography variant="h6">Title</Typography> */}
 
@@ -207,8 +287,26 @@ class GigEdit extends Component {
               value={this.state.location}
             />
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} display="flex" alignItems="center">
             <Typography variant="h5">Optional Details</Typography>
+            <input
+              accept="image/*"
+              onChange={this.uploadImage}
+              style={{ display: "none" }}
+              id="add-image"
+              type="file"
+            />
+            <Button>
+              <label htmlFor="add-image" id="add-image">
+                <AddAPhoto sx={{ fontSize: 14 }} />
+                <Typography variant="caption" sx={{ marginLeft: 0.5 }}>
+                  {this.state.photo ? `UPDATE PHOTO?` : `ADD A PHOTO?`}
+                </Typography>
+              </label>
+            </Button>
+          </Grid>
+          <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>
+            <Typography variant="body2">{`This is where you can tell us about the rehearsal, souncheck, box-lunch, etc. Be as detailed as you'd like!`}</Typography>
           </Grid>
           <Grid
             container
@@ -224,7 +322,7 @@ class GigEdit extends Component {
               xs={12}
               display="flex"
               flexDirection="row"
-              justifyContent="space-between"
+              // justifyContent="space-between"
             >
               {keys.map((cat, i) => (
                 <React.Fragment key={i}>
@@ -235,7 +333,7 @@ class GigEdit extends Component {
                   </Grid>
                   <Grid
                     item
-                    xs={8}
+                    xs={7}
                     display="flex"
                     justifyContent="space-between"
                   >
@@ -289,10 +387,9 @@ class GigEdit extends Component {
               </form>
             </Grid>
           </Grid>
-          <Button onClick={this.handleSave}>Save</Button>
-          <div id="band">
+          {/* <div id="band">
             CALLSTACK MANIPULATION GO HERE, DIFFERENT FOR CREATING AND EDITING.
-          </div>
+          </div> */}
         </Grid>
       </>
     );

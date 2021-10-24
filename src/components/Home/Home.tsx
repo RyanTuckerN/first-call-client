@@ -222,20 +222,22 @@ class Home extends Component<HomeProps, HomeState> {
                       className="arrow-dropdown"
                       fontSize="small"
                     />
-                    <IconButton
-                      size="small"
-                      edge="end"
-                      color='inherit'
-                      id="account-menu-button"
-                      aria-label="account of current user"
-                      style={{ marginLeft: -10 }}
-                    >
-                      <Add />
-                    </IconButton>
-                    <ArrowDropDown
-                      className="arrow-dropdown"
-                      fontSize="small"
-                    />
+                    <Link to='/main/gig/new'>
+                      <IconButton
+                        size="small"
+                        edge="end"
+                        color='inherit'
+                        id="add-new-gig"
+                        aria-label="create a new gig"
+                        style={{ marginLeft: -10 }}
+                      >
+                        <Add />
+                      </IconButton>
+                      <ArrowDropDown
+                        className="arrow-dropdown"
+                        fontSize="small"
+                      />
+                    </Link>
                   </Box>
                   <Menu
                     anchorEl={this.state.anchorEl}

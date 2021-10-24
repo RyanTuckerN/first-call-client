@@ -125,14 +125,14 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
             {`${d.toLocaleDateString()} at ${returnTime(d)}`}
           </Typography>
         </ListItem>
-        {entries.length && (
+        {entries.length ? (
           <>
             <Divider sx={{ paddingY: 1 }} />
             <Typography {...typoSx} variant="h6">
               Additional Info
             </Typography>
           </>
-        )}
+        ) : null }
 
         {entries.map((entry, i) => {
           return (

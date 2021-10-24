@@ -17,6 +17,7 @@
     "@types/node": "^12.20.33",
     "@types/react": "^17.0.30",
     "@types/react-dom": "^17.0.9",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-datetime-picker": "^3.4.2",
@@ -52,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.176",
     "@types/react-router-dom": "^5.3.1"
   }
 }

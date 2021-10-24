@@ -8,7 +8,7 @@ import Board from "./Board";
 import GigHeader from "./GigHeader";
 import GigInfo from "./GigInfo";
 import GigEdit from "./GigEdit";
-import { RouteComponentProps, withRouter } from "react-router";
+import { RouteComponentProps, withRouter, Route, NavLink } from "react-router-dom";
 import { DetailedGig } from "../../Gig.types";
 import { WindowDimensions } from "../../../../Home.types";
 import CallStackCreate from "../../CallStack/CallStackCreate";
@@ -53,6 +53,8 @@ class GigPage extends Component<GigPageProps, GigPageState> {
   //   gigId: this.state.gigId,
   //   setAuth: this.setAuthorizedView
   // }
+
+  setGig = (gig: Gig):void => this.setState({gig})
 
   toggleEditMode = (): void =>
     this.setState({ editMode: !this.state.editMode });
@@ -114,12 +116,13 @@ class GigPage extends Component<GigPageProps, GigPageState> {
               {...this.state.gig}
               details={this.state.details}
               windowDimensions={this.props.windowDimensions}
+              setGig={this.setGig}
             />
           ) : null}
           {/* </Paper> */}
         </Grid>
         <Grid item xs={12} md={6} sx={{ marginTop: 3 }}>
-          <CallStackCreate />
+          {/* <CallStackCreate /> */}
         </Grid>
       </Grid>
     );
