@@ -25,6 +25,7 @@ import { fetchHandler } from "../../../_helpers/fetchHandler";
 import API_URL from "../../../_helpers/environment";
 import { UserCtx } from "../../../Context/MainContext";
 import { formControl } from "../../../_helpers/helpers";
+import { AppState } from "../../../../App";
 
 interface ChangePassProps extends RouteComponentProps {}
 
@@ -40,7 +41,7 @@ interface ChangePassState {
 class ChangePass extends Component<ChangePassProps, ChangePassState> {
   static contextType = UserCtx;
 
-  constructor(props: ChangePassProps, context: any) {
+  constructor(props: ChangePassProps, context: AppState) {
     super(props, context);
     this.state = {
       currentPass: "",
@@ -67,13 +68,13 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
       const json = await fetchHandler({
         url: `${API_URL}/user/update-password`,
         method: "post",
-        auth: localStorage.getItem("token") ?? "",
+        auth: localStorage.getItem("token") ?? this.context.token ?? "",
         body: {
           password: this.state.currentPass,
           newPassword: this.state.new1,
         },
       });
-      console.log(json);
+      // console.log(json);
       this.setState({
         success: json.success,
         snackBarOpen: true,
@@ -191,7 +192,7 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
           ) : this.state.success === false ? (
             <Alert severity="error">Something went wrong.</Alert>
           ) : (
-            <Alert severity="warning">Passwords don't match.</Alert>
+            <Alert severity="warning">Passwords don&#39;t match.</Alert>
           )}
         </Snackbar>
       </Grid>

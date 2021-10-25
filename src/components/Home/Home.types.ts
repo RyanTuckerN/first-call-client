@@ -6,5 +6,5 @@ export interface WindowDimensions {
 }
 export interface HomeFunctions {
   fetchNotifications: FetchHandler,
-  fetchOffers: FetchHandler,
+  // fetchOffers: FetchHandler,
 }

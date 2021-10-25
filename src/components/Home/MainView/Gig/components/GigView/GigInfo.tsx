@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import { GigPageState } from "./GigPage";
 import {
   Grid,
@@ -14,87 +15,289 @@ import {
   ListItemIcon,
   ListItemButton,
   ListItemText,
+  Divider,
 } from "@mui/material";
-import { returnTime } from "../../../../../_helpers/helpers";
-import { Settings, AttachMoney, LocationOn, CalendarToday } from "@mui/icons-material";
+import { properize, returnTime } from "../../../../../_helpers/helpers";
+import {
+  Settings,
+  AttachMoney,
+  LocationOn,
+  CalendarToday,
+  ChevronRight,
+  CheckCircleOutline,
+  Circle,
+  ErrorOutline,
+  Build,
+  AddBoxOutlined,
+  // Circle
+} from "@mui/icons-material";
 import { DetailedGig } from "../../Gig.types";
 import { stringAvatar } from "../../../Settings/Header";
+import { Gig, User } from "../../../../../../types/API.types";
 
-const avatarSize: number = 50;
+const avatarSize: number = 35;
 
 interface GigInfoProps extends GigPageState {
   details: DetailedGig;
+  user: User;
+  gig: Gig;
+  toggleEditMode?: VoidFunction;
+  setAuth?: (b: boolean) => void;
 }
 
 const GigInfo: React.FunctionComponent<GigInfoProps> = ({
   authorizedView,
-  date,
-  description,
-  callStack,
-  openCalls,
-  optionalInfo,
   details,
-  payment,
-  location,
+  gig,
+  user,
+  setAuth,
+  toggleEditMode,
 }) => {
-  const d = new Date(date);
+  const [emptyStack, setEmptyStack] = useState(false);
+  const { date, callStack, optionalInfo, payment, location } = gig;
   const { bandLeader, bandMembers } = details;
-  const [additionalCategories, values] = Object.entries(optionalInfo ?? {})
-  console.log(additionalCategories, values)
+
+  const checkStack = (): void => {
+    setEmptyStack(
+      roles.map((r) => callStack?.stackTable[r].emptyStack).includes(true)
+    );
+  };
+
+  useEffect(
+    setAuth ? () => setAuth(user.id === details.bandLeader.id) : () => null,
+    []
+  );
+  useEffect(checkStack, [callStack]);
+
+  const d = new Date(date);
+  const entries = Object.entries(optionalInfo ?? {});
+  const roles = Object.keys(callStack?.stackTable ?? {});
+  const filled = roles.filter((r) => callStack?.stackTable[r].filled);
+  const typoSx = { paddingTop: 1.5 };
 
   return (
-    <Grid
-      item
-      container
-      xs={12}
-      padding={4}
-      display="flex"
-      justifyContent="space-between"
-      // letterSpacing={1.5}
-      id="gig-header"
-    >
-      <Grid item xs={12} sm={6} md={6}>
-        <Paper elevation={12} sx={{ padding: 2 }}>
-          <Typography variant="h6">Details</Typography>
-          <List>
-            <ListItem>
-              <ListItemAvatar>
-                {bandLeader.photo ? (
-                  <Avatar src={bandLeader.photo} alt={bandLeader.name} sx={{height: avatarSize, width: avatarSize}} />
-                ) : (
-                  <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
-                )}
-              </ListItemAvatar>
-              {/* <ListItemText  primary={bandLeader.name} /> */}
-              <Typography variant='subtitle1'>Gig hosted by <strong>{bandLeader.name}</strong></Typography>
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <AttachMoney color='success' />
-              </ListItemIcon>
-              <Typography><strong>Pay: </strong>${payment}</Typography>
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <LocationOn color='error' />
-              </ListItemIcon>
-              <Typography><strong>Location: </strong>{location}</Typography>
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <CalendarToday color='info' />
-              </ListItemIcon>
-              <Typography><strong>Date: </strong>{`${d.toLocaleDateString()} at ${returnTime(d)}`}</Typography>
-            </ListItem>
+    <Grid container display="flex" >
+      {/* <List> */}
+        <Grid item xs={12} md ={6} lg={4}>
+          <Typography {...typoSx} variant="h6">
+            Details
+          </Typography>
+          <ListItem>
+            <ListItemAvatar>
+              {bandLeader.photo ? (
+                <Avatar
+                  src={bandLeader.photo}
+                  alt={bandLeader.name}
+                  sx={{ height: avatarSize, width: avatarSize }}
+                />
+              ) : (
+                <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
+              )}
+            </ListItemAvatar>
+            {/* <ListItemText  primary={bandLeader.name} /> */}
+            {authorizedView ? (
+              <Typography variant="subtitle1">You are the bandleader</Typography>
+            ) : (
+              <Typography variant="subtitle1">
+                Gig hosted by <strong>{bandLeader.name}</strong>
+              </Typography>
+            )}
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <AttachMoney color="success" />
+            </ListItemIcon>
+            <Typography>
+              <strong>Pay: &nbsp; </strong>${payment}
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <LocationOn color="error" />
+            </ListItemIcon>
+            <Typography>
+              <strong>Location: &nbsp;</strong>
+              {location}
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <CalendarToday color="info" />
+            </ListItemIcon>
+            <Typography>
+              <strong>Date: &nbsp; </strong>
+              {`${d.toLocaleDateString()} at ${returnTime(d)}`}
+            </Typography>
+          </ListItem>
+                </Grid>
+          <Grid item xs={12} lg={4}>
+            {entries.length ? (
+              <Grid item xs={12}>
+                {/* <Divider sx={{ paddingY: 1 }} /> */}
+                <Typography {...typoSx} variant="h6">
+                  Additional Info
+                </Typography>
+              </Grid>
+            ) : null}
+            <Grid item xs={12}>
+              {entries.map((entry, i) => {
+                return (
+                  <ListItem key={i}>
+                    {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
+                    <Typography sx={{}}>
+                      <strong>{properize(entry[0])}: &nbsp; </strong>
+                      {`${entry[1]}`}
+                    </Typography>
+                  </ListItem>
+                );
+              })}
+            </Grid>
+          </Grid>
+        {/* <Divider sx={{ paddingY: 1 }} /> */}
+        <Grid
+          container
+          item 
+          lg={4}
+          display="flex"
+          justifyContent="space-between"
+          {...typoSx}
+        >
+            <Grid item display='flex' justifyContent='center' xs={9}>
+              <Typography variant="h6" >Band</Typography>
+            </Grid>
+          <Grid item display="flex">
+            {filled.length ? (
+              filled.length === roles.length ? (
+                <>
+                  <CheckCircleOutline color="success" />
+                  <Typography>Band Filled!</Typography>
+                </>
+              ) : (
+                <>
+                  {emptyStack && authorizedView ? (
+                    <ErrorOutline
+                      color="error"
+                      fontSize="small"
+                      sx={{ marginLeft: 1 }}
+                    />
+                  ) : null}
+                  {`${filled.length}/${roles.length} filled`}
+                </>
+              )
+            ) : null}
+          </Grid>
 
-          </List>
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={5}>
-        <Paper elevation={12}>TEST TEST</Paper>
-      </Grid>
+        {roles.length && !authorizedView ? (
+          roles.map((r, i) => (
+            <ListItem key={i}>
+              <Typography>
+                <strong>{properize(r)}:</strong> &nbsp;{" "}
+                {bandMembers.filter((p) => p.role === r)[0]?.name ??
+                  callStack?.stackTable[r]?.confirmed?.name ??
+                  callStack?.stackTable[r]?.confirmed?.email ?? (
+                    <i>Not filled</i>
+                    )}
+              </Typography>
+            </ListItem>
+          ))
+        ) : roles.length && authorizedView ? (
+          roles.map((r, i) => {
+            const role = callStack?.stackTable[r];
+            return (
+              <ListItem key={i}>
+                <ListItemIcon>
+                  {role.filled ? (
+                    <IconButton>
+                      <CheckCircleOutline
+                        sx={{ fontSize: 17 }}
+                        color="success"
+                        />
+                    </IconButton>
+                  ) : role.emptyStack ? (
+                    <IconButton onClick={toggleEditMode}>
+                      <ErrorOutline sx={{ fontSize: 17 }} color="error" />
+                    </IconButton>
+                  ) : null}
+                </ListItemIcon>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <Typography>
+                      <strong>{properize(r)}:</strong> &nbsp;{" "}
+                      {bandMembers.filter((p) => p.role === r)[0]?.name ??
+                        role?.confirmed?.name ??
+                        role?.confirmed?.email ?? <i>Not filled</i>}
+                    </Typography>
+                  </Grid>
+                  <div>
+                    {!role.filled ? (
+                      !role.onCall && !role.calls?.length ? (
+                        <Typography variant="body2">Empty Stack!</Typography>
+                        ) : (
+                          <>
+                          <Typography display="inline" sx={{ marginLeft: 1 }}>
+                            On call:
+                          </Typography>
+                          <Typography
+                            display="inline"
+                            sx={{ marginLeft: 1 }}
+                            variant="body2"
+                          >
+                            {role.onCall}
+                          </Typography>
+                          <Box>
+                            {role.calls?.length ? (
+                              <Typography
+                              display="inline"
+                              sx={{ marginLeft: 1 }}
+                              >
+                                Stack:
+                              </Typography>
+                            ) : null}
+                            {role.calls?.length
+                              ? role.calls?.map((call: any, i: number) => (
+                                <Typography
+                                display="inline"
+                                    sx={{ marginLeft: 1 }}
+                                    variant="body2"
+                                    key={i}
+                                    >
+                                    {call}
+                                  </Typography>
+                                ))
+                                : null}
+                          </Box>
+                        </>
+                      )
+                    ) : null}
+                  </div>
+                </Grid>
+              </ListItem>
+            );
+          })
+          ) : (
+            <ListItem>
+            {/* <ListItemIcon> */}
+            <IconButton onClick={toggleEditMode}>
+              <AddBoxOutlined />
+            </IconButton>
+            {/* </ListItemIcon> */}
+            <Typography display="inline" sx={{ marginLeft: 1 }} variant="body2">
+              Create your call lists!
+            </Typography>
+          </ListItem>
+        )}
+      {/* </List> */}
+        </Grid>
     </Grid>
   );
 };
 
 export default GigInfo;
+
+/**
+ *   {/* //*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */
+//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
+//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
+//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
+//CHANGE THIS IN THE SERVER TO ADD NAME AND EMAIL AS AN OBJECT
+//REQUIRE USER TO GIVE NAME WHEN ACCEPTING THE OFFER */}

@@ -21,12 +21,20 @@ import {
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { UserCtx } from "../../../Context/MainContext";
+import { User } from "../../../../types/API.types";
+import API_URL from "../../../_helpers/environment";
+import { fetchHandler } from "../../../_helpers/fetchHandler";
 import Header from "./Header";
 import Swal from "sweetalert2";
 import "./Settings.css";
 import EditProfile from "../Profile/EditProfile";
+import { AppState } from "../../../../App";
 
-interface SettingsProps extends RouteComponentProps {}
+interface SettingsProps extends RouteComponentProps {
+  setAppState: any,
+  user: User,
+  token: string
+}
 
 interface SettingsState {}
 
@@ -34,15 +42,37 @@ class Settings extends Component<SettingsProps, SettingsState> {
   static contextType = UserCtx;
   static header: string = "body1";
 
-  constructor(props: SettingsProps, context: any) {
+  constructor(props: SettingsProps, context: AppState) {
     super(props, context);
     this.state = { photo: this.context.user?.photo ?? "" };
+  }
+
+  toggleEmail = async (): Promise<void> => {
+    const emails = !this.props.user.emails;
+    const json = await fetchHandler({
+      url: `${API_URL}/user/profile`,
+      method: "PUT",
+      auth: localStorage.getItem('token') ?? this.context.token ?? '',
+      body: { emails },
+    });
+    this.props.setAppState('user', json.user);
+  };
+
+  updateProfile = async(user: any):Promise<boolean> => {
+    const json = await fetchHandler({
+      url: `${API_URL}/user/profile`,
+      method: "PUT",
+      auth: localStorage.getItem('token') ?? this.context.token ?? '',
+      body: user ,
+    });
+    // console.log(json)
+    json.user && this.props.setAppState('user', json.user); 
+    return json.success ? true : false 
   }
 
   uploadImage = async (
     e: React.ChangeEvent<HTMLInputElement>
   ): Promise<boolean> => {
-    console.log(e);
     try {
       const files = e.target.files;
       if (!files) throw new Error("something went wrong!");
@@ -59,7 +89,7 @@ class Settings extends Component<SettingsProps, SettingsState> {
       const File = await res.json();
       console.log(File);
       // await this.setState({photo: File.secure_url});
-      await this.context.updateProfile({ photo: File.secure_url });
+      await this.updateProfile({ photo: File.secure_url });
       return true;
     } catch (err) {
       console.error(err);
@@ -84,7 +114,6 @@ class Settings extends Component<SettingsProps, SettingsState> {
         <Grid container spacing={0}>
           <Grid item xs={6} sm={5} >
             <Header
-              user={this.context.user}
               handlePhoto={this.uploadImage}
               {...this.props}
             />
@@ -147,11 +176,11 @@ class Settings extends Component<SettingsProps, SettingsState> {
                   {/* <Typography variant='body1'>First call will send emails by default to keep you in the loop about any changes in the status of your gigs, but you can opt out if you wish!</Typography> */}
                   <div>
                     <Switch
-                      onChange={this.context.toggleEmail}
-                      checked={this.context.user?.emails ?? true}
+                      onChange={this.toggleEmail}
+                      checked={this.props.user.emails ?? true}
                     />
                     <Typography display="inline" variant="body2">
-                      {this.context.user?.emails ? "On" : "Off"}
+                      {this.props.user.emails ? "On" : "Off"}
                     </Typography>
                   </div>
                 </div>
@@ -163,7 +192,7 @@ class Settings extends Component<SettingsProps, SettingsState> {
           <Grid item xs={12} sm={7} md={9}>
             <RouteSwitch>
               <Route exact path={`${this.props.match.path}/`}>
-                <EditProfile />
+                <EditProfile {...this.props} updateProfile={this.updateProfile} />
               </Route>
               <Route exact path={`${this.props.match.path}/change-password`}>
                 <ChangePass />

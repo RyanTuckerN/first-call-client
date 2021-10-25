@@ -1,73 +1,200 @@
-import { Grid } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import * as React from "react";
 import { Component } from "react";
 // import { RouteComponentProps, withRouter } from 'react-router';
-import { Gig } from "../../../../../../types/API.types";
+import { Gig, Post, User } from "../../../../../../types/API.types";
 import { GigIndexState } from "../../GigsIndex";
 import Board from "./Board";
 import GigHeader from "./GigHeader";
-import { RouteComponentProps, withRouter } from "react-router";
 import GigInfo from "./GigInfo";
+import GigEdit from "./GigEdit";
+import {
+  RouteComponentProps,
+  withRouter,
+  Redirect,
+  Route,
+  NavLink,
+} from "react-router-dom";
 import { DetailedGig } from "../../Gig.types";
+import { WindowDimensions } from "../../../../Home.types";
+import CallStackCreate from "../../CallStack/CallStackCreate";
+import GigInvite from "../GigInvite";
+import { UserCtx } from "../../../../../Context/MainContext";
+import { AppState } from "../../../../../../App";
+import { posts } from "../../../../../_helpers/postOrganizer";
+import { fetchHandler } from "../../../../../_helpers/fetchHandler";
+import API_URL from "../../../../../_helpers/environment";
 
 interface RouteParams {
   gigId: string;
 }
 
 interface GigPageProps extends RouteComponentProps<RouteParams> {
-  detailedGigs: { [key: string]: DetailedGig } | null;
-  detailedOffers: { [key: string]: DetailedGig } | null;
+  detailsHash: { [key: string]: DetailedGig };
   offers: Gig[];
   gigs: Gig[];
+  user: User;
+  windowDimensions: WindowDimensions;
 }
 
-export interface GigPageState extends Gig {
+export interface GigPageState {
   authorizedView: boolean;
+  editMode: boolean;
   gigId: string | number;
-  details: DetailedGig;
+  details: DetailedGig | null;
+  gig: Gig | null;
+  posts: Post[];
 }
 
 class GigPage extends Component<GigPageProps, GigPageState> {
-  constructor(props: GigPageProps) {
-    super(props);
+  static contextType = UserCtx;
+  constructor(props: GigPageProps, context: AppState) {
+    super(props, context);
     this.state = {
-      ...[...this.props.offers, ...this.props.gigs].filter(
-        (g) => g.id === parseInt(this.props.match.params.gigId)
-      )[0],
-      authorizedView: false,
+      gig: null,
       gigId: this.props.match.params.gigId,
-      details: { ...this.props.detailedGigs, ...this.props.detailedOffers }[
-        this.props.match.params.gigId
-      ],
+      details: null,
+      authorizedView: false,
+      editMode: false,
+      posts: [],
     };
   }
+  setAuthorizedView = (b: boolean) => this.setState({ authorizedView: b });
+
+  // gigInfoProps = {
+  //   user: this.props.user,
+  //   authorizedView: this.state.authorizedView,
+  //   editMode: this.state.editMode,
+  //   gigId: this.state.gigId,
+  //   setAuth: this.setAuthorizedView
+  // }
+
+  setGig = (gig: Gig): void => this.setState({ gig });
+
+  fetchPosts = async (): Promise<boolean> => {
+    const json = await fetchHandler({
+      url: `${API_URL}/board/${this.state.gigId}`,
+      auth: this.context.token ?? localStorage.getItem("token") ?? "",
+    });
+    console.log(json);
+    json.success && this.setState({ posts: json.posts });
+    return json.success;
+  };
+
+  toggleEditMode = (): void =>
+    this.setState({ editMode: !this.state.editMode });
 
   componentDidUpdate(prevProps: GigPageProps, prevState: GigPageState) {
-    if (prevProps !== this.props) {
+    prevProps.detailsHash !== this.props.detailsHash &&
       this.setState({
-        details: { ...this.props.detailedGigs, ...this.props.detailedOffers }[
-          this.state.gigId
-        ],
+        details: this.props.detailsHash[this.state.gigId],
       });
-    }
-    
+
+    prevProps !== this.props &&
+      this.setState({
+        authorizedView: this.state.gig?.ownerId === this.props.user.id,
+      });
+  }
+
+  componentDidMount() {
+    this.fetchPosts();
+    this.setState({
+      details: this.props.detailsHash[this.props.match.params.gigId],
+      authorizedView: this.state.gigId === this.state.gig?.id.toString(),
+      gig:
+        [...this.props.gigs, ...this.props.offers].filter(
+          (g) => g.id.toString() === this.state.gigId
+        )[0] ?? null,
+    });
   }
 
   render() {
-    // console.log(this.props.match.params)
     return (
-      <Grid container>
-        {/* Hello From GigPage.tsx! */}
-        <GigHeader {...this.state} />
-        {this.state.details ? (
-          <GigInfo
-            {...this.props}
-            {...this.state}
-            details={this.state.details}
-          />
-        ) : null}
-        {/* <Board /> */}
-      </Grid>
+      <>
+        <Route
+          exact
+          path={`/main/gig/${this.state.gig?.id ?? 0}/`}
+          render={() => {
+            return ![...this.props.gigs, ...this.props.offers]
+              .map((g) => g.id)
+              .includes(this.state.gig?.id ?? 0) ? (
+              <Redirect to="" />
+            ) : (
+              <Grid container>
+                {/* Hello From GigPage.tsx! */}
+                {this.state.gig && (
+                  <GigHeader
+                    {...this.state}
+                    gig={this.state.gig}
+                    toggleEditMode={this.toggleEditMode}
+                  />
+                )}
+                <Grid
+                  display="flex"
+                  flexWrap={
+                    this.state.gig?.openCalls.includes(this.props.user.email)
+                      ? "wrap-reverse"
+                      : "wrap"
+                  }
+                >
+                  <Grid item xs={12} md={12} sx={{ marginTop: 3 }}>
+                    {/* <Paper elevation={12} sx={{ }}> */}
+                    {this.state.details &&
+                    !this.state.editMode &&
+                    this.state.gig ? (
+                      <GigInfo
+                        {...{
+                          user: this.props.user,
+                          authorizedView: this.state.authorizedView,
+                          editMode: this.state.editMode,
+                          gigId: this.state.gigId,
+                          setAuth: this.setAuthorizedView,
+                          windowDimensions: this.props.windowDimensions,
+                          posts: this.state.posts,
+                        }}
+                        toggleEditMode={this.toggleEditMode}
+                        details={this.state.details}
+                        gig={this.state.gig}
+                      />
+                    ) : this.state.details &&
+                      this.state.editMode &&
+                      this.state.gig ? (
+                      <GigEdit
+                        {...this.state.gig}
+                        details={this.state.details}
+                        windowDimensions={this.props.windowDimensions}
+                        setGig={this.setGig}
+                      />
+                    ) : null}
+                    {/* </Paper> */}
+                  </Grid>
+                  <Grid item xs={12} md={6} sx={{ marginTop: 3 }}>
+                    {/* <CallStackCreate /> */}
+                    {this.state.gig ? (
+                      this.state.gig.openCalls.includes(
+                        this.props.user.email
+                      ) && this.state.details ? (
+                        <GigInvite
+                          {...this.state.gig}
+                          user={this.props.user ?? this.context.user}
+                          details={this.state.details}
+                          setGig={this.setGig}
+                        />
+                      ) : !this.state.editMode && (
+                        <Board
+                          posts={this.state.posts}
+                          fetchPosts={this.fetchPosts}
+                          gigId={this.state.gigId}
+                        />
+                      )
+                    ) : null}
+                  </Grid>
+                </Grid>
+              </Grid>
+            );
+          }}
+        />
+      </>
     );
   }
 }

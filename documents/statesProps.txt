@@ -1,0 +1,436 @@
+
+***********************************
+***********************************
+***********************************
+***********************************
+***********************************
+*** *** App State *** ***
+{
+  "user": {
+    "id": 4,
+    "email": "user4@email.com",
+    "passwordhash": null,
+    "role": null,
+    "photo": "https://randomuser.me/api/portraits/med/men/48.jpg",
+    "emails": true,
+    "name": "Henry Crawford",
+    "description": null,
+    "location": null,
+    "paymentPreference": null,
+    "specialties": null,
+    "createdAt": "2021-10-22T04:48:03.394Z",
+    "updatedAt": "2021-10-22T04:48:03.394Z",
+    "gigs": "[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjM0OTE0NDcyLCJleHAiOjE2MzUwMDA4NzJ9.UskKlHB3Ax4KMUjJQ_Wm4NtmQpDBffOUuog8wn39rbs",
+  "auth": true,
+  "darkModeOn": "true",
+  "logout": "ƒ () {}",
+  "toggleDark": "ƒ () {}",
+  "setToken": "ƒ () {}",
+  "setAppState": "ƒ () {}"
+}
+
+***********************************
+***********************************
+***********************************
+***********************************
+***********************************
+*** *** Home Props *** ***
+{
+  "user": {
+    "id": 4,
+    "email": "user4@email.com",
+    "passwordhash": null,
+    "role": null,
+    "photo": "https://randomuser.me/api/portraits/med/men/48.jpg",
+    "emails": true,
+    "name": "Henry Crawford",
+    "description": null,
+    "location": null,
+    "paymentPreference": null,
+    "specialties": null,
+    "createdAt": "2021-10-22T04:48:03.394Z",
+    "updatedAt": "2021-10-22T04:48:03.394Z",
+    "gigs": "[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjM0OTE0NDcyLCJleHAiOjE2MzUwMDA4NzJ9.UskKlHB3Ax4KMUjJQ_Wm4NtmQpDBffOUuog8wn39rbs",
+  "auth": true,
+  "darkModeOn": "true",
+  "logout": "ƒ () {}",
+  "toggleDark": "ƒ () {}",
+  "setToken": "ƒ () {}",
+  "setAppState": "ƒ () {}",
+  "history": {
+    "length": 32,
+    "action": "PUSH",
+    "location": "{hash: \"\", key: \"5hap2d\", pathname: \"/main/\", searc…}",
+    "createHref": "ƒ createHref() {}",
+    "push": "ƒ push() {}",
+    "replace": "ƒ replace() {}",
+    "go": "ƒ go() {}",
+    "goBack": "ƒ goBack() {}",
+    "goForward": "ƒ goForward() {}",
+    "block": "ƒ block() {}",
+    "listen": "ƒ listen() {}"
+  },
+  "location": {
+    "pathname": "/main/",
+    "search": "",
+    "hash": "",
+    "key": "5hap2d"
+  },
+  "match": {
+    "path": "/",
+    "url": "/",
+    "params": "{}",
+    "isExact": false
+  }
+}
+
+***********************************
+***********************************
+***********************************
+***********************************
+***********************************
+*** *** Home State *** ***
+{
+  "detailsHash": {
+    "5": "{bandLeader: {…}, bandMembers: Array(2), gig: {…}}",
+    "6": "{bandLeader: {…}, bandMembers: Array(2), gig: {…}}",
+    "13": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "14": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "15": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "16": "{bandLeader: {…}, bandMembers: Array(1), gig: {…}}",
+    "17": "{bandLeader: {…}, bandMembers: Array(4), gig: {…}}",
+    "18": "{bandLeader: {…}, bandMembers: Array(4), gig: {…}}",
+    "19": "{bandLeader: {…}, bandMembers: Array(3), gig: {…}}",
+    "20": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}"
+  },
+  "anchorEl": null,
+  "isMenuOpen": false,
+  "isNotificationsOpen": false,
+  "open": true,
+  "windowDimensions": {
+    "height": 939,
+    "width": 1848
+  },
+  "notifications": [
+    "{createdAt: \"2021-10-22T04:48:03.737Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:03.843Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.544Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.550Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.553Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.585Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.651Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:06.348Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:07.851Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:10.486Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.073Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:12.357Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:13.197Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.289Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.593Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.980Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:07.484Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:09.574Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.007Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.119Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.958Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:12.478Z\", details: {……}"
+  ]
+}
+
+***********************************
+***********************************
+***********************************
+***********************************
+*** *** MainView Props *** ***
+{
+  "user": {
+    "id": 4,
+    "email": "user4@email.com",
+    "passwordhash": null,
+    "role": null,
+    "photo": "https://randomuser.me/api/portraits/med/men/48.jpg",
+    "emails": true,
+    "name": "Henry Crawford",
+    "description": null,
+    "location": null,
+    "paymentPreference": null,
+    "specialties": null,
+    "createdAt": "2021-10-22T04:48:03.394Z",
+    "updatedAt": "2021-10-22T04:48:03.394Z",
+    "gigs": "[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjM0OTE0NDcyLCJleHAiOjE2MzUwMDA4NzJ9.UskKlHB3Ax4KMUjJQ_Wm4NtmQpDBffOUuog8wn39rbs",
+  "auth": true,
+  "darkModeOn": "true",
+  "logout": "ƒ () {}",
+  "toggleDark": "ƒ () {}",
+  "setToken": "ƒ () {}",
+  "setAppState": "ƒ () {}",
+  "history": {
+    "length": 32,
+    "action": "PUSH",
+    "location": "{hash: \"\", key: \"5hap2d\", pathname: \"/main/\", searc…}",
+    "createHref": "ƒ createHref() {}",
+    "push": "ƒ push() {}",
+    "replace": "ƒ replace() {}",
+    "go": "ƒ go() {}",
+    "goBack": "ƒ goBack() {}",
+    "goForward": "ƒ goForward() {}",
+    "block": "ƒ block() {}",
+    "listen": "ƒ listen() {}"
+  },
+  "location": {
+    "pathname": "/main/",
+    "search": "",
+    "hash": "",
+    "key": "5hap2d"
+  },
+  "match": {
+    "path": "/main",
+    "url": "/main/",
+    "isExact": true,
+    "params": "{}"
+  },
+  "detailsHash": {
+    "5": "{bandLeader: {…}, bandMembers: Array(2), gig: {…}}",
+    "6": "{bandLeader: {…}, bandMembers: Array(2), gig: {…}}",
+    "13": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "14": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "15": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "16": "{bandLeader: {…}, bandMembers: Array(1), gig: {…}}",
+    "17": "{bandLeader: {…}, bandMembers: Array(4), gig: {…}}",
+    "18": "{bandLeader: {…}, bandMembers: Array(4), gig: {…}}",
+    "19": "{bandLeader: {…}, bandMembers: Array(3), gig: {…}}",
+    "20": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}"
+  },
+  "anchorEl": null,
+  "isMenuOpen": false,
+  "isNotificationsOpen": false,
+  "open": true,
+  "windowDimensions": {
+    "height": 939,
+    "width": 1848
+  },
+  "notifications": [
+    "{createdAt: \"2021-10-22T04:48:03.737Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:03.843Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.544Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.550Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.553Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.585Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.651Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:06.348Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:07.851Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:10.486Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.073Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:12.357Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:13.197Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.289Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.593Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.980Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:07.484Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:09.574Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.007Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.119Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.958Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:12.478Z\", details: {……}"
+  ],
+  "fetchNotifications": "ƒ () {}",
+  "setHomeState": "ƒ () {}"
+}
+
+***********************************
+***********************************
+***********************************
+***********************************
+*** *** MainView State *** ***
+{
+  "dashboardRoute": "notifications",
+  "setMainState": "ƒ () {}"
+}
+
+
+***********************************
+***********************************
+***********************************
+***********************************
+*** *** GigIndex Props *** ***
+{
+  "user": {
+    "id": 4,
+    "email": "user4@email.com",
+    "passwordhash": null,
+    "role": null,
+    "photo": "https://randomuser.me/api/portraits/med/men/48.jpg",
+    "emails": true,
+    "name": "Henry Crawford",
+    "description": null,
+    "location": null,
+    "paymentPreference": null,
+    "specialties": null,
+    "createdAt": "2021-10-22T04:48:03.394Z",
+    "updatedAt": "2021-10-22T04:48:03.394Z",
+    "gigs": "[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiaWF0IjoxNjM0OTE0NDcyLCJleHAiOjE2MzUwMDA4NzJ9.UskKlHB3Ax4KMUjJQ_Wm4NtmQpDBffOUuog8wn39rbs",
+  "auth": true,
+  "darkModeOn": "true",
+  "logout": "ƒ () {}",
+  "toggleDark": "ƒ () {}",
+  "setToken": "ƒ () {}",
+  "setAppState": "ƒ () {}",
+  "history": {
+    "length": 33,
+    "action": "PUSH",
+    "location": "{hash: \"\", key: \"9s2sip\", pathname: \"/main/gig/13\",…}",
+    "createHref": "ƒ createHref() {}",
+    "push": "ƒ push() {}",
+    "replace": "ƒ replace() {}",
+    "go": "ƒ go() {}",
+    "goBack": "ƒ goBack() {}",
+    "goForward": "ƒ goForward() {}",
+    "block": "ƒ block() {}",
+    "listen": "ƒ listen() {}"
+  },
+  "location": {
+    "pathname": "/main/gig/13",
+    "search": "",
+    "hash": "",
+    "key": "9s2sip"
+  },
+  "match": {
+    "path": "/main/",
+    "url": "/main",
+    "isExact": false,
+    "params": "{}"
+  },
+  "detailsHash": {
+    "5": "{bandLeader: {…}, bandMembers: Array(2), gig: {…}}",
+    "6": "{bandLeader: {…}, bandMembers: Array(2), gig: {…}}",
+    "13": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "14": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "15": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}",
+    "16": "{bandLeader: {…}, bandMembers: Array(1), gig: {…}}",
+    "17": "{bandLeader: {…}, bandMembers: Array(4), gig: {…}}",
+    "18": "{bandLeader: {…}, bandMembers: Array(4), gig: {…}}",
+    "19": "{bandLeader: {…}, bandMembers: Array(3), gig: {…}}",
+    "20": "{bandLeader: {…}, bandMembers: Array(0), gig: {…}}"
+  },
+  "anchorEl": null,
+  "isMenuOpen": false,
+  "isNotificationsOpen": false,
+  "open": true,
+  "windowDimensions": {
+    "height": 939,
+    "width": 1848
+  },
+  "notifications": [
+    "{createdAt: \"2021-10-22T04:48:03.737Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:03.843Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.544Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.550Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.553Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.585Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.651Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:06.348Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:07.851Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:10.486Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.073Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:12.357Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:13.197Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.289Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.593Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.980Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:07.484Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:09.574Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.007Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.119Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.958Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:12.478Z\", details: {……}"
+  ],
+  "fetchNotifications": "ƒ () {}",
+  "setHomeState": "ƒ () {}",
+  "dashboardRoute": "gigs",
+  "setMainState": "ƒ () {}"
+}
+
+***********************************
+***********************************
+***********************************
+***********************************
+***********************************
+*** *** GigIndex State *** ***
+{
+  "offers": [
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:04.65…}"
+  ],
+  "gigs": [
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:03.40…}",
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:03.43…}",
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:03.53…}",
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:03.72…}",
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:04.58…}",
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:04.54…}",
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:00.93…}",
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:04.51…}",
+    "{callStack: {…}, createdAt: \"2021-10-22T04:48:01.04…}"
+  ],
+  "notifications": [
+    "{createdAt: \"2021-10-22T04:48:03.737Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:03.843Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.544Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.550Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.553Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.585Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:04.651Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:06.348Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:07.851Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:10.486Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.073Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:12.357Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:13.197Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.289Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.593Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:05.980Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:07.484Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:09.574Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.007Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.119Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:11.958Z\", details: {……}",
+    "{createdAt: \"2021-10-22T04:48:12.478Z\", details: {……}"
+  ],
+  "notificationsHash": {
+    "100": "[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]",
+    "200": "[{…}, {…}, {…}, {…}, {…}, {…}, {…}]",
+    "201": "[{…}, {…}, {…}]",
+    "300": "[{…}]",
+    "301": "[{…}]"
+  },
+  "user": {
+    "id": 4,
+    "email": "user4@email.com",
+    "passwordhash": null,
+    "role": null,
+    "photo": "https://randomuser.me/api/portraits/med/men/48.jpg",
+    "emails": true,
+    "name": "Henry Crawford",
+    "description": null,
+    "location": null,
+    "paymentPreference": null,
+    "specialties": null,
+    "createdAt": "2021-10-22T04:48:03.394Z",
+    "updatedAt": "2021-10-22T04:48:03.394Z",
+    "gigs": "[{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]"
+  },
+  "messageCode": null,
+  "windowDimensions": {
+    "height": 939,
+    "width": 1848
+  },
+  "setGigState": "ƒ () {}"
+}
+

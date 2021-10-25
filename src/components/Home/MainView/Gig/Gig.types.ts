@@ -42,7 +42,7 @@ export type BandLeader = {
 export interface DetailedGig {
   gig: Gig,
   bandLeader: BandLeader,
-  bandMembers: BandMember
+  bandMembers: BandMember[]
 }
 
 

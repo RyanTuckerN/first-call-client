@@ -2,22 +2,36 @@ import React, { useState } from "react";
 import { GigIndexState } from "../GigsIndex";
 import { Notification } from "../../../../../types/API.types";
 import { Button, Grid, Paper, Typography, Box } from "@mui/material";
-import { HashCode, RouteOption, Routes } from "../Gig.types";
+import { DetailedGig, HashCode, RouteOption, Routes } from "../Gig.types";
 import NotificationsDashBoard from "./GigDashboard";
 import Notifications from "../../../components/Notifications";
 import { GigSidebar, BottomNav } from "./Navigation";
 import GigsDash from "./GigsDash";
 import GigsMapper from "./mappers/GigsMapper";
 
-interface GigWelcomeProps extends GigIndexState {}
+interface GigWelcomeProps extends GigIndexState {
+  dashboardRoute: RouteOption; //Main state
+  detailsHash: { [key: string]: DetailedGig };
+  setMainState: (key: string, value: any) => void;
+  setHomeState: (key: string, value: any) => void;
+}
 
 const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
   props: GigWelcomeProps
 ) => {
-  const [route, setRoute] = useState<RouteOption>("notifications");
-  const { user, notifications, messageCode, windowDimensions, setGigState } =
-    props;
+  const {
+    user,
+    notifications,
+    messageCode,
+    windowDimensions,
+    dashboardRoute,
+    setGigState,
+    setMainState,
+  } = props;
   const { width } = windowDimensions;
+
+  const setRoute = (route: RouteOption) =>
+    setMainState("dashboardRoute", route);
 
   const routes: Routes = {
     notifications: {
@@ -30,23 +44,22 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       dash: <NotificationsDashBoard {...props} />,
     },
     gigs: {
-      body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="gigs" />,
+      body: <GigsMapper {...props} gigsOrOffers="gigs" user={props.user} />,
       dash: <GigsDash {...props} gigsOrOffers="gigs" />,
     },
     offers: {
-      body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="offers" />,
+      body: <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />,
       dash: <GigsDash {...props} gigsOrOffers="offers" />,
     },
     gig: {
-      body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="offers" />,
+      body: <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />,
       dash: <GigsDash {...props} gigsOrOffers="offers" />,
     },
     callStack: {
-      body: <GigsMapper {...props} setRoute={setRoute} gigsOrOffers="offers" />,
+      body: <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />,
       dash: <GigsDash {...props} gigsOrOffers="offers" />,
     },
   };
-
 
   return (
     <>
@@ -58,22 +71,24 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
           {user && `Welcome back, ${user.name.split(" ")[0]}!`}
         </Typography>
       </Paper>
-      {routes[route]?.dash}
+      {routes[dashboardRoute]?.dash}
       <Grid container spacing={2} display="flex" justifyContent="center">
         {width >= 600 && (
           <Grid item xs={3} sm={3}>
-            <GigSidebar {...props} setRoute={setRoute} route={route} />
+            <GigSidebar {...props} setRoute={setRoute} route={dashboardRoute} />
           </Grid>
         )}
         <Grid item xs={12} sm={9}>
-          {routes[route]?.body}
+          {routes[dashboardRoute]?.body}
           <Box display="flex" justifyContent="center">
-            {route === "notifications" && notifications.length ? (
+            {dashboardRoute === "notifications" && notifications.length ? (
               <Button onClick={() => setGigState("messageCode", null)}>
                 show all notifications
               </Button>
-            ) : route === "notifications" ? (
-              <Button disabled sx={{marginTop: 4}}>No Notifications!</Button>
+            ) : dashboardRoute === "notifications" ? (
+              <Button disabled sx={{ marginTop: 4 }}>
+                No Notifications!
+              </Button>
             ) : null}
           </Box>
         </Grid>
@@ -81,7 +96,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       {width < 600 && (
         <>
           <div id="spacer" style={{ height: 40 }} />{" "}
-          <BottomNav {...props} setRoute={setRoute} route={route} />
+          <BottomNav {...props} setRoute={setRoute} route={dashboardRoute} />
         </>
       )}
     </>

@@ -25,7 +25,10 @@ import Swal from "sweetalert2";
 // };
 // const keys = Object.entries(payment)
 
-interface EditProfileProps {}
+interface EditProfileProps  {
+  updateProfile: (prop: any) => Promise<boolean>;
+  user: User
+}
 
 interface EditProfileState extends User {
   handle?: string;
@@ -46,9 +49,9 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
   constructor(props: EditProfileProps, context: any) {
     super(props, context);
     this.state = {
-      ...this.context.user,
-      handle: this.context.user.paymentPreference?.handle ?? "",
-      platform: this.context.user.paymentPreference?.platform ?? "",
+      ...this.props.user,
+      handle: this.props.user.paymentPreference?.handle ?? "",
+      platform: this.props.user.paymentPreference?.platform ?? "",
       snackBarOpen: false,
       success: null,
       // stateChanged: false
@@ -91,7 +94,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
       paymentPreference,
       role,
     };
-    if (await this.context.updateProfile(body)) {
+    if (await this.props.updateProfile(body)) {
       this.stateChanged = false;
       this.handleSuccess();
     } else this.handleFailure();
@@ -103,6 +106,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
   }
   componentDidUpdate(prevProps: EditProfileProps, prevState: EditProfileState) {
     if (prevState !== this.state) {
+
       this.stateChanged = true;
 
 
@@ -122,6 +126,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
       return;
     }
     this.setState({ snackBarOpen: false });
+    this.stateChanged = false
   };
 
   render() {

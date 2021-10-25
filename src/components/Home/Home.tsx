@@ -29,6 +29,7 @@ import {
   Logout,
   ArrowDropDown,
   Add,
+  Dashboard,
 } from "@mui/icons-material";
 import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
@@ -49,9 +50,13 @@ import API_URL from "../_helpers/environment";
 import { HomeFunctions, WindowDimensions } from "./Home.types";
 import { Paper } from "@mui/material";
 import { DetailedGig } from "./MainView/Gig/Gig.types";
+import { AppState } from "../../App";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
+  setAppState: (key: string, value: any) => void;
+  setToken: (token: string)=>void;
+  token: string;
   auth: boolean | null;
   user: User | null
 }
@@ -71,8 +76,8 @@ class Home extends Component<HomeProps, HomeState> {
   menuId: string = "primary-account-menu";
   appBarHeight: number = 75;
 
-  constructor(props: HomeProps) {
-    super(props);
+  constructor(props: HomeProps, context: AppState) {
+    super(props, context);
     this.state = {
       detailsHash: null,
       anchorEl: null,
@@ -93,26 +98,24 @@ class Home extends Component<HomeProps, HomeState> {
     this.setState(stateObj)
   }
 
-  functions: HomeFunctions = {
-    fetchNotifications: async (): Promise<any> => {
+  fetchNotifications =  async (): Promise<void> => {
       const json = await fetchHandler({
         url: `${API_URL}/user/notifications`,
-        auth: localStorage.getItem("token") ?? "",
+        auth: localStorage.getItem("token") ?? this.context.token ?? '',
       });
       json.auth &&
         this.setState({
           notifications: json.notifications,
         });
-    },
+  }
 
-    fetchOffers: async (): Promise<any> => {
-      const json = await fetchHandler({
-        url: `${API_URL}/user/offers`,
-        auth: localStorage.getItem("token") ?? "",
-      });
-      // console.log(json);
-    },
-  };
+    // fetchOffers: async (): Promise<any> => {
+    //   const json = await fetchHandler({
+    //     url: `${API_URL}/user/offers`,
+    //     auth: localStorage.getItem("token") ?? "",
+    //   });
+    //   this.setState({})
+    // },
 
   handleResize = (): void =>
     this.setState({
@@ -193,7 +196,7 @@ class Home extends Component<HomeProps, HomeState> {
                         id="home-button"
                         color="inherit"
                       >
-                        <HomeIcon />
+                        <Dashboard />
                       </IconButton>
                     </Link>
                     <IconButton
@@ -219,20 +222,22 @@ class Home extends Component<HomeProps, HomeState> {
                       className="arrow-dropdown"
                       fontSize="small"
                     />
-                    <IconButton
-                      size="small"
-                      edge="end"
-                      color='inherit'
-                      id="account-menu-button"
-                      aria-label="account of current user"
-                      style={{ marginLeft: -10 }}
-                    >
-                      <Add />
-                    </IconButton>
-                    <ArrowDropDown
-                      className="arrow-dropdown"
-                      fontSize="small"
-                    />
+                    <Link to='/main/add'>
+                      <IconButton
+                        size="small"
+                        edge="end"
+                        color='inherit'
+                        id="add-new-gig"
+                        aria-label="create a new gig"
+                        style={{ marginLeft: -10 }}
+                      >
+                        <Add />
+                      </IconButton>
+                      <ArrowDropDown
+                        className="arrow-dropdown"
+                        fontSize="small"
+                      />
+                    </Link>
                   </Box>
                   <Menu
                     anchorEl={this.state.anchorEl}
@@ -328,12 +333,13 @@ class Home extends Component<HomeProps, HomeState> {
                   <Respond />
                 </Route>
                 <Route path="/main">
-                  <MainView
-                    functions={this.functions}
+                  {this.props.user ? <MainView
+                    {...this.props} {...this.state}
+                    fetchNotifications={this.fetchNotifications}
                     notifications={this.state.notifications}
                     setHomeState={this.setHomeState}
-                    {...this.props}
-                  />
+                    user={this.props.user}
+                  /> : null}
                 </Route>
 
                 <Route path="/welcome">
@@ -341,7 +347,7 @@ class Home extends Component<HomeProps, HomeState> {
                 </Route>
 
                 <Route path="/auth">
-                  <Auth />
+                  <Auth {...this.props} />
                 </Route>
               </Switch>
             </Paper>
