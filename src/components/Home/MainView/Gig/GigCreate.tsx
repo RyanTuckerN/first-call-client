@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Component } from "react";
 import CallStackCreate from "./CallStack/CallStackCreate";
+import {Grid} from '@mui/material'
 import { User } from "../../../../types/API.types";
 import GigEdit from "./components/GigView/GigEdit";
 import { WindowDimensions } from "../../Home.types";
@@ -25,18 +26,22 @@ class GigCreate extends Component<GigCreateProps, GigCreateState> {
 
   render() {
     return (
-      <div>
-        <GigEdit
-          windowDimensions={this.props.windowDimensions}
-          gigCreate={true}
-          setGigId={this.setGigId}
-          callStackEmpty={this.state.callStackEmpty}
-        />
-        <CallStackCreate
-          setCallStackEmpty={this.setCallStackEmpty}
-          gigId={this.state.gigId}
-        />
-      </div>
+      <Grid container >
+        <Grid item xs={12} lg={6}>
+          <GigEdit
+            windowDimensions={this.props.windowDimensions}
+            gigCreate={true}
+            setGigId={this.setGigId}
+            callStackEmpty={this.state.callStackEmpty}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <CallStackCreate
+            setCallStackEmpty={this.setCallStackEmpty}
+            gigId={this.state.gigId}
+          />
+        </Grid>
+      </Grid>
     );
   }
 }

@@ -52,3 +52,14 @@ export const formControl = {
   validatePasswordsMatch: (p1: string, p2: string): boolean => p1 === p2,
   validatePassword: (p1: string): boolean => p1.length >= 8,
 };
+
+export const returnTimeDifference = (d1: Date, d2: Date): string => {
+  const m = Math.abs(Math.floor((d1.getTime() - d2.getTime()) / (1000 * 60)));
+  return m < 1
+    ? "Less than 1m"
+    : m < 60
+    ? `${m}m`
+    : m < 60 * 24
+    ? `${(m - (m % 60)) / 60}h`
+    : `${Math.floor(m / 24 / 60)}d`;
+};

@@ -181,7 +181,7 @@ class GigEdit extends Component {
       body,
       auth: localStorage.getItem("token" ?? this.context.token ?? ""),
     });
-    console.log(json)
+    console.log(json);
     json.success
       ? this.state.gigCreate
         ? this.props.setGigId(json.newGig.id)
@@ -201,14 +201,14 @@ class GigEdit extends Component {
         <Grid
           container
           spacing={1}
-          padding={1}
+          padding={2}
           display="flex"
           justifyContent="space-between"
         >
-          <Grid item container xs={12}>
+          <Grid item container xs={12} sx={{ marginTop: 1 }} display='flex' justifyContent='space-between'>
             <Typography variant="h4">Details</Typography>
             {/* {!this.state.gigCreate ? ( */}
-            <Button onClick={this.handleSave}>Save</Button>
+            <Button color='success' variant='contained' onClick={this.handleSave}>{this.state.gigCreate ? `CREATE GIG` : `SAVE`}</Button>
             {/* ) : null} */}
           </Grid>
           <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>

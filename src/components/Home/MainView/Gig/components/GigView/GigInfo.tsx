@@ -28,7 +28,7 @@ import {
   Circle,
   ErrorOutline,
   Build,
-  AddBoxOutlined
+  AddBoxOutlined,
   // Circle
 } from "@mui/icons-material";
 import { DetailedGig } from "../../Gig.types";
@@ -41,8 +41,8 @@ interface GigInfoProps extends GigPageState {
   details: DetailedGig;
   user: User;
   gig: Gig;
-  toggleEditMode: VoidFunction;
-  setAuth: (b: boolean) => void;
+  toggleEditMode?: VoidFunction;
+  setAuth?: (b: boolean) => void;
 }
 
 const GigInfo: React.FunctionComponent<GigInfoProps> = ({
@@ -63,99 +63,108 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
     );
   };
 
-  useEffect(() => setAuth(user.id === details.bandLeader.id), []);
+  useEffect(
+    setAuth ? () => setAuth(user.id === details.bandLeader.id) : () => null,
+    []
+  );
   useEffect(checkStack, [callStack]);
 
   const d = new Date(date);
   const entries = Object.entries(optionalInfo ?? {});
   const roles = Object.keys(callStack?.stackTable ?? {});
   const filled = roles.filter((r) => callStack?.stackTable[r].filled);
-  const typoSx = { paddingTop: 3 };
+  const typoSx = { paddingTop: 1.5 };
 
   return (
-    <Grid container display="flex" justifyContent="center">
-      <List>
-        <Typography {...typoSx} variant="h6">
-          Details
-        </Typography>
-        <ListItem>
-          <ListItemAvatar>
-            {bandLeader.photo ? (
-              <Avatar
-                src={bandLeader.photo}
-                alt={bandLeader.name}
-                sx={{ height: avatarSize, width: avatarSize }}
-              />
+    <Grid container display="flex" >
+      {/* <List> */}
+        <Grid item xs={12} md ={6} lg={4}>
+          <Typography {...typoSx} variant="h6">
+            Details
+          </Typography>
+          <ListItem>
+            <ListItemAvatar>
+              {bandLeader.photo ? (
+                <Avatar
+                  src={bandLeader.photo}
+                  alt={bandLeader.name}
+                  sx={{ height: avatarSize, width: avatarSize }}
+                />
+              ) : (
+                <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
+              )}
+            </ListItemAvatar>
+            {/* <ListItemText  primary={bandLeader.name} /> */}
+            {authorizedView ? (
+              <Typography variant="subtitle1">You are the bandleader</Typography>
             ) : (
-              <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
-            )}
-          </ListItemAvatar>
-          {/* <ListItemText  primary={bandLeader.name} /> */}
-          {authorizedView ? (
-            <Typography variant="subtitle1">You are the bandleader</Typography>
-          ) : (
-            <Typography variant="subtitle1">
-              Gig hosted by <strong>{bandLeader.name}</strong>
-            </Typography>
-          )}
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <AttachMoney color="success" />
-          </ListItemIcon>
-          <Typography>
-            <strong>Pay: &nbsp; </strong>${payment}
-          </Typography>
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <LocationOn color="error" />
-          </ListItemIcon>
-          <Typography>
-            <strong>Location: &nbsp;</strong>
-            {location}
-          </Typography>
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <CalendarToday color="info" />
-          </ListItemIcon>
-          <Typography>
-            <strong>Date: &nbsp; </strong>
-            {`${d.toLocaleDateString()} at ${returnTime(d)}`}
-          </Typography>
-        </ListItem>
-        {entries.length ? (
-          <>
-            <Divider sx={{ paddingY: 1 }} />
-            <Typography {...typoSx} variant="h6">
-              Additional Info
-            </Typography>
-          </>
-        ) : null }
-
-        {entries.map((entry, i) => {
-          return (
-            <ListItem key={i}>
-              {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
-              <Typography sx={{}}>
-                <strong>{properize(entry[0])}: &nbsp; </strong>
-                {`${entry[1]}`}
+              <Typography variant="subtitle1">
+                Gig hosted by <strong>{bandLeader.name}</strong>
               </Typography>
-            </ListItem>
-          );
-        })}
-        <Divider sx={{ paddingY: 1 }} />
+            )}
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <AttachMoney color="success" />
+            </ListItemIcon>
+            <Typography>
+              <strong>Pay: &nbsp; </strong>${payment}
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <LocationOn color="error" />
+            </ListItemIcon>
+            <Typography>
+              <strong>Location: &nbsp;</strong>
+              {location}
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <ListItemIcon>
+              <CalendarToday color="info" />
+            </ListItemIcon>
+            <Typography>
+              <strong>Date: &nbsp; </strong>
+              {`${d.toLocaleDateString()} at ${returnTime(d)}`}
+            </Typography>
+          </ListItem>
+                </Grid>
+          <Grid item xs={12} lg={4}>
+            {entries.length ? (
+              <Grid item xs={12}>
+                {/* <Divider sx={{ paddingY: 1 }} /> */}
+                <Typography {...typoSx} variant="h6">
+                  Additional Info
+                </Typography>
+              </Grid>
+            ) : null}
+            <Grid item xs={12}>
+              {entries.map((entry, i) => {
+                return (
+                  <ListItem key={i}>
+                    {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
+                    <Typography sx={{}}>
+                      <strong>{properize(entry[0])}: &nbsp; </strong>
+                      {`${entry[1]}`}
+                    </Typography>
+                  </ListItem>
+                );
+              })}
+            </Grid>
+          </Grid>
+        {/* <Divider sx={{ paddingY: 1 }} /> */}
         <Grid
           container
+          item 
+          lg={4}
           display="flex"
           justifyContent="space-between"
           {...typoSx}
         >
-          <Grid item display="flex">
-            <Typography variant="h6">Band</Typography>
-            
-          </Grid>
+            <Grid item display='flex' justifyContent='center' xs={9}>
+              <Typography variant="h6" >Band</Typography>
+            </Grid>
           <Grid item display="flex">
             {filled.length ? (
               filled.length === roles.length ? (
@@ -165,18 +174,18 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                 </>
               ) : (
                 <>
-                {emptyStack && authorizedView ? (
-              <ErrorOutline
-                color="error"
-                fontSize="small"
-                sx={{ marginLeft: 1 }}
-              />
-            ) : null}
-                {`${filled.length}/${roles.length} filled`}</>
+                  {emptyStack && authorizedView ? (
+                    <ErrorOutline
+                      color="error"
+                      fontSize="small"
+                      sx={{ marginLeft: 1 }}
+                    />
+                  ) : null}
+                  {`${filled.length}/${roles.length} filled`}
+                </>
               )
             ) : null}
           </Grid>
-        </Grid>
 
         {roles.length && !authorizedView ? (
           roles.map((r, i) => (
@@ -187,7 +196,7 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                   callStack?.stackTable[r]?.confirmed?.name ??
                   callStack?.stackTable[r]?.confirmed?.email ?? (
                     <i>Not filled</i>
-                  )}
+                    )}
               </Typography>
             </ListItem>
           ))
@@ -202,7 +211,7 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                       <CheckCircleOutline
                         sx={{ fontSize: 17 }}
                         color="success"
-                      />
+                        />
                     </IconButton>
                   ) : role.emptyStack ? (
                     <IconButton onClick={toggleEditMode}>
@@ -223,8 +232,8 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                     {!role.filled ? (
                       !role.onCall && !role.calls?.length ? (
                         <Typography variant="body2">Empty Stack!</Typography>
-                      ) : (
-                        <>
+                        ) : (
+                          <>
                           <Typography display="inline" sx={{ marginLeft: 1 }}>
                             On call:
                           </Typography>
@@ -238,24 +247,24 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                           <Box>
                             {role.calls?.length ? (
                               <Typography
-                                display="inline"
-                                sx={{ marginLeft: 1 }}
+                              display="inline"
+                              sx={{ marginLeft: 1 }}
                               >
                                 Stack:
                               </Typography>
                             ) : null}
                             {role.calls?.length
                               ? role.calls?.map((call: any, i: number) => (
-                                  <Typography
-                                    display="inline"
+                                <Typography
+                                display="inline"
                                     sx={{ marginLeft: 1 }}
                                     variant="body2"
                                     key={i}
-                                  >
+                                    >
                                     {call}
                                   </Typography>
                                 ))
-                              : null}
+                                : null}
                           </Box>
                         </>
                       )
@@ -265,19 +274,20 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
               </ListItem>
             );
           })
-        ) : (
-          <ListItem>
+          ) : (
+            <ListItem>
             {/* <ListItemIcon> */}
-              <IconButton onClick={toggleEditMode}>
-                <AddBoxOutlined />
-              </IconButton>
+            <IconButton onClick={toggleEditMode}>
+              <AddBoxOutlined />
+            </IconButton>
             {/* </ListItemIcon> */}
             <Typography display="inline" sx={{ marginLeft: 1 }} variant="body2">
               Create your call lists!
             </Typography>
           </ListItem>
         )}
-      </List>
+      {/* </List> */}
+        </Grid>
     </Grid>
   );
 };

@@ -45,13 +45,15 @@ export interface Post {
   id: number;
   author: number;
   text: string;
-  childOf: number;
+  childOf: number | null;
+  gigId: number;
   upvotes: number;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
   voters: number[];
+  user?: User;
   details: PostDetails;
-  children: Post[];
+  children?: Post[];
 }
 interface PostDetails {
   edited?: boolean;

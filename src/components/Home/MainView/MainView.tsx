@@ -13,15 +13,16 @@ import GigIndex from "./Gig/GigsIndex";
 import Profile from "./Profile/Profile";
 import Settings from "./Settings/Settings";
 import { DetailedGig, RouteOption } from "./Gig/Gig.types";
+import { Alert, Snackbar } from "@mui/material";
 
 export interface MainViewProps extends RouteComponentProps {
   // functions: HomeFunctions;
   notifications: Notification[];
-  user: User ;
+  user: User;
   auth: boolean | null;
-  detailsHash: {[key: string]: DetailedGig} | null,
-  token: string,
-  fetchNotifications: ()=>Promise<void>;
+  detailsHash: { [key: string]: DetailedGig } | null;
+  token: string;
+  fetchNotifications: () => Promise<void>;
   setHomeState: (key: string, value: any) => void;
   setAppState: (key: string, value: any) => void;
 }
@@ -35,8 +36,8 @@ class MainView extends Component<MainViewProps, MainViewState> {
   constructor(props: MainViewProps) {
     super(props);
     this.state = {
-      dashboardRoute: "notifications",
       setMainState: this.setMainState,
+      dashboardRoute: "notifications",
     };
   }
 
@@ -46,12 +47,12 @@ class MainView extends Component<MainViewProps, MainViewState> {
     this.setState(stateObj);
   };
 
-  
-
   componentDidMount() {
     const { fetchNotifications } = this.props;
     fetchNotifications();
   }
+
+
 
   render() {
     return this.props.auth ? (
@@ -62,14 +63,15 @@ class MainView extends Component<MainViewProps, MainViewState> {
             <Profile {...this.props} />
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
-            <Settings {...this.props}/>
+            <Settings {...this.props} />
           </Route>
           <Route path={`${this.props.match.path}/`}>
             {this.props.user?.gigs && this.props.notifications ? (
-              <GigIndex {...this.props}  {...this.state} />
+              <GigIndex {...this.props} {...this.state} />
             ) : null}
           </Route>
         </Switch>
+        
       </>
     ) : null;
   }

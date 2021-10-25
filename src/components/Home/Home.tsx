@@ -222,7 +222,7 @@ class Home extends Component<HomeProps, HomeState> {
                       className="arrow-dropdown"
                       fontSize="small"
                     />
-                    <Link to='/main/gig/new'>
+                    <Link to='/main/add'>
                       <IconButton
                         size="small"
                         edge="end"

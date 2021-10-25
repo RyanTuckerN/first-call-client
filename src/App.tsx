@@ -4,13 +4,19 @@ import { BrowserRouter as Router } from "react-router-dom";
 // import "./App.css";
 import Home from "./components/Home/Home";
 import { UserCtx } from "./components/Context/MainContext";
-import { UserSetter, TokenSetter, ColorSetter, EmailSetter, StateSetter } from "./App.types";
+import {
+  UserSetter,
+  TokenSetter,
+  ColorSetter,
+  EmailSetter,
+  StateSetter,
+} from "./App.types";
 import { User, UserAuth } from "./types/API.types";
 import { light, dark } from "./components/Theme/Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { fetchHandler } from "./components/_helpers/fetchHandler";
 import API_URL from "./components/_helpers/environment";
-import {Snackbar} from '@mui/material'
+import { Snackbar, Alert } from "@mui/material";
 
 interface AppProps {}
 
@@ -19,10 +25,17 @@ export interface AppState {
   token: string;
   auth: boolean | null;
   darkModeOn: string;
-  authenticate: (token: string)=> Promise<void>;
+  snackBarOpen: boolean;
+  snackMessage: string;
+  snackSeverity: "success" | "warning" | "error" | "info" ;
+  handleSnackBar: (
+    snackMessage: string,
+    snackSeverity: "success" | "warning" | "error" | "info"  
+  ) => void;
+  authenticate: (token: string) => Promise<void>;
   toggleDark: ColorSetter;
   setToken: TokenSetter;
-  logout: ()=>void,
+  logout: () => void;
   setAppState: (key: string, value: any) => void;
 }
 
@@ -34,27 +47,31 @@ class App extends Component<AppProps, AppState> {
       token: "",
       auth: null,
       darkModeOn: localStorage.getItem("darkModeOn") ?? "false",
+      snackBarOpen: false,
+      snackMessage: "",
+      snackSeverity: 'info',
+      handleSnackBar: this.handleSnackBar,
       authenticate: this.authenticate,
       logout: this.logout,
       toggleDark: this.toggleDark,
       setToken: this.setToken,
-      setAppState: this.setAppState
+      setAppState: this.setAppState,
     };
   }
 
-  setAppState = (key: string, value: any):void =>{
-    const stateObj:any={}
-    stateObj[key]=value
-    this.setState(stateObj)
-  }
+  setAppState = (key: string, value: any): void => {
+    const stateObj: any = {};
+    stateObj[key] = value;
+    this.setState(stateObj);
+  };
 
   setUser = (user: User): void => this.setState({ user });
-  
+
   setToken = (token: string): void => {
     localStorage.setItem("token", token);
     this.setState({ token });
   };
-  
+
   logout = (): void => this.setState({ user: null, token: "", auth: null });
 
   toggleDark = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -67,7 +84,6 @@ class App extends Component<AppProps, AppState> {
     );
   };
 
-
   authenticate = async (token: string): Promise<void> => {
     const json: UserAuth = await fetchHandler({
       url: `${API_URL}/user/auth`,
@@ -79,6 +95,20 @@ class App extends Component<AppProps, AppState> {
       this.setState({ auth: false });
       localStorage.removeItem("token");
     }
+  };
+
+  handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({ snackBarOpen: false });
+  };
+
+  handleSnackBar = (
+    snackMessage: string,
+    snackSeverity: "success" | "warning" | "error" | "info" 
+  ): void => {
+    this.setState({ snackMessage, snackSeverity, snackBarOpen: true });
   };
 
   componentDidMount() {
@@ -96,7 +126,7 @@ class App extends Component<AppProps, AppState> {
         {/* Hello from App.tsx! */}
         <Router
         //  getUserConfirmation={()=>{}}
-         >
+        >
           <ThemeProvider
             theme={this.state.darkModeOn === "true" ? dark : light}
           >
@@ -111,6 +141,13 @@ class App extends Component<AppProps, AppState> {
             </UserCtx.Provider>
           </ThemeProvider>
         </Router>
+        <Snackbar
+          open={this.state.snackBarOpen}
+          autoHideDuration={4000}
+          onClose={this.handleClose}
+        >
+          <Alert severity={this.state.snackSeverity}>{this.state.snackMessage}</Alert>
+        </Snackbar>
       </div>
     );
   }
