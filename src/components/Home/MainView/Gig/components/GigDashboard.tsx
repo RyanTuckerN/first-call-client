@@ -7,19 +7,25 @@ import { HashCode } from "../Gig.types";
 import BlockMapper from "./mappers/BlockMapper";
 import BarMapper from "./mappers/BarMapper";
 
-interface GigDashBoardProps extends GigIndexState {}
-interface GigDashBoardState {}
+interface GigDashBoardProps extends GigIndexState {
+  width: number
+}
+interface GigDashBoardState {
+}
 class GigDashBoard extends React.Component<
   GigDashBoardProps,
   GigDashBoardState
 > {
   constructor(props: GigDashBoardProps) {
     super(props);
+
   }
 
+
+
   render() {
-    const { notificationsHash, windowDimensions, notifications } = this.props;
-    const { width } = windowDimensions;
+    const { notificationsHash, notifications } = this.props;
+    const { width } = this.props;
     return width >= 600 && notifications.length? (
       <>
         <Grid

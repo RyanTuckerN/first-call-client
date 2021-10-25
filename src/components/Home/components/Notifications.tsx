@@ -68,11 +68,11 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
             <ListItemText
               style={{
                 // marginLeft: 15,
-                padding: 8,
+                // padding: 8,
                 borderRadius: 25,
-                background: `linear-gradient(90deg, rgba(255,255,255,0) 0%, ${
-                  hash[code.toString()].color
-                }30 0%, rgba(255,255,255,0) 100%)`,
+                // background: `linear-gradient(90deg, rgba(255,255,255,0) 0%, ${
+                //   hash[code.toString()].color
+                // }30 0%, rgba(255,255,255,0) 100%)`,
               }}
             >
               <Link to={`/main/gig/${n.details.gigId}`}>{hash[code.toString()].icon}</Link>

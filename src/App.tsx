@@ -27,10 +27,10 @@ export interface AppState {
   darkModeOn: string;
   snackBarOpen: boolean;
   snackMessage: string;
-  snackSeverity: "success" | "warning" | "error" | "info" ;
+  snackSeverity: "success" | "warning" | "error" | "info";
   handleSnackBar: (
     snackMessage: string,
-    snackSeverity: "success" | "warning" | "error" | "info"  
+    snackSeverity: "success" | "warning" | "error" | "info"
   ) => void;
   authenticate: (token: string) => Promise<void>;
   toggleDark: ColorSetter;
@@ -49,7 +49,7 @@ class App extends Component<AppProps, AppState> {
       darkModeOn: localStorage.getItem("darkModeOn") ?? "false",
       snackBarOpen: false,
       snackMessage: "",
-      snackSeverity: 'info',
+      snackSeverity: "info",
       handleSnackBar: this.handleSnackBar,
       authenticate: this.authenticate,
       logout: this.logout,
@@ -106,7 +106,7 @@ class App extends Component<AppProps, AppState> {
 
   handleSnackBar = (
     snackMessage: string,
-    snackSeverity: "success" | "warning" | "error" | "info" 
+    snackSeverity: "success" | "warning" | "error" | "info"
   ): void => {
     this.setState({ snackMessage, snackSeverity, snackBarOpen: true });
   };
@@ -122,7 +122,7 @@ class App extends Component<AppProps, AppState> {
 
   render() {
     return (
-      <div>
+      <>
         {/* Hello from App.tsx! */}
         <Router
         //  getUserConfirmation={()=>{}}
@@ -146,9 +146,11 @@ class App extends Component<AppProps, AppState> {
           autoHideDuration={4000}
           onClose={this.handleClose}
         >
-          <Alert severity={this.state.snackSeverity}>{this.state.snackMessage}</Alert>
+          <Alert severity={this.state.snackSeverity}>
+            {this.state.snackMessage}
+          </Alert>
         </Snackbar>
-      </div>
+      </>
     );
   }
 }

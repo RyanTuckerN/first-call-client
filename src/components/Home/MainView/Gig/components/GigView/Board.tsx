@@ -3,7 +3,14 @@ import { Component } from "react";
 import { Post } from "../../../../../../types/API.types";
 import { postOrganizer } from "../../../../../_helpers/postOrganizer";
 import * as _ from "lodash";
-import { Button, Grid, Divider, TextField } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Divider,
+  TextField,
+  Paper,
+  Typography,
+} from "@mui/material";
 import PostComponent from "./Post";
 import API_URL from "../../../../../_helpers/environment";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
@@ -25,7 +32,7 @@ class Board extends Component<BoardProps, BoardState> {
     super(props);
     this.state = {
       posts: this.props.posts,
-      emptyBoard: !_.isEmpty(this.props.posts.length),
+      emptyBoard: !_.isEmpty(this.props.posts),
       organizedPosts: postOrganizer(this.props.posts),
       text: "",
     };
@@ -43,7 +50,10 @@ class Board extends Component<BoardProps, BoardState> {
       ),
     });
 
-  handleNewPost = async (): Promise<boolean> => {
+  handleNewPost = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<boolean> => {
+    e.preventDefault();
     if (!this.state.text) return false;
     const json = await fetchHandler({
       url: `${API_URL}/board/${this.props.gigId}/newPost`,
@@ -59,6 +69,13 @@ class Board extends Component<BoardProps, BoardState> {
     return json.success;
   };
 
+  // handleEventListener = (): void => {
+  //   window.addEventListener("keydown", this.logEvent);
+  // };
+  // removeEL = (): void => window.removeEventListener("keydown", this.logEvent);
+
+  // logEvent = (e: any): void => console.log(e.key);
+
   componentDidUpdate(prevProps: BoardProps, prevState: BoardState) {
     if (prevProps.posts !== this.props.posts) {
       this.setState({ organizedPosts: postOrganizer(this.props.posts) });
@@ -70,55 +87,104 @@ class Board extends Component<BoardProps, BoardState> {
 
   render() {
     return (
-      <Grid container display="flex" justifyContent="space-between">
-        <Grid item xs={12}>
-          <TextField
-            value={this.state.text}
-            onChange={this.handleText}
-            fullWidth={true}
-            minRows={4}
-            multiline
-          />
-        </Grid>
-        <Grid item xs={8}>
-          <Button
-            variant="outlined"
-            sx={{ margin: 1 }}
-            onClick={() => this.handleSort("upvotes")}
-          >
-            top
-          </Button>
-          <Button
-            variant="outlined"
-            sx={{ margin: 1 }}
-            onClick={() => this.handleSort("createdAt")}
-          >
-            new
-          </Button>
-        </Grid>
-        <Grid item xs={4} textAlign="end">
-          <Button
-            sx={{ margin: 1 }}
-            color="success"
-            variant="contained"
-            onClick={() => this.handleNewPost()}
-          >
-            POST
-          </Button>
-        </Grid>
-        <Grid container>
-          {this.state.organizedPosts.map((p, i) => (
-            <React.Fragment key={p.id}>
-              <PostComponent
-                post={p}
-                key={p.id}
-                i={1}
-                fetchPosts={this.props.fetchPosts}
-              />
-              {/* {i < this.state.organizedPosts.length ? <Divider /> : null} */}
-            </React.Fragment>
-          ))}
-        </Grid>
+      <Grid
+        container
+        item
+        xs={12}
+        sm={10}
+        md={8}
+        border={1}
+        sx={{ borderColor: "#3f3f3f50" }}
+      >
+        <Paper
+          elevation={12}
+          sx={{ padding: 2, width: "100%", maxWidth: "100%" }}
+        >
+          {/* <Box border={1}  sx={{borderColor: '#3f3f3f50', padding: 3}}> */}
+          <Grid item xs={12}>
+            <form
+              action="submit"
+              id="main-input"
+              onSubmit={this.handleNewPost}
+              // onFocus={this.handleEventListener}
+              // onBlur={this.removeEL}
+            >
+              <Grid item xs={12}>
+                <TextField
+                  value={this.state.text}
+                  onChange={this.handleText}
+                  fullWidth={true}
+                  minRows={4}
+                  multiline
+                />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                display="flex"
+                justifyContent="flex-end"
+                marginBottom={2}
+              >
+                <Button
+                  type="submit"
+                  sx={{ margin: 1 }}
+                  color="success"
+                  variant="contained"
+                >
+                  POST
+                </Button>
+              </Grid>
+            </form>
+          </Grid>
+          {/* <Divider /> */}
+          {/* <div style={{height: 15}} /> */}
+          {this.state.organizedPosts.length ? (
+            <>
+              <Grid item xs={12} display="flex" alignItems="center">
+                <Typography variant="button">sort by:</Typography>
+                <Button
+                  variant="text"
+                  sx={{ margin: 1 }}
+                  onClick={() => this.handleSort("upvotes")}
+                >
+                  top
+                </Button>
+                <Button
+                  variant="text"
+                  sx={{ margin: 1 }}
+                  onClick={() => this.handleSort("createdAt")}
+                >
+                  new
+                </Button>
+              </Grid>
+              <Grid
+                container
+                item
+                xs={12}
+                display="flex"
+                flexDirection="column"
+                sx={{ position: "relative", left: -8 }}
+              >
+                {this.state.organizedPosts.map((p, i) => (
+                  // <React.Fragment key={p.id}>
+                  <PostComponent
+                    post={p}
+                    key={p.id}
+                    i={1}
+                    fetchPosts={this.props.fetchPosts}
+                  />
+                ))}
+              </Grid>
+            </>
+          ) : (
+            <Grid item xs={12} display="flex" justifyContent="center">
+              <Button variant="text" disabled>
+                No Posts!
+              </Button>
+            </Grid>
+          )}
+          {/* </Box> */}
+        </Paper>
       </Grid>
     );
   }

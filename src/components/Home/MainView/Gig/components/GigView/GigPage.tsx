@@ -16,7 +16,6 @@ import {
   NavLink,
 } from "react-router-dom";
 import { DetailedGig } from "../../Gig.types";
-import { WindowDimensions } from "../../../../Home.types";
 import CallStackCreate from "../../CallStack/CallStackCreate";
 import GigInvite from "../GigInvite";
 import { UserCtx } from "../../../../../Context/MainContext";
@@ -34,7 +33,6 @@ interface GigPageProps extends RouteComponentProps<RouteParams> {
   offers: Gig[];
   gigs: Gig[];
   user: User;
-  windowDimensions: WindowDimensions;
 }
 
 export interface GigPageState {
@@ -120,7 +118,10 @@ class GigPage extends Component<GigPageProps, GigPageState> {
               .includes(this.state.gig?.id ?? 0) ? (
               <Redirect to="" />
             ) : (
-              <Grid container>
+              <Grid 
+                container 
+                // sx={{backgroundColor: 'red'}}
+              >
                 {/* Hello From GigPage.tsx! */}
                 {this.state.gig && (
                   <GigHeader
@@ -130,6 +131,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                   />
                 )}
                 <Grid
+                container
                   display="flex"
                   flexWrap={
                     this.state.gig?.openCalls.includes(this.props.user.email)
@@ -137,7 +139,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                       : "wrap"
                   }
                 >
-                  <Grid item xs={12} md={12} sx={{ marginTop: 3 }}>
+                  {/* <Grid item xs={12} sx={{ marginTop: 3 }}> */}
                     {/* <Paper elevation={12} sx={{ }}> */}
                     {this.state.details &&
                     !this.state.editMode &&
@@ -149,7 +151,6 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                           editMode: this.state.editMode,
                           gigId: this.state.gigId,
                           setAuth: this.setAuthorizedView,
-                          windowDimensions: this.props.windowDimensions,
                           posts: this.state.posts,
                         }}
                         toggleEditMode={this.toggleEditMode}
@@ -162,13 +163,12 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                       <GigEdit
                         {...this.state.gig}
                         details={this.state.details}
-                        windowDimensions={this.props.windowDimensions}
                         setGig={this.setGig}
                       />
                     ) : null}
                     {/* </Paper> */}
-                  </Grid>
-                  <Grid item xs={12} md={6} sx={{ marginTop: 3 }}>
+                  {/* </Grid> */}
+                  <Grid container item xs={12} display='flex' justifyContent='center' sx={{ marginTop: 3}}>
                     {/* <CallStackCreate /> */}
                     {this.state.gig ? (
                       this.state.gig.openCalls.includes(
@@ -180,13 +180,13 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                           details={this.state.details}
                           setGig={this.setGig}
                         />
-                      ) : !this.state.editMode && (
+                      ) : !this.state.editMode && this.state.posts ? (
                         <Board
                           posts={this.state.posts}
                           fetchPosts={this.fetchPosts}
                           gigId={this.state.gigId}
                         />
-                      )
+                      ) : <div>loading</div>
                     ) : null}
                   </Grid>
                 </Grid>

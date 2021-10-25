@@ -310,7 +310,7 @@ class Home extends Component<HomeProps, HomeState> {
             {/* box is just to show layout, should be removed */}
             <Paper
               sx={{
-                padding: 1,
+                padding: 2,
                 marginBottom: 2,
                 minHeight:
                   this.state.windowDimensions.height - this.appBarHeight - 30,

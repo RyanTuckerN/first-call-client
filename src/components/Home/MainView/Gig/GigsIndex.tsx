@@ -39,7 +39,6 @@ export interface GigIndexState {
   notifications: Notification[];
   notificationsHash: NotificationsHash;
   user: User | null;
-  windowDimensions: WindowDimensions;
   messageCode: number | null;
   // setHomeState: (key: string, value: any) => void;
   setGigState: (key: string, value: any) => void;
@@ -60,10 +59,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       notificationsHash: this.notificationHash(this.props.notifications),
       user: this.props.user,
       messageCode: null,
-      windowDimensions: {
-        height: window.innerHeight,
-        width: window.innerWidth,
-      },
+      
       // setHomeState: this.props.setHomeState,
       setGigState: this.setGigState,
     };
@@ -104,13 +100,13 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       return obj;
     }, {});
 
-  handleResize = (): void =>
-    this.setState({
-      windowDimensions: {
-        height: window.innerHeight,
-        width: window.innerWidth,
-      },
-    });
+  // handleResize = (): void =>
+  //   this.setState({
+  //     windowDimensions: {
+  //       height: window.innerHeight,
+  //       width: window.innerWidth,
+  //     },
+  //   });
 
   componentDidUpdate(prevProps: GigIndexProps, prevState: GigIndexState) {
     if (prevProps.notifications !== this.props.notifications) {
@@ -137,12 +133,11 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   }
 
   async componentDidMount() {
-    window.addEventListener("resize", this.handleResize);
+    // window.addEventListener("resize", this.handleResize);
     await this.fetchOffers();
     if (!this.props.detailsHash) await this.fetchDetails();
   }
   render() {
-    const { width } = this.state.windowDimensions;
 
     return (
       <>
@@ -177,15 +172,13 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
               {...this.state}
               user={this.state.user}
               detailsHash={this.props.detailsHash}
-              windowDimensions={this.state.windowDimensions}
             />
           ) : null}
         </Route>
         <Route exact path="/main/add">
-          {this.state.user && this.state.windowDimensions ? (
+          {this.state.user ? (
             <GigCreate
               {...this.state.user}
-              windowDimensions={this.state.windowDimensions}
             />
           ) : null}
         </Route>

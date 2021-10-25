@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GigIndexState } from "../GigsIndex";
 import { Notification } from "../../../../../types/API.types";
 import { Button, Grid, Paper, Typography, Box } from "@mui/material";
@@ -8,6 +8,7 @@ import Notifications from "../../../components/Notifications";
 import { GigSidebar, BottomNav } from "./Navigation";
 import GigsDash from "./GigsDash";
 import GigsMapper from "./mappers/GigsMapper";
+import "../Gig.css";
 
 interface GigWelcomeProps extends GigIndexState {
   dashboardRoute: RouteOption; //Main state
@@ -23,12 +24,25 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
     user,
     notifications,
     messageCode,
-    windowDimensions,
     dashboardRoute,
     setGigState,
     setMainState,
   } = props;
-  const { width } = windowDimensions;
+
+  // const [windowDimensions, setWindowDimensions] = useState({height: window.innerHeight, width: window.innerWidth});
+  const [width, setWidth] = useState(window.innerWidth);
+
+  const handleResize = (w: number): void => setWidth(w);
+
+  useEffect(() => {
+    window.addEventListener("resize", () => handleResize(window.innerWidth));
+    return window.removeEventListener("resize", () => handleResize(window.innerWidth)
+    );
+  });
+
+  // useEffect(()=>{
+  //   console.log(windowDimensions)
+  // },[windowDimensions])
 
   const setRoute = (route: RouteOption) =>
     setMainState("dashboardRoute", route);
@@ -41,7 +55,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
           setHomeState={props.setHomeState}
         />
       ),
-      dash: <NotificationsDashBoard {...props} />,
+      dash: <NotificationsDashBoard {...props} width={width} />,
     },
     gigs: {
       body: <GigsMapper {...props} gigsOrOffers="gigs" user={props.user} />,
@@ -74,7 +88,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       {routes[dashboardRoute]?.dash}
       <Grid container spacing={2} display="flex" justifyContent="center">
         {width >= 600 && (
-          <Grid item xs={3} sm={3}>
+          <Grid className="large-screen" item xs={3} sm={false}>
             <GigSidebar {...props} setRoute={setRoute} route={dashboardRoute} />
           </Grid>
         )}
@@ -95,7 +109,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       </Grid>
       {width < 600 && (
         <>
-          <div id="spacer" style={{ height: 40 }} />{" "}
+          <div id="spacer" className="small-screen" style={{ height: 40 }} />{" "}
           <BottomNav {...props} setRoute={setRoute} route={dashboardRoute} />
         </>
       )}

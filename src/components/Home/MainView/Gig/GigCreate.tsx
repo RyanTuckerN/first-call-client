@@ -4,10 +4,8 @@ import CallStackCreate from "./CallStack/CallStackCreate";
 import {Grid} from '@mui/material'
 import { User } from "../../../../types/API.types";
 import GigEdit from "./components/GigView/GigEdit";
-import { WindowDimensions } from "../../Home.types";
 
 interface GigCreateProps extends User {
-  windowDimensions: WindowDimensions;
 }
 
 interface GigCreateState {
@@ -29,7 +27,6 @@ class GigCreate extends Component<GigCreateProps, GigCreateState> {
       <Grid container >
         <Grid item xs={12} lg={6}>
           <GigEdit
-            windowDimensions={this.props.windowDimensions}
             gigCreate={true}
             setGigId={this.setGigId}
             callStackEmpty={this.state.callStackEmpty}

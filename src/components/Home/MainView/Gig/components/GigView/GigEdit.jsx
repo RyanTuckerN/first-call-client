@@ -193,7 +193,6 @@ class GigEdit extends Component {
   render() {
     const { optionalInfo } = this.state;
     const keys = Object.keys(optionalInfo);
-    const { height, width } = this.props.windowDimensions;
 
     return (
       <>
