@@ -6,9 +6,16 @@ import Divider from "@mui/material/Divider";
 import MenuList from "@mui/material/MenuList";
 import MenuItem from "@mui/material/MenuItem";
 // import ListItemIcon from "@mui/material/ListItemIcon";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 // import Check from "@mui/icons-material/Check";
-import { Typography, Box, IconButton, List, ListItem, ListItemText } from "@mui/material";
+import {
+  Typography,
+  Box,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 import {
   MailOutlineOutlined,
   ReportOutlined,
@@ -30,10 +37,9 @@ interface NotificationsProps {
 
 const Notifications: React.FunctionComponent<NotificationsProps> = ({
   notifications,
-  setHomeState
+  setHomeState,
 }) => {
-
-  const context = useContext(UserCtx)
+  const context = useContext(UserCtx);
   const invite = "#2374D2";
   const hash: any = {
     "100": { color: invite, icon: <InsertInvitationOutlined /> },
@@ -55,10 +61,10 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
         const json = await fetchHandler({
           url: `${API_URL}/notification/${n.id}`,
           method: "delete",
-          auth: localStorage.getItem('token') ?? context?.token ?? ''
+          auth: localStorage.getItem("token") ?? context?.token ?? "",
         });
-        alert(json.message)
-        json.success && setHomeState('notifications', json.notifications)
+        context?.handleSnackBar(json.message,json.success?'success':'warning')
+        json.success && setHomeState("notifications", json.notifications);
         return json.success;
       };
 
@@ -75,10 +81,22 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                 // }30 0%, rgba(255,255,255,0) 100%)`,
               }}
             >
-              <Link to={`/main/gig/${n.details.gigId}`}>{hash[code.toString()].icon}</Link>
-              <IconButton sx={{ float: "right", marginLeft: 10 }} onClick={handleDelete}>
-                <HighlightOffOutlined fontSize="small" />
-              </IconButton>
+              <div style={{display:'flex', alignItems: 'flex-end', justifyContent: 'space-between'}}>
+                <div>
+                  <Link to={`/main/gig/${n.details.gigId}`}>
+                    {hash[code.toString()].icon}
+                  </Link>
+                  <Typography variant="overline" sx={{position: 'relative', bottom: 4, left: 5}}>
+                    {n.createdAt && new Date(n.createdAt).toLocaleDateString()}
+                  </Typography>
+                </div>
+                <IconButton
+                  sx={{ float: "right", marginLeft: 10 }}
+                  onClick={handleDelete}
+                >
+                  <HighlightOffOutlined fontSize="small" />
+                </IconButton>
+              </div>
               {/* <Typography
                 variant="inherit"
                 sx={{ fontSize: 11, float: "right", marginLeft: 10 }}
@@ -87,9 +105,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
               </Typography> */}
               <div />
               <Typography variant="inherit">{n.text}</Typography>
-              <Typography variant="overline">
-                {n.createdAt && new Date(n.createdAt).toLocaleDateString()}
-              </Typography>
+              
             </ListItemText>
           </ListItem>
           {i < notifications.length - 1 && <Divider />}

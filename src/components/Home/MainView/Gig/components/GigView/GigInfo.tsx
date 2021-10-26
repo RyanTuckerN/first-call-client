@@ -272,7 +272,7 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                               >
                                 {role.onCall}
                               </Typography>
-                              <Box>
+                              <Box >
                                 {role.calls?.length ? (
                                   <Typography
                                     display="inline"
@@ -284,8 +284,8 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                                 {role.calls?.length
                                   ? role.calls?.map((call: any, i: number) => (
                                       <Typography
-                                        display="inline"
-                                        sx={{ marginLeft: 1 }}
+                                        // display="inline"
+                                        sx={{ marginLeft: 3 }}
                                         variant="body2"
                                         key={i}
                                       >

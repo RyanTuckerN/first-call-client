@@ -98,7 +98,7 @@ class Board extends Component<BoardProps, BoardState> {
       >
         <Paper
           elevation={12}
-          sx={{ padding: 2, width: "100%", maxWidth: "100%" }}
+          sx={{ padding: 0.5, width: "100%", maxWidth: "100%" }}
         >
           {/* <Box border={1}  sx={{borderColor: '#3f3f3f50', padding: 3}}> */}
           <Grid item xs={12}>
@@ -109,21 +109,23 @@ class Board extends Component<BoardProps, BoardState> {
               // onFocus={this.handleEventListener}
               // onBlur={this.removeEL}
             >
-              <Grid item xs={12}>
-                <TextField
-                  value={this.state.text}
-                  onChange={this.handleText}
-                  fullWidth={true}
-                  minRows={4}
-                  multiline
-                />
-              </Grid>
+              <Paper elevation={7}>
+                <Grid item xs={12} paddingX={1.2} paddingTop={3}>
+                  <TextField
+                    value={this.state.text}
+                    onChange={this.handleText}
+                    fullWidth={true}
+                    minRows={4}
+                    multiline
+                  />
+                </Grid>
+              </Paper>
               <Grid
                 item
                 xs={12}
                 display="flex"
                 justifyContent="flex-end"
-                marginBottom={2}
+                marginBottom={-6}
               >
                 <Button
                   type="submit"
@@ -163,16 +165,14 @@ class Board extends Component<BoardProps, BoardState> {
                 xs={12}
                 display="flex"
                 flexDirection="column"
-                sx={{ position: "relative", left: -8 }}
+                sx={{
+                  padding: -10,
+                  // position: "relative", left: -8,
+                }}
               >
                 {this.state.organizedPosts.map((p, i) => (
                   // <React.Fragment key={p.id}>
-                  <PostComponent
-                    post={p}
-                    key={p.id}
-                    i={1}
-                    fetchPosts={this.props.fetchPosts}
-                  />
+                  <PostComponent post={p} key={p.id} i={1} />
                 ))}
               </Grid>
             </>
@@ -181,6 +181,7 @@ class Board extends Component<BoardProps, BoardState> {
               <Button variant="text" disabled>
                 No Posts!
               </Button>
+              <div style={{ height: 200 }} />
             </Grid>
           )}
           {/* </Box> */}

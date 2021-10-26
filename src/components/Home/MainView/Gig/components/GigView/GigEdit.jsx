@@ -16,6 +16,7 @@ import {
   Alert,
   List,
   Link,
+  Avatar,
   InputAdornment,
   IconButton,
 } from "@mui/material";
@@ -67,9 +68,12 @@ class GigEdit extends Component {
       optionalVal: "",
       optionalInfo: this.props.optionalInfo ?? {},
       gigCreate: this.props.gigCreate ?? false,
+      success: false
       // testDate: moment(new Date())
     };
   }
+
+
 
   handleTitle = (e) =>
     this.setState({ description: properizeNoTrim(e.target.value) });
@@ -100,10 +104,10 @@ class GigEdit extends Component {
   };
   handleOptionalDelete = (key) => {
     const obj = this.state.optionalInfo;
-    console.log(obj);
-    console.log(key);
+    // console.log(obj);
+    // console.log(key);
     delete obj[key];
-    console.log(obj);
+    // console.log(obj);
     this.setState({ optionalInfo: obj });
   };
 
@@ -127,7 +131,7 @@ class GigEdit extends Component {
       // await this.updateProfile({ photo: File.secure_url });
       if (this.state.gigCreate) {
         this.setState({ photo: File.secure_url });
-        alert("done!");
+        this.context.handleSnackBar("Done!", 'info');
         return;
       }
       const json = await fetchHandler({
@@ -136,13 +140,14 @@ class GigEdit extends Component {
         auth: localStorage.getItem("token" ?? this.context.token ?? ""),
         body: { photo: File.secure_url },
       });
-      alert(json.message);
+      // alert(json.message);
       console.log(json);
+      json.success && this.context.handleSnackBar(json.message, 'success')
       json.success && this.props.setGig(json.gig);
       return true;
     } catch (err) {
       console.error(err);
-      alert("There was an error! Please try again");
+      this.context.handleSnackBar("There was an error!", 'error');
       return false;
     }
   };
@@ -159,11 +164,11 @@ class GigEdit extends Component {
       !optionalInfo
       // !gigId
     ) {
-      alert("Empty field(s)!");
+      this.context.handleSnackBar("Empty field(s)!", 'warning');
       return;
     }
     if (callStackEmpty && gigCreate) {
-      alert("empty callStack! Fill out at least one role to submit.");
+      this.context.handleSnackBar("empty callStack! Fill out at least one role to submit.", 'warning');
       return;
     }
     const body = {
@@ -187,8 +192,15 @@ class GigEdit extends Component {
         ? this.props.setGigId(json.newGig.id)
         : this.props.setGig(json.gig)
       : null;
-    alert(json.message);
+    json.success && this.context.handleSnackBar(json.message, 'success');
+    json.success && this.setState({success: true})
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    this.state.success && setTimeout(() => {
+      this.props.toggleEditMode()
+    }, 1750);
+  }
 
   render() {
     const { optionalInfo } = this.state;
@@ -197,8 +209,15 @@ class GigEdit extends Component {
     return (
       <>
         {/* {width<900 && <Link href='#band'>Band</Link>} */}
+        {this.state.photo && <Grid display='flex' justifyContent='center'>
+          <Avatar src={this.state.photo} variant='square' sx={{width: '100%', height:'auto'}} />
+        </Grid>}
         <Grid
           container
+          item
+          xs={this.props.gigCreate ? 12 : 12}
+          md={this.props.gigCreate ? 12 : 7}
+          lg={this.props.gigCreate ? 12 : 6}
           spacing={1}
           padding={2}
           display="flex"

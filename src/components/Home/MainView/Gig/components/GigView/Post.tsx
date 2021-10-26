@@ -9,6 +9,7 @@ import {
   IconButton,
   TextField,
   Button,
+  Paper
 } from "@mui/material";
 import {
   ArrowDropDown,
@@ -25,7 +26,6 @@ import API_URL from "../../../../../_helpers/environment";
 interface PostComponentProps {
   post: Post;
   i: number;
-  fetchPosts: () => Promise<boolean>;
 }
 
 interface PostComponentState {
@@ -183,141 +183,151 @@ class PostComponent extends React.Component<
         xs={12}
       >
         {/* FIRST LINE */}
-        <Grid item xs={12} sx={defaultLineProps}>
-          {this.state.post.children?.length ? (
-            this.state.isOpen ? (
-              <ArrowDropDown sx={{ padding: 0.5 }} onClick={this.toggleOpen} />
+        {/* <Paper elevation={7} sx={{width: '100%'}}> */}
+          <Grid item xs={12} sx={defaultLineProps}>
+            {this.state.post.children?.length ? (
+              this.state.isOpen ? (
+                <ArrowDropDown sx={{ padding: i === 1 ? 0 : 0.5 }} onClick={this.toggleOpen} />
+              ) : (
+                <ArrowRight sx={{ padding: i === 1 ? 0 : 0.5 }} onClick={this.toggleOpen} />
+              )
             ) : (
-              <ArrowRight sx={{ padding: 0.5 }} onClick={this.toggleOpen} />
-            )
-          ) : (
-            <ArrowRight sx={{ padding: 0.5, color: "rgba(0,0,0,0)" }} />
-          )}
-          <Typography variant="body2" fontWeight={300}>
-          &nbsp;{post.user?.name}&nbsp;&#183;&nbsp;
-            {returnTimeDifference(
-              new Date(),
-              new Date(this.state.post.createdAt)
+              <ArrowRight sx={{ padding: 0.5, color: "rgba(0,0,0,0)" }} />
             )}
-          </Typography>
-          {post.details.edited && <Typography variant="body2" fontWeight={300}>
-          &nbsp;&nbsp;<i>edited</i>
-          </Typography>}
-        </Grid>
-        {/* SECOND LINE */}
-        <Grid
-          item
-          xs={12}
-          sx={{
-            position: "relative",
-            left: 25,
-            marginTop: -1,
-            // backgroundColor: "yellow",
-            maxWidth: `calc(100% - (${(i - 1) * 22}px))`,
-          }}
-          // style={{ wordWrap: "break-word",  }}
-        >
-          <Typography
-            variant="body2"
-            fontWeight={400}
-            style={{ wordWrap: "break-word" }}
-          >
-            {post.text}
-          </Typography>
-        </Grid>
-        {/* THIRD LINE */}
-        <Grid
-          item
-          xs={12}
-          sx={{
-            position: "relative",
-            left: 25,
-            display: "flex",
-            alignItems: "center",
-            marginTop: -1.1,
-          }}
-        >
-          <Typography fontSize={15}>{post.upvotes}</Typography>
-          <IconButton onClick={this.handleLike}>
-            <ArrowCircleUp
-              fontSize="inherit"
-              color={post.voters.includes(user.id) ? "success" : undefined}
-            />
-          </IconButton>
-          <IconButton
-            onClick={() =>
-              this.setState({
-                showInput: !this.state.showInput,
-                editing: false,
-              })
-            }
-          >
-            {this.state.showInput ? (
-              <Close fontSize="inherit" />
-            ) : (
-              <Reply fontSize="inherit" />
-            )}
-          </IconButton>
-          {this.context.user.id === post.author && (
-            <IconButton onClick={this.handleEdit}>
-              <Edit sx={{ padding: 0.6 }} color="inherit" />
-            </IconButton>
-          )}
-        </Grid>
-        {this.state.showInput ? (
-          <Grid
-            xs={12}
-            // sx={{
-            //   position: "relative",
-            //   left: this.props.i > 1 ? -22 * i : 0,
-            // }}
-          >
-            <TextField
-              value={
-                this.state.editing
-                  ? this.state.editingText
-                  : this.state.replyText
-              }
-              onChange={this.handleText}
-              style={{
-                zIndex: 9999,
-                // position: "absolute",
-                // bottom: 25,
-                // left: this.props.i > 1 ? -22 * i : 0,
-                // width:'75%'
-              }}
-            />
-            <Button
-              onClick={
-                this.state.editing ? this.handleEditSubmit : this.handleReply
-              }
-              color={this.state.editing ? "success" : "primary"}
-            >
-              {this.state.editing ? "SAVE" : "REPLY"}
-            </Button>
+            <Typography variant="body2" fontWeight={i === 1 ? 500 : 300}>
+            &nbsp;{post.user?.name}&nbsp;&#183;&nbsp;
+              {returnTimeDifference(
+                new Date(),
+                new Date(this.state.post.createdAt)
+              )}
+            </Typography>
+            {post.details.edited && <Typography variant="body2" fontWeight={300}>
+            &nbsp;&nbsp;<i>edited</i>
+            </Typography>}
           </Grid>
-        ) : null}
-        <Grid
-          item
-          xs={12}
-          // style={{ maxWidth: `calc(100% - (${i * 22}px))` }}
-        >
-          {this.state.isOpen && (
-            <>
-              {post.children?.length
-                ? post.children.map((p) => (
-                    // <Grid key={p.id} item xs={12}>
-                    <PostComponent
-                      post={p}
-                      key={p.id}
-                      i={i + 1}
-                      fetchPosts={this.props.fetchPosts}
-                    />
-                  ))
-                : null}
-            </>
-          )}
-        </Grid>
+          {/* SECOND LINE */}
+          <Grid
+            item
+            xs={12}
+            sx={{
+              position: "relative",
+              left: 25,
+              marginTop: -1,
+              // backgroundColor: "yellow",
+              maxWidth: `calc(100% - (${(i - 1) * 22}px))`,
+            }}
+            // style={{ wordWrap: "break-word",  }}
+          >
+            <Typography
+              variant="body2"
+              fontWeight={400}
+              style={{ wordWrap: "break-word" }}
+            >
+              {post.text}
+            </Typography>
+          </Grid>
+          {/* THIRD LINE */}
+          <Grid
+            item
+            xs={12}
+            sx={{
+              position: "relative",
+              left: 25,
+              display: "flex",
+              alignItems: "center",
+              marginTop: -1.1,
+            }}
+          >
+            <Typography fontSize={15}>{post.upvotes}</Typography>
+            <IconButton onClick={this.handleLike}>
+              <ArrowCircleUp
+                fontSize="inherit"
+                color={post.voters.includes(user.id) ? "success" : undefined}
+              />
+              <Typography variant='caption'>upvote</Typography>
+            </IconButton>
+            <IconButton
+              onClick={() =>
+                this.setState({
+                  showInput: !this.state.showInput,
+                  editing: false,
+                })
+              }
+            >
+              {this.state.showInput ? (
+                <>
+                  <Close fontSize="inherit" />
+                  <Typography variant='caption'>close</Typography>
+                </>
+              ) : (
+                <>
+                  <Reply fontSize="inherit" />
+                                <Typography variant='caption'>reply</Typography>
+                </>
+
+              )}
+
+            </IconButton>
+            {this.context.user.id === post.author && (
+              <IconButton onClick={this.handleEdit}>
+                <Edit sx={{ padding: 0.6 }} color="inherit" />
+              </IconButton>
+            )}
+          </Grid>
+          {this.state.showInput ? (
+            <Grid
+              xs={12}
+              // sx={{
+              //   position: "relative",
+              //   left: this.props.i > 1 ? -22 * i : 0,
+              // }}
+            >
+              <TextField
+                value={
+                  this.state.editing
+                    ? this.state.editingText
+                    : this.state.replyText
+                }
+                onChange={this.handleText}
+                style={{
+                  zIndex: 9999,
+                  // position: "absolute",
+                  // bottom: 25,
+                  // left: this.props.i > 1 ? -22 * i : 0,
+                  // width:'75%'
+                }}
+              />
+              <Button
+                onClick={
+                  this.state.editing ? this.handleEditSubmit : this.handleReply
+                }
+                color={this.state.editing ? "success" : "primary"}
+              >
+                {this.state.editing ? "SAVE" : "REPLY"}
+              </Button>
+            </Grid>
+          ) : null}
+          <Grid
+            item
+            xs={12}
+            // style={{ maxWidth: `calc(100% - (${i * 22}px))` }}
+          >
+            {this.state.isOpen && (
+              <>
+                {post.children?.length
+                  ? post.children.map((p) => (
+                      // <Grid key={p.id} item xs={12}>
+                      <PostComponent
+                        post={p}
+                        key={p.id}
+                        i={i + 1}
+                      />
+                    ))
+                  : null}
+              </>
+            )}
+          </Grid>
+        {/* </Paper> */}
       </Grid>
     );
   }

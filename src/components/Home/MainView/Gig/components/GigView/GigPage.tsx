@@ -23,6 +23,7 @@ import { AppState } from "../../../../../../App";
 import { posts } from "../../../../../_helpers/postOrganizer";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import API_URL from "../../../../../_helpers/environment";
+import CallStackEdit from "../../CallStack/CallStackEdit";
 
 interface RouteParams {
   gigId: string;
@@ -118,11 +119,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
               .includes(this.state.gig?.id ?? 0) ? (
               <Redirect to="" />
             ) : (
-              <Grid 
-                container 
-                // sx={{backgroundColor: 'red'}}
-              >
-                {/* Hello From GigPage.tsx! */}
+              <Grid container>
                 {this.state.gig && (
                   <GigHeader
                     {...this.state}
@@ -131,7 +128,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                   />
                 )}
                 <Grid
-                container
+                  container
                   display="flex"
                   flexWrap={
                     this.state.gig?.openCalls.includes(this.props.user.email)
@@ -139,56 +136,70 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                       : "wrap"
                   }
                 >
-                  {/* <Grid item xs={12} sx={{ marginTop: 3 }}> */}
-                    {/* <Paper elevation={12} sx={{ }}> */}
-                    {this.state.details &&
-                    !this.state.editMode &&
+                  {this.state.details &&
+                  !this.state.editMode &&
+                  this.state.gig ? (
+                    <GigInfo
+                      {...{
+                        user: this.props.user,
+                        authorizedView: this.state.authorizedView,
+                        editMode: this.state.editMode,
+                        gigId: this.state.gigId,
+                        setAuth: this.setAuthorizedView,
+                        posts: this.state.posts,
+                      }}
+                      toggleEditMode={this.toggleEditMode}
+                      details={this.state.details}
+                      gig={this.state.gig}
+                    />
+                  ) : this.state.details &&
+                    this.state.editMode &&
                     this.state.gig ? (
-                      <GigInfo
-                        {...{
-                          user: this.props.user,
-                          authorizedView: this.state.authorizedView,
-                          editMode: this.state.editMode,
-                          gigId: this.state.gigId,
-                          setAuth: this.setAuthorizedView,
-                          posts: this.state.posts,
-                        }}
-                        toggleEditMode={this.toggleEditMode}
-                        details={this.state.details}
-                        gig={this.state.gig}
-                      />
-                    ) : this.state.details &&
-                      this.state.editMode &&
-                      this.state.gig ? (
-                      <GigEdit
-                        {...this.state.gig}
-                        details={this.state.details}
-                        setGig={this.setGig}
-                      />
-                    ) : null}
-                    {/* </Paper> */}
-                  {/* </Grid> */}
-                  <Grid container item xs={12} display='flex' justifyContent='center' sx={{ marginTop: 3}}>
-                    {/* <CallStackCreate /> */}
-                    {this.state.gig ? (
-                      this.state.gig.openCalls.includes(
-                        this.props.user.email
-                      ) && this.state.details ? (
+                    <GigEdit
+                      {...this.state.gig}
+                      details={this.state.details}
+                      setGig={this.setGig}
+                      toggleEditMode={this.toggleEditMode}
+                    />
+                  ) : null}
+
+                  {this.state.gig ? (
+                    this.state.gig.openCalls.includes(this.props.user.email) &&
+                    this.state.details ? (
+                      <Grid
+                        container
+                        item
+                        xs={12}
+                        display="flex"
+                        justifyContent="center"
+                        sx={{ marginTop: 3 }}
+                      >
                         <GigInvite
                           {...this.state.gig}
                           user={this.props.user ?? this.context.user}
                           details={this.state.details}
                           setGig={this.setGig}
                         />
-                      ) : !this.state.editMode && this.state.posts ? (
+                      </Grid>
+                    ) : !this.state.editMode && this.state.posts ? (
+                      <Grid
+                        container
+                        item
+                        xs={12}
+                        display="flex"
+                        justifyContent="center"
+                        sx={{ marginTop: 3 }}
+                      >
                         <Board
                           posts={this.state.posts}
                           fetchPosts={this.fetchPosts}
                           gigId={this.state.gigId}
                         />
-                      ) : <div>loading</div>
-                    ) : null}
-                  </Grid>
+                      </Grid>
+                    ) : this.state.gig.callStack && this.state.editMode ? (
+                      <CallStackEdit {...this.state.gig.callStack} />
+                    ) : null
+                  ) : null}
                 </Grid>
               </Grid>
             );

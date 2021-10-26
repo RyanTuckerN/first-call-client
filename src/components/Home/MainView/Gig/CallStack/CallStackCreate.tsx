@@ -10,8 +10,6 @@ import {
   TextField,
   Typography,
   Autocomplete,
-  Snackbar,
-  Alert,
   List,
   Link,
   InputAdornment,
@@ -107,10 +105,10 @@ class CallStackCreate extends Component<
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
       console.log('callStack', json)
-      json.success && alert("success!");
+      json.success && this.context.handleSnackBar('Success!', 'success');
       json.success && this.props.setCallStackEmpty(true)
     } catch (err) {
-      alert(err);
+      this.context.handleSnackBar(err, 'error');
     }
   };
 

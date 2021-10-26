@@ -40,27 +40,22 @@ export interface GigIndexState {
   notificationsHash: NotificationsHash;
   user: User | null;
   messageCode: number | null;
-  // setHomeState: (key: string, value: any) => void;
   setGigState: (key: string, value: any) => void;
 }
 
 class GigIndex extends Component<GigIndexProps, GigIndexState> {
   static contextType = UserCtx;
-  context!: React.ContextType<typeof UserCtx>
+  context!: React.ContextType<typeof UserCtx>;
 
   constructor(props: GigIndexProps, context: AppState) {
     super(props, context);
     this.state = {
       offers: [],
       gigs: this.props.user?.gigs ?? [],
-      // detailedGigs: null,
-      // detailedOffers: null,
       notifications: this.props.notifications,
       notificationsHash: this.notificationHash(this.props.notifications),
       user: this.props.user,
       messageCode: null,
-      
-      // setHomeState: this.props.setHomeState,
       setGigState: this.setGigState,
     };
   }
@@ -93,12 +88,25 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   };
 
   notificationHash = (arr: Notification[]): NotificationsHash =>
-    arr.reduce((obj: any, note: Notification) => {
-      const id: string = note.details.code.toString();
-      if (!obj[id]) obj[id] = [];
-      obj[id].push(note);
-      return obj;
-    }, {});
+    arr
+      // .filter((note) =>
+      //   [...this.state?.gigs ?? [], ...this.state?.offers ?? []]
+      //     .map((g) => g.id)
+      //     .includes(note.details.gigId)
+      // )
+      .reduce((obj: any, note: Notification) => {
+        // if (
+        //   note.details.code === 100 &&
+        //   !this.state?.offers.map((o) => o.id).includes(note.details.gigId)
+        // )
+        //   return obj;
+          
+        const id: string = note.details.code.toString();
+
+        if (!obj[id]) obj[id] = [];
+        obj[id].push(note);
+        return obj;
+      }, {});
 
   // handleResize = (): void =>
   //   this.setState({
@@ -116,6 +124,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       });
     }
     if (prevState.notificationsHash !== this.state.notificationsHash) {
+      this.fetchOffers();
+      this.fetchDetails();
     }
     if (prevProps.user !== this.props.user && this.props.user) {
       this.setState({
@@ -129,16 +139,18 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       this.fetchOffers();
       this.fetchDetails();
     }
-    // console.log(Object.entries(this.state.notificationsHash));
+    if(prevState.offers !== this.state.offers){
+      this.fetchDetails()
+    }
+    console.log(Object.entries(this.state.notificationsHash));
   }
 
-  async componentDidMount() {
-    // window.addEventListener("resize", this.handleResize);
-    await this.fetchOffers();
-    if (!this.props.detailsHash) await this.fetchDetails();
+  componentDidMount() {
+    this.fetchDetails();
+    this.fetchOffers();
   }
+
   render() {
-
     return (
       <>
         <Route exact path="/main">
@@ -176,11 +188,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
           ) : null}
         </Route>
         <Route exact path="/main/add">
-          {this.state.user ? (
-            <GigCreate
-              {...this.state.user}
-            />
-          ) : null}
+          {this.state.user ? <GigCreate {...this.state.user} /> : null}
         </Route>
         {/* <Route exact path="/invite/gig/:gigId">
           <GigInfo />
