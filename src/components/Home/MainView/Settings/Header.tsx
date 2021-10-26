@@ -103,7 +103,7 @@ const Header: React.FunctionComponent<HeaderProps> = ({
           )}
           <div className="header-text"></div>
         </div>
-          <Link to="/main/profile">
+          <Link to={`/main/profile/${user.id}`}>
             <Button sx={{marginLeft: -2}}>Go to your profile</Button>
           </Link>
       </div>

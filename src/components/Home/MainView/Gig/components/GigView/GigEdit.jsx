@@ -68,7 +68,8 @@ class GigEdit extends Component {
       optionalVal: "",
       optionalInfo: this.props.optionalInfo ?? {},
       gigCreate: this.props.gigCreate ?? false,
-      success: false
+      success: false,
+      toggleEditMode: this.props.toggleEditMode
       // testDate: moment(new Date())
     };
   }
@@ -168,7 +169,7 @@ class GigEdit extends Component {
       return;
     }
     if (callStackEmpty && gigCreate) {
-      this.context.handleSnackBar("empty callStack! Fill out at least one role to submit.", 'warning');
+      this.context.handleSnackBar("Empty callStack! Fill out at least one role to submit.", 'warning');
       return;
     }
     const body = {
@@ -198,7 +199,7 @@ class GigEdit extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     this.state.success && setTimeout(() => {
-      this.props.toggleEditMode()
+      this.state.toggleEditMode()
     }, 1750);
   }
 

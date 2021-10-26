@@ -14,6 +14,7 @@ import {
 import PostComponent from "./Post";
 import API_URL from "../../../../../_helpers/environment";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
+import { BoardSkeleton, Loading } from "../../../../../Skeletons";
 interface BoardProps {
   posts: Post[];
   gigId: string | number;
@@ -25,9 +26,11 @@ interface BoardState {
   emptyBoard: boolean;
   organizedPosts: Post[];
   text: string;
+  showBoard: boolean;
 }
 
 class Board extends Component<BoardProps, BoardState> {
+  
   constructor(props: BoardProps) {
     super(props);
     this.state = {
@@ -35,24 +38,25 @@ class Board extends Component<BoardProps, BoardState> {
       emptyBoard: !_.isEmpty(this.props.posts),
       organizedPosts: postOrganizer(this.props.posts),
       text: "",
+      showBoard: false
     };
   }
-
+  
   handleText = (e: React.ChangeEvent<HTMLInputElement>): void =>
-    this.setState({ text: e.target.value });
-
+  this.setState({ text: e.target.value });
+  
   handleSort = (sort: "createdAt" | "upvotes"): void =>
-    this.setState({
-      organizedPosts: this.state.organizedPosts.sort((a, b) =>
-        sort === "upvotes"
-          ? b[sort] - a[sort]
+  this.setState({
+    organizedPosts: this.state.organizedPosts.sort((a, b) =>
+    sort === "upvotes"
+    ? b[sort] - a[sort]
           : new Date(b[sort]).getTime() - new Date(a[sort]).getTime()
-      ),
-    });
-
-  handleNewPost = async (
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<boolean> => {
+          ),
+        });
+        
+        handleNewPost = async (
+          e: React.FormEvent<HTMLFormElement>
+          ): Promise<boolean> => {
     e.preventDefault();
     if (!this.state.text) return false;
     const json = await fetchHandler({
@@ -68,25 +72,39 @@ class Board extends Component<BoardProps, BoardState> {
     });
     return json.success;
   };
-
+  
   // handleEventListener = (): void => {
-  //   window.addEventListener("keydown", this.logEvent);
-  // };
-  // removeEL = (): void => window.removeEventListener("keydown", this.logEvent);
-
-  // logEvent = (e: any): void => console.log(e.key);
-
-  componentDidUpdate(prevProps: BoardProps, prevState: BoardState) {
-    if (prevProps.posts !== this.props.posts) {
-      this.setState({ organizedPosts: postOrganizer(this.props.posts) });
+    //   window.addEventListener("keydown", this.logEvent);
+    // };
+    // removeEL = (): void => window.removeEventListener("keydown", this.logEvent);
+    
+    // logEvent = (e: any): void => console.log(e.key);
+    
+    timeOut: any = null
+    timer = () => this.timeOut = setTimeout(()=>{
+      this.setState({showBoard: true})
+    }, 1000)
+    
+    componentDidUpdate(prevProps: BoardProps, prevState: BoardState) {
+      if (prevProps.posts !== this.props.posts) {
+        this.setState({ organizedPosts: postOrganizer(this.props.posts) });
+      }
+      if (prevState.posts !== this.state.posts) {
+        this.setState({ organizedPosts: postOrganizer(this.state.posts) });
+      }
     }
-    if (prevState.posts !== this.state.posts) {
-      this.setState({ organizedPosts: postOrganizer(this.state.posts) });
-    }
+
+
+  componentDidMount(){
+    this.timer()
+  }
+
+  componentWillUnmount() {
+    this.timeOut = null
   }
 
   render() {
-    return (
+    return this.state.showBoard ? (
       <Grid
         container
         item
@@ -187,7 +205,17 @@ class Board extends Component<BoardProps, BoardState> {
           {/* </Box> */}
         </Paper>
       </Grid>
-    );
+    ) : <Grid
+    container
+    item
+    xs={12}
+    sm={10}
+    md={8}
+    border={1}
+    sx={{ borderColor: "#3f3f3f50" }}
+  >
+        <Loading />
+    </Grid>;
   }
 }
 

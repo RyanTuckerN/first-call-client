@@ -139,17 +139,17 @@ class App extends Component<AppProps, AppState> {
                 <Home {...this.state} />
               ) : null}
             </UserCtx.Provider>
+            <Snackbar
+              open={this.state.snackBarOpen}
+              autoHideDuration={4000}
+              onClose={this.handleClose}
+            >
+              <Alert severity={this.state.snackSeverity} variant='outlined'>
+                {this.state.snackMessage}
+              </Alert>
+            </Snackbar>
           </ThemeProvider>
         </Router>
-        <Snackbar
-          open={this.state.snackBarOpen}
-          autoHideDuration={4000}
-          onClose={this.handleClose}
-        >
-          <Alert severity={this.state.snackSeverity}>
-            {this.state.snackMessage}
-          </Alert>
-        </Snackbar>
       </>
     );
   }

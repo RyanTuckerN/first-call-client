@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { GigIndexState } from "../GigsIndex";
 import { Notification } from "../../../../../types/API.types";
 import { Button, Grid, Paper, Typography, Box } from "@mui/material";
@@ -9,6 +9,9 @@ import { GigSidebar, BottomNav } from "./Navigation";
 import GigsDash from "./GigsDash";
 import GigsMapper from "./mappers/GigsMapper";
 import "../Gig.css";
+import { fetchHandler } from "../../../../_helpers/fetchHandler";
+import API_URL from "../../../../_helpers/environment";
+import { UserCtx } from "../../../../Context/MainContext";
 
 interface GigWelcomeProps extends GigIndexState {
   dashboardRoute: RouteOption; //Main state
@@ -31,18 +34,30 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
 
   // const [windowDimensions, setWindowDimensions] = useState({height: window.innerHeight, width: window.innerWidth});
   const [width, setWidth] = useState(window.innerWidth);
+  const context = useContext(UserCtx);
 
   const handleResize = (w: number): void => setWidth(w);
 
   useEffect(() => {
     window.addEventListener("resize", () => handleResize(window.innerWidth));
-    return window.removeEventListener("resize", () => handleResize(window.innerWidth)
+    return window.removeEventListener("resize", () =>
+      handleResize(window.innerWidth)
     );
   });
 
-  // useEffect(()=>{
-  //   console.log(windowDimensions)
-  // },[windowDimensions])
+  const handleDeleteAll = async (): Promise<boolean> => {
+    const { deletions, success } = await fetchHandler({
+      url: `${API_URL}/notification/deleteAll`,
+      method: "delete",
+      auth: localStorage.getItem("token") ?? "",
+    });
+    success && setGigState("notifications", []);
+    context?.handleSnackBar(
+      success ? `${deletions} messages deleted` : "Something went wrong!",
+      success ? "success" : "error"
+    );
+    return success;
+  };
 
   const setRoute = (route: RouteOption) =>
     setMainState("dashboardRoute", route);
@@ -96,9 +111,16 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
           {routes[dashboardRoute]?.body}
           <Box display="flex" justifyContent="center">
             {dashboardRoute === "notifications" && notifications.length ? (
-              <Button onClick={() => setGigState("messageCode", null)}>
-                show all notifications
-              </Button>
+              <>
+                <Button
+                  onClick={async () => console.log(await handleDeleteAll())}
+                >
+                  Delete all notifications
+                </Button>
+                <Button onClick={() => setGigState("messageCode", null)}>
+                  show all notifications
+                </Button>
+              </>
             ) : dashboardRoute === "notifications" ? (
               <Button disabled sx={{ marginTop: 4 }}>
                 No Notifications!

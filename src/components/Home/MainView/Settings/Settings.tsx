@@ -127,7 +127,7 @@ class Settings extends Component<SettingsProps, SettingsState> {
             </Typography>
 
             <List>
-              <NavLink to={`${this.props.match.path}/`}>
+              <NavLink to={`${this.props.match.path}`}>
                 <ListItemButton>
                   <Typography variant="body1">Account</Typography>
                 </ListItemButton>

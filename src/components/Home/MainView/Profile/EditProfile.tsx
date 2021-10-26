@@ -152,14 +152,14 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
           />
         </Grid>
         <Grid item xs={12} sm={5}>
-          <Typography variant="h6">Role</Typography>
+          <Typography variant="h6">Title</Typography>
           <TextField
             onChange={this.handleRole}
             fullWidth
             variant="outlined"
             placeholder="Guitarist"
-            id="role"
-            name="role"
+            id="title"
+            name="title"
             value={this.state.role ? properize(this.state.role) : ""}
             // label="Name"
           />

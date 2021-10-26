@@ -72,13 +72,8 @@ export interface Notification {
   userId: number;
   text: string;
   details: NotificationDetails;
-  createdAt?: string;
+  createdAt: string;
   updatedAt?: string;
-}
-export interface UserAuth {
-  auth: boolean;
-  user: User;
-  err?: any;
 }
 interface NotificationDetails {
   to: string;
@@ -89,6 +84,11 @@ interface NotificationDetails {
   dateTime: string;
   recieverExists: boolean;
   nextUser?: string;
+}
+export interface UserAuth {
+  auth: boolean;
+  user: User;
+  err?: any;
 }
 
 export interface DetailsHash{

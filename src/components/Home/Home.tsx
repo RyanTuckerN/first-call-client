@@ -55,10 +55,10 @@ import { AppState } from "../../App";
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
   setAppState: (key: string, value: any) => void;
-  setToken: (token: string)=>void;
+  setToken: (token: string) => void;
   token: string;
   auth: boolean | null;
-  user: User | null
+  user: User | null;
 }
 
 interface HomeState {
@@ -68,7 +68,7 @@ interface HomeState {
   open: boolean;
   windowDimensions: WindowDimensions;
   notifications: Notification[];
-  detailsHash: {[key:string|number]: DetailedGig} | null
+  detailsHash: { [key: string | number]: DetailedGig } | null;
 }
 
 class Home extends Component<HomeProps, HomeState> {
@@ -92,30 +92,30 @@ class Home extends Component<HomeProps, HomeState> {
     };
   }
 
-  setHomeState = (key: string, value: any):void =>{
-    const stateObj:any={}
-    stateObj[key]=value
-    this.setState(stateObj)
-  }
+  setHomeState = (key: string, value: any): void => {
+    const stateObj: any = {};
+    stateObj[key] = value;
+    this.setState(stateObj);
+  };
 
-  fetchNotifications =  async (): Promise<void> => {
-      const json = await fetchHandler({
-        url: `${API_URL}/user/notifications`,
-        auth: localStorage.getItem("token") ?? this.context.token ?? '',
+  fetchNotifications = async (): Promise<void> => {
+    const json = await fetchHandler({
+      url: `${API_URL}/user/notifications`,
+      auth: localStorage.getItem("token") ?? this.context.token ?? "",
+    });
+    json.auth &&
+      this.setState({
+        notifications: json.notifications,
       });
-      json.auth &&
-        this.setState({
-          notifications: json.notifications,
-        });
-  }
+  };
 
-    // fetchOffers: async (): Promise<any> => {
-    //   const json = await fetchHandler({
-    //     url: `${API_URL}/user/offers`,
-    //     auth: localStorage.getItem("token") ?? "",
-    //   });
-    //   this.setState({})
-    // },
+  // fetchOffers: async (): Promise<any> => {
+  //   const json = await fetchHandler({
+  //     url: `${API_URL}/user/offers`,
+  //     auth: localStorage.getItem("token") ?? "",
+  //   });
+  //   this.setState({})
+  // },
 
   handleResize = (): void =>
     this.setState({
@@ -201,7 +201,7 @@ class Home extends Component<HomeProps, HomeState> {
                     </Link>
                     <IconButton
                       size="medium"
-                      edge="end"
+                      // edge="end"
                       id="account-menu-button"
                       aria-label="account of current user"
                       aria-controls={this.menuId}
@@ -212,31 +212,35 @@ class Home extends Component<HomeProps, HomeState> {
                       {this.context.user.photo ? (
                         <Avatar
                           src={this.context.user.photo}
-                          sx={{ height: 26, width: 26, border: 'solid white 1px' }}
+                          sx={{
+                            height: 26,
+                            width: 26,
+                            border: "solid white 1px",
+                          }}
                         />
                       ) : (
                         <AccountCircle />
                       )}
                     </IconButton>
-                    <ArrowDropDown
+                    {/* <ArrowDropDown
                       className="arrow-dropdown"
                       fontSize="small"
-                    />
-                    <Link to='/main/add'>
+                    /> */}
+                    <Link to="/main/add">
                       <IconButton
                         size="small"
-                        edge="end"
-                        color='inherit'
+                        // edge="end"
+                        color="inherit"
                         id="add-new-gig"
                         aria-label="create a new gig"
-                        style={{ marginLeft: -10 }}
+                        style={{ position: "relative", top: 3 }}
                       >
                         <Add />
                       </IconButton>
-                      <ArrowDropDown
+                      {/* <ArrowDropDown
                         className="arrow-dropdown"
                         fontSize="small"
-                      />
+                      /> */}
                     </Link>
                   </Box>
                   <Menu
@@ -254,7 +258,11 @@ class Home extends Component<HomeProps, HomeState> {
                         Home
                       </MenuItem>
                     </Link>
-                    <Link to={`${this.props.match.path}main/profile`}>
+                    <Link
+                      to={`${this.props.match.path}main/profile/${
+                        this.props.user?.id ?? this.context.user.id
+                      }`}
+                    >
                       <MenuItem onClick={this.handleMenuClose}>
                         <ListItemIcon>
                           <Person />
@@ -323,7 +331,7 @@ class Home extends Component<HomeProps, HomeState> {
                   path="/"
                   render={() => {
                     return auth ? (
-                      <Redirect to="main" />
+                      <Redirect to="main/" />
                     ) : (
                       <Redirect to="welcome" />
                     );
@@ -333,13 +341,16 @@ class Home extends Component<HomeProps, HomeState> {
                   <Respond />
                 </Route>
                 <Route path="/main">
-                  {this.props.user ? <MainView
-                    {...this.props} {...this.state}
-                    fetchNotifications={this.fetchNotifications}
-                    notifications={this.state.notifications}
-                    setHomeState={this.setHomeState}
-                    user={this.props.user}
-                  /> : null}
+                  {this.props.user ? (
+                    <MainView
+                      {...this.props}
+                      {...this.state}
+                      fetchNotifications={this.fetchNotifications}
+                      notifications={this.state.notifications}
+                      setHomeState={this.setHomeState}
+                      user={this.props.user}
+                    />
+                  ) : null}
                 </Route>
 
                 <Route path="/welcome">

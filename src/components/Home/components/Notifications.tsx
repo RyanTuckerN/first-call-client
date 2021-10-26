@@ -42,76 +42,96 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
   const context = useContext(UserCtx);
   const invite = "#2374D2";
   const hash: any = {
-    "100": { color: invite, icon: <InsertInvitationOutlined /> },
+    "100": {
+      color: invite,
+      icon: <InsertInvitationOutlined color="primary" />,
+    },
     "200": {
       color: "#ff9800",
       icon: <SentimentVeryDissatisfiedOutlined color="warning" />,
     },
-    "201": { color: "#66bb6a", icon: <SentimentVerySatisfiedOutlined /> },
+    "201": {
+      color: "#66bb6a",
+      icon: <SentimentVerySatisfiedOutlined color="success" />,
+    },
     "300": { color: "#66bb6a", icon: <CelebrationOutlined color="success" /> },
     "301": { color: "#f44336", icon: <ReportOutlined color="error" /> },
-    "400": { color: "", icon: <MailOutlineOutlined /> },
+    "400": { color: "", icon: <MailOutlineOutlined color="primary" /> },
   };
 
   const mapper = (notifications: Notification[]): any =>
-    notifications.map((n, i) => {
-      const { code } = n.details;
+    notifications
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .map((n, i) => {
+        const { code } = n.details;
 
-      const handleDelete = async (): Promise<boolean | null> => {
-        const json = await fetchHandler({
-          url: `${API_URL}/notification/${n.id}`,
-          method: "delete",
-          auth: localStorage.getItem("token") ?? context?.token ?? "",
-        });
-        context?.handleSnackBar(json.message,json.success?'success':'warning')
-        json.success && setHomeState("notifications", json.notifications);
-        return json.success;
-      };
+        const handleDelete = async (): Promise<boolean | null> => {
+          const json = await fetchHandler({
+            url: `${API_URL}/notification/delete/${n.id}`,
+            method: "delete",
+            auth: localStorage.getItem("token") ?? context?.token ?? "",
+          });
+          context?.handleSnackBar(
+            json.message,
+            json.success ? "success" : "warning"
+          );
+          json.success && setHomeState("notifications", json.notifications);
+          return json.success;
+        };
 
-      return (
-        <List key={n.id}>
-          <ListItem dense style={{ whiteSpace: "normal" }}>
-            <ListItemText
-              style={{
-                // marginLeft: 15,
-                // padding: 8,
-                borderRadius: 25,
-                // background: `linear-gradient(90deg, rgba(255,255,255,0) 0%, ${
-                //   hash[code.toString()].color
-                // }30 0%, rgba(255,255,255,0) 100%)`,
-              }}
-            >
-              <div style={{display:'flex', alignItems: 'flex-end', justifyContent: 'space-between'}}>
-                <div>
-                  <Link to={`/main/gig/${n.details.gigId}`}>
-                    {hash[code.toString()].icon}
-                  </Link>
-                  <Typography variant="overline" sx={{position: 'relative', bottom: 4, left: 5}}>
-                    {n.createdAt && new Date(n.createdAt).toLocaleDateString()}
-                  </Typography>
-                </div>
-                <IconButton
-                  sx={{ float: "right", marginLeft: 10 }}
-                  onClick={handleDelete}
+        return (
+          <List key={n.id}>
+            <ListItem dense style={{ whiteSpace: "normal" }}>
+              <ListItemText
+                style={{
+                  // marginLeft: 15,
+                  // padding: 8,
+                  borderRadius: 25,
+                  // background: `linear-gradient(90deg, rgba(255,255,255,0) 0%, ${
+                  //   hash[code.toString()].color
+                  // }30 0%, rgba(255,255,255,0) 100%)`,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  <HighlightOffOutlined fontSize="small" />
-                </IconButton>
-              </div>
-              {/* <Typography
+                  <div>
+                    <Link to={`/main/gig/${n.details.gigId}`}>
+                      {hash[code.toString()].icon}
+                    </Link>
+                    <Typography
+                      variant="overline"
+                      sx={{ position: "relative", bottom: 4, left: 5 }}
+                    >
+                      {n.createdAt &&
+                        new Date(n.createdAt).toLocaleDateString()}
+                    </Typography>
+                  </div>
+                  <IconButton
+                    sx={{ float: "right", marginLeft: 10 }}
+                    onClick={handleDelete}
+                  >
+                    <HighlightOffOutlined fontSize="small" />
+                  </IconButton>
+                </div>
+                {/* <Typography
                 variant="inherit"
                 sx={{ fontSize: 11, float: "right", marginLeft: 10 }}
               >
                 {n.details.sender}
               </Typography> */}
-              <div />
-              <Typography variant="inherit">{n.text}</Typography>
-              
-            </ListItemText>
-          </ListItem>
-          {i < notifications.length - 1 && <Divider />}
-        </List>
-      );
-    });
+                <div />
+                <Typography variant="inherit">{n.text}</Typography>
+              </ListItemText>
+            </ListItem>
+            {i < notifications.length - 1 && <Divider />}
+          </List>
+        );
+      });
 
   return <Paper>{mapper(notifications)}</Paper>;
 };

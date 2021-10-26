@@ -72,13 +72,13 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
 
   fetchDetails = async () => {
     const body = [...this.state.gigs, ...this.state.offers].map((g) => g.id);
-    const hash = await fetchHandler({
+    const { hash, success } = await fetchHandler({
       method: "post",
       url: `${API_URL}/gig/details`,
       auth: localStorage.getItem("token") ?? this.context?.token ?? "",
       body,
     });
-    this.props.setHomeState("detailsHash", hash);
+    success && this.props.setHomeState("detailsHash", hash);
   };
 
   setGigState = (key: string, value: any) => {
@@ -88,33 +88,12 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   };
 
   notificationHash = (arr: Notification[]): NotificationsHash =>
-    arr
-      // .filter((note) =>
-      //   [...this.state?.gigs ?? [], ...this.state?.offers ?? []]
-      //     .map((g) => g.id)
-      //     .includes(note.details.gigId)
-      // )
-      .reduce((obj: any, note: Notification) => {
-        // if (
-        //   note.details.code === 100 &&
-        //   !this.state?.offers.map((o) => o.id).includes(note.details.gigId)
-        // )
-        //   return obj;
-          
-        const id: string = note.details.code.toString();
-
-        if (!obj[id]) obj[id] = [];
-        obj[id].push(note);
-        return obj;
-      }, {});
-
-  // handleResize = (): void =>
-  //   this.setState({
-  //     windowDimensions: {
-  //       height: window.innerHeight,
-  //       width: window.innerWidth,
-  //     },
-  //   });
+    arr.reduce((obj: { [key: string]: Notification[] }, note: Notification) => {
+      const id: string = note.details.code.toString();
+      if (!obj[id]) obj[id] = [];
+      obj[id].push(note);
+      return obj;
+    }, {});
 
   componentDidUpdate(prevProps: GigIndexProps, prevState: GigIndexState) {
     if (prevProps.notifications !== this.props.notifications) {
@@ -139,20 +118,21 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       this.fetchOffers();
       this.fetchDetails();
     }
-    if(prevState.offers !== this.state.offers){
-      this.fetchDetails()
+    if (prevState.offers !== this.state.offers) {
+      this.fetchDetails();
     }
-    console.log(Object.entries(this.state.notificationsHash));
+    // console.log(Object.entries(this.state.notificationsHash));
   }
 
   componentDidMount() {
-    this.fetchDetails();
-    this.fetchOffers();
+    // this.fetchDetails();
+    // this.fetchOffers();
   }
 
   render() {
     return (
       <>
+
         <Route exact path="/main">
           {this.props.detailsHash ? (
             <GigWelcome
@@ -162,21 +142,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
             />
           ) : null}
         </Route>
-        {/* <Route
-          exact
-          path="/main/gig/:gigId"
-          render={() => {
-            return this.props.detailsHash && this.state.user ? (
-              <GigPage
-                {...this.props}
-                {...this.state}
-                user={this.state.user}
-                detailsHash={this.props.detailsHash}
-                windowDimensions={this.state.windowDimensions}
-              />
-            ) : null;
-          }}
-        /> */}
+
         <Route exact path="/main/gig/:gigId">
           {this.props.detailsHash && this.state.user ? (
             <GigPage
@@ -187,16 +153,11 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
             />
           ) : null}
         </Route>
+        
         <Route exact path="/main/add">
           {this.state.user ? <GigCreate {...this.state.user} /> : null}
         </Route>
-        {/* <Route exact path="/invite/gig/:gigId">
-          <GigInfo />
-          <GigInvite />
-        </Route> */}
-        {/* <GigCreate {...this.state} />
-        <GigInvite {...this.state} />
-        <GigEdit {...this.state} /> */}
+        
       </>
     );
   }

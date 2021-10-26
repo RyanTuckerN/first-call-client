@@ -188,11 +188,11 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
           onClose={this.handleClose}
         >
           {this.state.success ? (
-            <Alert severity="success">Success! Password updated.</Alert>
+            <Alert severity="success" variant='outlined'>Success! Password updated.</Alert>
           ) : this.state.success === false ? (
-            <Alert severity="error">Something went wrong.</Alert>
+            <Alert severity="error" variant='outlined'>Something went wrong.</Alert>
           ) : (
-            <Alert severity="warning">Passwords don&#39;t match.</Alert>
+            <Alert severity="warning" variant='outlined'>Passwords don&#39;t match.</Alert>
           )}
         </Snackbar>
       </Grid>
