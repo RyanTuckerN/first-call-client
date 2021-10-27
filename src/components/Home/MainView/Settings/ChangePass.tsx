@@ -40,6 +40,7 @@ interface ChangePassState {
 
 class ChangePass extends Component<ChangePassProps, ChangePassState> {
   static contextType = UserCtx;
+  timeout:any = null
 
   constructor(props: ChangePassProps, context: AppState) {
     super(props, context);
@@ -82,10 +83,13 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
         new1: "",
         new2: "",
       });
+      json.success && this.context.handleSnackBar('Success.', 'success')
+      !json.success && this.context.handleSnackBar('Incorrect Password.', 'warning')
       return json.success;
     } catch (err) {
       console.log(err);
-      this.setState({ success: false, snackBarOpen: true });
+      // this.setState({ success: false, snackBarOpen: true });
+      this.context.handleSnackBar('Something went wrong.', 'error')
       return false;
     }
   };
@@ -97,12 +101,14 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
     this.setState({ snackBarOpen: false, success: null });
   };
 
+
+
   componentDidUpdate(prevProps: ChangePassProps, prevState: ChangePassState) {
     // console.log(this.state);
-    this.state.success &&
-      setTimeout(() => {
+    if(this.state.success) {
+      this.timeout = setTimeout(() => {
         this.props.history.push("/main/settings");
-      }, 2500);
+      }, 2500)}
     if (
       prevState.new1 !== this.state.new1 ||
       prevState.new2 !== this.state.new2
@@ -114,6 +120,10 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
         ),
       });
     }
+  }
+
+  componentWillUnmount(){
+    clearTimeout(this.timeout)
   }
 
   render() {
@@ -182,7 +192,7 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
             </Grid>
           </Grid>
         </Grid>
-        <Snackbar
+        {/* <Snackbar
           open={this.state.snackBarOpen}
           autoHideDuration={4000}
           onClose={this.handleClose}
@@ -194,7 +204,7 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
           ) : (
             <Alert severity="warning" variant='outlined'>Passwords don&#39;t match.</Alert>
           )}
-        </Snackbar>
+        </Snackbar> */}
       </Grid>
     );
   }

@@ -72,13 +72,13 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
   }
 
   render() {
-    const buttonGridProps = {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "center",
-      alignItems: "center",
-      minHeight: 400,
-    };
+    // const buttonGridProps = {
+    //   display: "flex",
+    //   flexDirection: "row",
+    //   justifyContent: "center",
+    //   alignItems: "center",
+    //   minHeight: 400,
+    // };
 
     return (
       <Container

@@ -3,14 +3,9 @@ import { useContext } from "react";
 import { Notification } from "../../../types/API.types";
 import Paper from "@mui/material/Paper";
 import Divider from "@mui/material/Divider";
-import MenuList from "@mui/material/MenuList";
-import MenuItem from "@mui/material/MenuItem";
-// import ListItemIcon from "@mui/material/ListItemIcon";
-import { Link } from "react-router-dom";
-// import Check from "@mui/icons-material/Check";
+import { HashLink as Link } from "react-router-hash-link";
 import {
   Typography,
-  Box,
   IconButton,
   List,
   ListItem,
@@ -27,7 +22,6 @@ import {
 } from "@mui/icons-material";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import API_URL from "../../_helpers/environment";
-import { AppState } from "../../../App";
 import { UserCtx } from "../../Context/MainContext";
 
 interface NotificationsProps {
@@ -61,7 +55,10 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
 
   const mapper = (notifications: Notification[]): any =>
     notifications
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
       .map((n, i) => {
         const { code } = n.details;
 
@@ -100,7 +97,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                   }}
                 >
                   <div>
-                    <Link to={`/main/gig/${n.details.gigId}`}>
+                    <Link smooth to={`/main/gig/${n.details.gigId}#gig-anchor`}>
                       {hash[code.toString()].icon}
                     </Link>
                     <Typography

@@ -1,28 +1,22 @@
 import { FunctionComponent } from "react";
 import { Gig, User } from "../../../../../../../types/API.types";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
 import { CardActionArea } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import {Link} from 'react-router-dom'
-import { red } from "@mui/material/colors";
+import {HashLink as Link} from 'react-router-hash-link'
 import { Grid } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { returnTime } from "../../../../../../_helpers/helpers";
-import zIndex from "@mui/material/styles/zIndex";
 import { stringAvatar } from "../../../../Settings/Header";
 import { DetailedGig } from "../../../Gig.types";
-import { LocationOn, AttachMoney, Event } from "@mui/icons-material";
+import { LocationOn, AttachMoney } from "@mui/icons-material";
 import "../../../Gig.css";
 
 interface GigProps extends Gig {
@@ -39,7 +33,7 @@ const GigCard: FunctionComponent<GigProps> = ({
   description,
   id,
   payment,
-  location,
+  gigLocation,
   detailsHash,
   user
 }) => {
@@ -54,19 +48,20 @@ const GigCard: FunctionComponent<GigProps> = ({
     sx: { height: avatarSize, width: avatarSize },
   };
 
-  const getRandomColor = (): string => {
-    const letters = "0123456789ABCDEF".split("");
-    let color = "#";
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
+  // const getRandomColor = (): string => {
+  //   const letters = "0123456789ABCDEF".split("");
+  //   let color = "#";
+  //   for (var i = 0; i < 6; i++) {
+  //     color += letters[Math.floor(Math.random() * 16)];
+  //   }
+  //   return color;
+  // };
 
   return bandLeader ? (
-    <Card elevation={5} sx={{ margin: 1, borderRadius: 4 }}>
+    // <Card elevation={5} sx={{ margin: 1, borderRadius:  }}>
+    <Card elevation={0} sx={{  }}>
         
-        <Link to={`/main/gig/${id}`}>
+        <Link smooth  to={`/main/gig/${id}#gig-anchor`}>
           <CardActionArea>
             <CardHeader
               sx={{
@@ -124,7 +119,7 @@ const GigCard: FunctionComponent<GigProps> = ({
                 <div className="justify">
                   <LocationOn fontSize="small" color="error" />
                   <Typography variant="caption" display="inline">
-                    {location}
+                    {gigLocation}
                   </Typography>
                 </div>
               </Grid>
@@ -172,7 +167,7 @@ const GigCard: FunctionComponent<GigProps> = ({
                 <div className="justify">
                   <LocationOn fontSize="small" color="error" />
                   <Typography variant="caption" display="inline">
-                    {location}
+                    {gigLocation}
                   </Typography>
                 </div>
               </Grid>

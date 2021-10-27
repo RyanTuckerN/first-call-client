@@ -32,8 +32,10 @@ import {
   // Circle
 } from "@mui/icons-material";
 import { DetailedGig } from "../../Gig.types";
+import {Link} from 'react-router-dom'
 import { stringAvatar } from "../../../Settings/Header";
 import { Gig, User } from "../../../../../../types/API.types";
+import * as _ from "lodash";
 
 const avatarSize: number = 35;
 
@@ -54,7 +56,7 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
   toggleEditMode,
 }) => {
   const [emptyStack, setEmptyStack] = useState(false);
-  const { date, callStack, optionalInfo, payment, location } = gig;
+  const { date, callStack, optionalInfo, payment, gigLocation } = gig;
   const { bandLeader, bandMembers } = details;
 
   const checkStack = (): void => {
@@ -79,28 +81,36 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
     <Grid
       container
       display="flex"
+      flexDirection='row'
       justifyContent="center"
       spacing={1}
       sx={{ padding: 1 }}
     >
       {/* <List> */}
-      <Grid item xs={12} sm={7} md={5}>
-        <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}>
+      {/* {gig.photo && (
+        <Grid item xs={12} sm={5} md={3}>
+          <Avatar variant="square" src={gig.photo} sx={{height: '100%', width:'100%'}} />
+        </Grid>
+      )} */}
+      <Grid item xs={12} sm={7} md={4}>
+        <Paper elevation={10} sx={{ paddingLeft: 2, minHeight: "100%" }}>
           <Typography {...typoSx} variant="h6">
             Details
           </Typography>
           <ListItem>
-            <ListItemAvatar>
-              {bandLeader.photo ? (
-                <Avatar
-                  src={bandLeader.photo}
-                  alt={bandLeader.name}
-                  sx={{ height: avatarSize, width: avatarSize }}
-                />
-              ) : (
-                <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
-              )}
-            </ListItemAvatar>
+            <Link to={`/main/profile/${bandLeader.id}`}>
+              <ListItemAvatar>
+                {bandLeader.photo ? (
+                  <Avatar
+                    src={bandLeader.photo}
+                    alt={bandLeader.name}
+                    sx={{ height: avatarSize, width: avatarSize }}
+                  />
+                ) : (
+                  <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
+                )}
+              </ListItemAvatar>
+            </Link>
             {/* <ListItemText  primary={bandLeader.name} /> */}
             {authorizedView ? (
               <Typography variant="subtitle1">
@@ -126,7 +136,7 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
             </ListItemIcon>
             <Typography>
               <strong>Location: &nbsp;</strong>
-              {location}
+              {gigLocation}
             </Typography>
           </ListItem>
           <ListItem>
@@ -138,31 +148,36 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
               {`${d.toLocaleDateString()} at ${returnTime(d)}`}
             </Typography>
           </ListItem>
-        </Paper>
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
-        <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}>
-          {entries.length ? (
+      {!_.isEmpty(entries) && (
+        <>
+        {/* <Grid item xs={12} sm={6} md={3}> */}
+          {/* <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}> */}
+            {entries.length ? (
+              <Grid item xs={12}>
+                {/* <Divider sx={{ paddingY: 1 }} /> */}
+                <Typography {...typoSx} variant="h6">
+                  Additional Info
+                </Typography>
+              </Grid>
+            ) : null}
             <Grid item xs={12}>
-              {/* <Divider sx={{ paddingY: 1 }} /> */}
-              <Typography {...typoSx} variant="h6">
-                Additional Info
-              </Typography>
+              {entries.map((entry, i) => {
+                return (
+                  <ListItem key={i}>
+                    {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
+                    <Typography sx={{}}>
+                      <strong>{properize(entry[0])}: &nbsp; </strong>
+                      {`${entry[1]}`}
+                    </Typography>
+                  </ListItem>
+                );
+              })}
             </Grid>
-          ) : null}
-          <Grid item xs={12}>
-            {entries.map((entry, i) => {
-              return (
-                <ListItem key={i}>
-                  {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
-                  <Typography sx={{}}>
-                    <strong>{properize(entry[0])}: &nbsp; </strong>
-                    {`${entry[1]}`}
-                  </Typography>
-                </ListItem>
-              );
-            })}
-          </Grid>
+          {/* </Paper> */}
+        {/* </Grid> */}
+        </>
+      )}
+      <div id='gig-padding' style={{height:20}}/>
         </Paper>
       </Grid>
       {/* <Divider sx={{ paddingY: 1 }} /> */}
@@ -179,10 +194,16 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
       >
         <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}>
           <Grid item xs={12} container>
-            <Grid item xs={4}>
+            <Grid item xs={4} paddingLeft={1}>
               <Typography variant="h6">Band</Typography>
             </Grid>
-            <Grid item xs={8} display='flex' alignItems='flex-end' justifyContent='flex-end'>
+            <Grid
+              item
+              xs={8}
+              display="flex"
+              alignItems="flex-end"
+              justifyContent="flex-end"
+            >
               {filled.length ? (
                 filled.length === roles.length ? (
                   <>
@@ -272,7 +293,7 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                               >
                                 {role.onCall}
                               </Typography>
-                              <Box >
+                              <Box>
                                 {role.calls?.length ? (
                                   <Typography
                                     display="inline"
@@ -320,6 +341,8 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
             )}
             {/* </List> */}
           </Grid>
+      <div id='gig-padding' style={{height:20}}/>
+
         </Paper>
       </Grid>
     </Grid>

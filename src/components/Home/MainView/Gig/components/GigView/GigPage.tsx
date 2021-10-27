@@ -2,7 +2,7 @@ import { Grid, Paper } from "@mui/material";
 import * as React from "react";
 import { Component } from "react";
 // import { RouteComponentProps, withRouter } from 'react-router';
-import { Gig, Post, User } from "../../../../../../types/API.types";
+import { CallStack, Gig, Post, User } from "../../../../../../types/API.types";
 import { GigIndexState } from "../../GigsIndex";
 import Board from "./Board";
 import GigHeader from "./GigHeader";
@@ -70,6 +70,11 @@ class GigPage extends Component<GigPageProps, GigPageState> {
 
   setGig = (gig: Gig): void => this.setState({ gig });
 
+  // addCallStackToGig = (callStack: CallStack): void => {
+  //   const gig = { ...this.state.gig!, callStack };
+  //   this.setState({ gig });
+  // };
+
   fetchPosts = async (): Promise<boolean> => {
     const json = await fetchHandler({
       url: `${API_URL}/board/${this.state.gigId}`,
@@ -92,6 +97,13 @@ class GigPage extends Component<GigPageProps, GigPageState> {
     prevProps !== this.props &&
       this.setState({
         authorizedView: this.state.gig?.ownerId === this.props.user.id,
+      });
+    prevProps.gigs !== this.props.gigs &&
+      this.setState({
+        gig:
+          [...this.props.gigs, ...this.props.offers].filter(
+            (g) => g.id.toString() === this.state.gigId
+          )[0] ?? null,
       });
   }
 
@@ -136,6 +148,10 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                       : "wrap"
                   }
                 >
+                  <div
+                    id="gig-anchor"
+                    style={{ position: "relative", bottom: 300 }}
+                  />
                   {this.state.details &&
                   !this.state.editMode &&
                   this.state.gig ? (
@@ -197,7 +213,11 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                         />
                       </Grid>
                     ) : this.state.gig.callStack && this.state.editMode ? (
-                      <CallStackEdit {...this.state.gig.callStack} />
+                      <CallStackEdit
+                        {...this.state.gig.callStack}
+                        setGig={this.setGig}
+                        gig={this.state.gig}
+                      />
                     ) : null
                   ) : null}
                 </Grid>

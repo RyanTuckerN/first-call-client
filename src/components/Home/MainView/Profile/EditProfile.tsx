@@ -50,6 +50,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
     super(props, context);
     this.state = {
       ...this.props.user,
+
       handle: this.props.user.paymentPreference?.handle ?? "",
       platform: this.props.user.paymentPreference?.platform ?? "",
       snackBarOpen: false,
@@ -204,7 +205,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             variant="outlined"
             id="bio"
             name="bio"
-            value={this.state.description}
+            value={this.state.description ?? ''}
             // label="Name"
           />
         </Grid>

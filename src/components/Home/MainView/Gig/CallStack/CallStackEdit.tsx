@@ -10,14 +10,17 @@ import {
   Box,
 } from "@mui/material";
 import { Backspace } from "@mui/icons-material";
-import { CallStack } from "../../../../../types/API.types";
+import { CallStack, Gig } from "../../../../../types/API.types";
 import { properize, properizeNoTrim } from "../../../../_helpers/helpers";
 import { fetchHandler } from "../../../../_helpers/fetchHandler";
 import API_URL from "../../../../_helpers/environment";
 import { UserCtx } from "../../../../Context/MainContext";
 import { AppState } from "../../../../../App";
 
-interface CallStackEditProps extends CallStack {}
+interface CallStackEditProps extends CallStack {
+  setGig: (gig: Gig) => void;
+  gig: Gig
+}
 
 interface CallStackEditState extends CallStack {
   roleVal: string;
@@ -29,42 +32,79 @@ class CallStackEdit extends React.Component<
   CallStackEditProps,
   CallStackEditState
 > {
-  static contextType = UserCtx
+  static contextType = UserCtx;
 
   constructor(props: CallStackEditProps, context: AppState) {
     super(props, context);
-    this.state = { 
+    this.state = {
       ...this.props,
-      roleVal: "", 
-      emailVal: "", 
-      message: "" };
+      roleVal: "",
+      emailVal: "",
+      message: "",
+    };
   }
 
   handleRole = (e: any) =>
     this.setState({ roleVal: e.target.value.toLowerCase() });
 
-  handleEmail = (e: any) => this.setState({ emailVal: e.target.value });
+  handleEmail = (e: any) => this.setState({ emailVal: e.target.value.toLowerCase() });
 
-  handleSubmit = async(e: React.FormEvent<HTMLFormElement>): Promise<boolean> => {
-    e.preventDefault()
-    const {roleVal, emailVal} = this.state
-    if(!emailVal || !roleVal){
-      this.setState({message: 'Please fill out both fields'})
-      return false
+  handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<boolean> => {
+    e.preventDefault();
+    try {
+      const { roleVal, emailVal } = this.state;
+      if (!emailVal || !roleVal) {
+        this.setState({ message: "Please fill out both fields" });
+        return false;
+      }
+      if (this.state.stackTable[roleVal]) {
+        const { success, callStack } = await fetchHandler({
+          url: `${API_URL}/gig/${this.state.gigId}/callStack/addUser/${roleVal}/${emailVal}`,
+          method: "post",
+          auth: this.context.token ?? localStorage.getItem("token") ?? "",
+        });
+        // console.log(callStack, success);
+        success && this.setState({ stackTable: callStack });
+        return success;
+      } else {
+        const { success, roleStack, message } = await fetchHandler({
+          url: `${API_URL}/gig/${this.state.gigId}/callStack/addRole/${roleVal}`,
+          method: "post",
+          body: { calls: emailVal },
+          auth: this.context.token ?? localStorage.getItem("token") ?? "",
+        });
+        // console.log(roleStack, message);
+        success &&
+          this.setState({
+            stackTable: { ...this.state.stackTable, [roleVal]: roleStack },
+          });
+          success && this.props.setGig({...this.props.gig, callStack: {...this.state}})
+        return success;
+      }
+    } catch (err) {
+      console.log(err);
+      return false;
     }
-    if(this.state.stackTable[roleVal]){
-      const json = await fetchHandler({
-        url: `${API_URL}/gig/${this.state.gigId}/callStack/addUser/${roleVal}/${emailVal}`,
-        method: 'post',
-        auth: this.context.token ?? localStorage.getItem('token') ?? ''
+  };
+
+  handleDelete = async(role: string, email: string): Promise<boolean> => {
+    try {
+      const {message, success, stack} = await fetchHandler({
+        url: `${API_URL}/gig/${this.state.gigId}/callStack/remove/${role}/${email}`,
+        method: 'delete',
+        auth: this.context.token ?? localStorage.getItem("token") ?? ""
       })
-      console.log(json)
-      json.success && this.setState({stackTable: json.callStack})
-      return json.success
+      console.log(stack, message)
+      success && this.setState({stackTable: {...this.state.stackTable, [role]: stack}})
+      return success
+    } catch (error) {
+    console.log(error)
+    return false    
     }
-    return false
   }
- 
+
   render() {
     const { stackTable } = this.state;
     const roles = Object.keys(stackTable);
@@ -116,7 +156,7 @@ class CallStackEdit extends React.Component<
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={12} >
+              <Grid item xs={12} sm={6} md={12}>
                 <TextField
                   label="Email"
                   value={this.state.emailVal}
@@ -151,9 +191,9 @@ class CallStackEdit extends React.Component<
                 </Grid>
                 <List>
                   {stackTable[r].calls.map((email: string, i: number) => (
-                    <>
+                    <React.Fragment key={i}>
                       <Box display="flex" alignItems="center">
-                        <ListItemText key={i}>
+                        <ListItemText>
                           <Typography variant="body2">
                             <strong>
                               {i + 1}
@@ -162,11 +202,11 @@ class CallStackEdit extends React.Component<
                             &nbsp;&nbsp; {email}
                           </Typography>
                         </ListItemText>
-                        <IconButton>
-                          <Backspace color="error" />
+                        <IconButton onClick={()=>this.handleDelete(r, email)}>
+                          <Backspace color="error"/>
                         </IconButton>
                       </Box>
-                    </>
+                    </React.Fragment>
                   ))}
                 </List>
               </Grid>

@@ -36,6 +36,7 @@ import {
   // Circle
 } from "@mui/icons-material";
 // import DateTimePicker from "react-datetime-picker";
+import { withRouter } from "react-router-dom";
 import { addHours, properizeNoTrim } from "../../../../../_helpers/helpers";
 import "../../Gig.css";
 import { Box } from "@mui/system";
@@ -61,7 +62,7 @@ class GigEdit extends Component {
       date: this.props.date ?? "",
       description: this.props.description ?? "",
       payment: this.props.payment ?? 0,
-      location: this.props.location ?? "",
+      gigLocation: this.props.gigLocation ?? "",
       photo: this.props.photo ?? "",
       dateVal: new Date(this.props.date ?? new Date()),
       optionalKey: "",
@@ -69,12 +70,10 @@ class GigEdit extends Component {
       optionalInfo: this.props.optionalInfo ?? {},
       gigCreate: this.props.gigCreate ?? false,
       success: false,
-      toggleEditMode: this.props.toggleEditMode
+      // toggleEditMode: this.props.toggleEditMode
       // testDate: moment(new Date())
     };
   }
-
-
 
   handleTitle = (e) =>
     this.setState({ description: properizeNoTrim(e.target.value) });
@@ -84,8 +83,8 @@ class GigEdit extends Component {
     this.setState({ length: e.target.value < 0 ? 1 : e.target.value });
   handleDate = (val) =>
     this.setState({ date: new Date(val).toISOString(), dateVal: val });
-  handleLocation = (e) =>
-    this.setState({ location: properizeNoTrim(e.target.value ?? "") });
+  handlegigLocation = (e) =>
+    this.setState({ gigLocation: properizeNoTrim(e.target.value ?? "") });
   handleKey = (e) =>
     this.setState({ optionalKey: properizeNoTrim(e.target.value ?? "") });
   handleVal = (e) =>
@@ -132,7 +131,7 @@ class GigEdit extends Component {
       // await this.updateProfile({ photo: File.secure_url });
       if (this.state.gigCreate) {
         this.setState({ photo: File.secure_url });
-        this.context.handleSnackBar("Done!", 'info');
+        this.context.handleSnackBar("Done!", "info");
         return;
       }
       const json = await fetchHandler({
@@ -143,42 +142,45 @@ class GigEdit extends Component {
       });
       // alert(json.message);
       console.log(json);
-      json.success && this.context.handleSnackBar(json.message, 'success')
+      json.success && this.context.handleSnackBar(json.message, "success");
       json.success && this.props.setGig(json.gig);
       return true;
     } catch (err) {
       console.error(err);
-      this.context.handleSnackBar("There was an error!", 'error');
+      this.context.handleSnackBar("There was an error!", "error");
       return false;
     }
   };
 
   handleSave = async () => {
-    const { description, date, payment, location, optionalInfo, gigId } =
+    const { description, date, payment, gigLocation, optionalInfo, gigId } =
       this.state;
     const { callStackEmpty, gigCreate } = this.props;
     if (
       !description ||
       !date ||
       !payment ||
-      !location ||
+      !gigLocation ||
       !optionalInfo
       // !gigId
     ) {
-      this.context.handleSnackBar("Empty field(s)!", 'warning');
+      this.context.handleSnackBar("Empty field(s)!", "warning");
       return;
     }
     if (callStackEmpty && gigCreate) {
-      this.context.handleSnackBar("Empty callStack! Fill out at least one role to submit.", 'warning');
+      this.context.handleSnackBar(
+        "Empty callStack! Fill out at least one role to submit.",
+        "warning"
+      );
       return;
     }
     const body = {
       description,
       date,
       payment,
-      location,
+      gigLocation,
       optionalInfo,
-      [this.state.photo && "photo"]: this.state.photo,
+      photo: this.state.photo,
     };
 
     const json = await fetchHandler({
@@ -193,14 +195,23 @@ class GigEdit extends Component {
         ? this.props.setGigId(json.newGig.id)
         : this.props.setGig(json.gig)
       : null;
-    json.success && this.context.handleSnackBar(json.message, 'success');
-    json.success && this.setState({success: true})
+    json.success && this.context.handleSnackBar(json.message, "success");
+    json.success &&
+      this.setState({
+        success: true,
+        gigId: this.state.gigCreate ? json.newGig.id : json.gig.id,
+      });
+    // json.success && this.props.addGig(json.newGig)
   };
 
   componentDidUpdate(prevProps, prevState) {
-    this.state.success && setTimeout(() => {
-      this.state.toggleEditMode()
-    }, 1750);
+    this.state.success &&
+      setTimeout(() => {
+        // alert("redirect here at GigEdit Component did update!");
+        this.state.gigCreate
+          ? this.props.history.push(`/main/gig/${this.state.gigId}`)
+          : this.props.toggleEditMode();
+      }, 1750);
   }
 
   render() {
@@ -208,26 +219,42 @@ class GigEdit extends Component {
     const keys = Object.keys(optionalInfo);
 
     return (
-      <>
+      <Grid
+        item
+        xs={this.props.gigCreate ? 12 : 12}
+        md={this.props.gigCreate ? 12 : 7}
+        lg={this.props.gigCreate ? 12 : 6}
+      >
         {/* {width<900 && <Link href='#band'>Band</Link>} */}
-        {this.state.photo && <Grid display='flex' justifyContent='center'>
+        {/* {this.state.photo && <Grid display='flex' item xs={6} justifyContent='center'>
           <Avatar src={this.state.photo} variant='square' sx={{width: '100%', height:'auto'}} />
-        </Grid>}
+        </Grid>} */}
         <Grid
           container
           item
-          xs={this.props.gigCreate ? 12 : 12}
-          md={this.props.gigCreate ? 12 : 7}
-          lg={this.props.gigCreate ? 12 : 6}
           spacing={1}
           padding={2}
           display="flex"
           justifyContent="space-between"
+          alignItems="flex-start"
         >
-          <Grid item container xs={12} sx={{ marginTop: 1 }} display='flex' justifyContent='space-between'>
+          <Grid
+            item
+            container
+            xs={12}
+            sx={{ marginTop: 1 }}
+            display="flex"
+            justifyContent="space-between"
+          >
             <Typography variant="h4">Details</Typography>
             {/* {!this.state.gigCreate ? ( */}
-            <Button color='success' variant='contained' onClick={this.handleSave}>{this.state.gigCreate ? `CREATE GIG` : `SAVE`}</Button>
+            <Button
+              color="success"
+              variant="contained"
+              onClick={this.handleSave}
+            >
+              {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
+            </Button>
             {/* ) : null} */}
           </Grid>
           <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>
@@ -296,14 +323,14 @@ class GigEdit extends Component {
           </Grid>
 
           <Grid item xs={12}>
-            {/* <Typography variant="h6">Location</Typography> */}
-            {/* <LocationOn /> */}
+            {/* <Typography variant="h6">gigLocation</Typography> */}
+            {/* <gigLocationOn /> */}
             <TextField
               fullWidth
               label="Location"
               placeholder="Include a place or address"
-              onChange={this.handleLocation}
-              value={this.state.location}
+              onChange={this.handlegigLocation}
+              value={this.state.gigLocation}
             />
           </Grid>
           <Grid item xs={12} display="flex" alignItems="center">
@@ -329,7 +356,7 @@ class GigEdit extends Component {
           </Grid>
           <Grid
             container
-            justifyContent="space-between"
+            // justifyContent="space-between"
             display="flex"
             flexDirection="column"
             item
@@ -339,7 +366,7 @@ class GigEdit extends Component {
               item
               container
               xs={12}
-              display="flex"
+              // display="flex"
               flexDirection="row"
               // justifyContent="space-between"
             >
@@ -376,23 +403,24 @@ class GigEdit extends Component {
                   flexDirection="row"
                   justifyContent="space-between"
                 >
-                  <Grid item xs={3}>
+                  <Grid item xs={12} sm={5}>
                     <TextField
                       ref={(i) => (this.optForm = i)}
                       label="Category"
                       onChange={this.handleKey}
                       value={this.state.optionalKey}
-                      placeholder="Meal"
+                      placeholder="Any category"
+                      fullWidth
                     />
                   </Grid>
                   {/* <Typography variant="h4">:</Typography> */}
-                  <Grid item xs={8}>
+                  <Grid item xs={12} sm={7}>
                     <TextField
                       label="Info"
                       onChange={this.handleVal}
                       value={this.state.optionalVal}
                       fullWidth
-                      placeholder="Surf and turf"
+                      placeholder="Some details"
                       InputProps={{
                         endAdornment: (
                           <IconButton type="submit">
@@ -410,9 +438,14 @@ class GigEdit extends Component {
             CALLSTACK MANIPULATION GO HERE, DIFFERENT FOR CREATING AND EDITING.
           </div> */}
         </Grid>
-      </>
+        <Grid display="flex" justifyContent="flex-end" padding={2}>
+          <Button color="success" variant="contained" onClick={this.handleSave}>
+            {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
+          </Button>
+        </Grid>
+      </Grid>
     );
   }
 }
 
-export default GigEdit;
+export default withRouter(GigEdit);

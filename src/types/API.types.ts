@@ -21,7 +21,7 @@ export interface Gig {
   id: number;
   ownerId: number;
   description: string;
-  location: string;
+  gigLocation: string;
   date: string; //date format
   payment: number;
   token: string; //uuid

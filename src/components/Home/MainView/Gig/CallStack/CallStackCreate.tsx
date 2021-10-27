@@ -25,6 +25,7 @@ import { fetchHandler } from "../../../../_helpers/fetchHandler";
 import API_URL from "../../../../_helpers/environment";
 import { UserCtx } from "../../../../Context/MainContext";
 import { AppState } from "../../../../../App";
+import { Gig } from "../../../../../types/API.types";
 
 interface RouteParams {
   gigId: string;
@@ -32,7 +33,9 @@ interface RouteParams {
 
 interface CallStackCreateProps extends RouteComponentProps<RouteParams> {
   gigId: number | null;
-  setCallStackEmpty: (b:boolean) => void
+  setCallStackEmpty: (b:boolean) => void;
+  addGig: (gig:Gig)=>void
+
 }
 
 interface CallStackCreateState {
@@ -63,7 +66,7 @@ class CallStackCreate extends Component<
   handleRole = (e: any) =>
     this.setState({ roleVal: e.target.value.toLowerCase() });
 
-  handleEmail = (e: any) => this.setState({ emailVal: e.target.value });
+  handleEmail = (e: any) => this.setState({ emailVal: e.target.value.toLowerCase() });
 
   handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,6 +110,10 @@ class CallStackCreate extends Component<
       console.log('callStack', json)
       json.success && this.context.handleSnackBar('Success!', 'success');
       json.success && this.props.setCallStackEmpty(true)
+      if(json.success){
+        const gig = {...json.gig, callStack: json.callStack }
+        this.props.addGig(gig)
+      }
     } catch (err) {
       this.context.handleSnackBar(err, 'error');
     }
@@ -135,6 +142,7 @@ class CallStackCreate extends Component<
     }
     if(prevProps.gigId !== this.props.gigId && typeof this.props.gigId==='number'){
       this.saveCallStackToDB()
+      // this.props.fetchDetails()
     }
   }
 

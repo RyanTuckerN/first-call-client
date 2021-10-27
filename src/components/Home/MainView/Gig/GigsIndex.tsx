@@ -7,7 +7,7 @@ import {
   Switch,
   RouteComponentProps,
 } from "react-router-dom";
-import { Gig, Notification, User } from "../../../../types/API.types";
+import { CallStack, Gig, Notification, User } from "../../../../types/API.types";
 import API_URL from "../../../_helpers/environment";
 import { UserCtx } from "../../../Context/MainContext";
 import { fetchHandler } from "../../../_helpers/fetchHandler";
@@ -70,7 +70,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     return success;
   };
 
-  fetchDetails = async () => {
+  fetchDetails = async ():Promise<void> => {
     const body = [...this.state.gigs, ...this.state.offers].map((g) => g.id);
     const { hash, success } = await fetchHandler({
       method: "post",
@@ -86,6 +86,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     obj[key] = value;
     this.setState(obj);
   };
+
+  addGig = (gig: Gig):void => this.setState({gigs: [...this.state.gigs, gig]})
 
   notificationHash = (arr: Notification[]): NotificationsHash =>
     arr.reduce((obj: { [key: string]: Notification[] }, note: Notification) => {
@@ -125,8 +127,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
   }
 
   componentDidMount() {
-    // this.fetchDetails();
-    // this.fetchOffers();
+    this.fetchDetails();
+    this.fetchOffers();
   }
 
   render() {
@@ -155,7 +157,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
         </Route>
         
         <Route exact path="/main/add">
-          {this.state.user ? <GigCreate {...this.state.user} /> : null}
+          {this.state.user ? <GigCreate {...this.state.user} addGig={this.addGig} fetchDetails={this.fetchDetails} /> : null}
         </Route>
         
       </>

@@ -7,6 +7,7 @@ export const properize = (s: string): string =>
   s && s[0].toUpperCase() + s.slice(1).trim();
 export const properizeNoTrim = (s: string): string =>
   s && s[0].toUpperCase() + s.slice(1);
+export const properizeName = (name: string) => name.split(' ').map(n=>properize(n)).join(' ')
 
 /**
  *
@@ -51,6 +52,7 @@ export const formControl = {
     emailAddress.split("").includes("."),
   validatePasswordsMatch: (p1: string, p2: string): boolean => p1 === p2,
   validatePassword: (p1: string): boolean => p1.length >= 8,
+  validateName: (name: string): boolean => name.split(' ').length > 1
 };
 
 export const returnTimeDifference = (d1: Date, d2: Date): string => {

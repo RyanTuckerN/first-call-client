@@ -175,7 +175,7 @@ class Home extends Component<HomeProps, HomeState> {
       <>
         <Box sx={{ flexGrow: 1 }}>
           <AppBar
-            position="static"
+            position="fixed"
             color="secondary"
             style={{ height: this.appBarHeight }}
           >
@@ -309,6 +309,7 @@ class Home extends Component<HomeProps, HomeState> {
               )}
             </Toolbar>
           </AppBar>
+          <div style={{minHeight: 90}}/>
         </Box>
         <div style={{ marginTop: 10 }} />
         <>
