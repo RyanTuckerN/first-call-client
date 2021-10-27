@@ -152,6 +152,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
               {...this.state}
               user={this.state.user}
               detailsHash={this.props.detailsHash}
+              addGig={this.addGig}
             />
           ) : null}
         </Route>

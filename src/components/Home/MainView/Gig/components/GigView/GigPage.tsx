@@ -34,6 +34,7 @@ interface GigPageProps extends RouteComponentProps<RouteParams> {
   offers: Gig[];
   gigs: Gig[];
   user: User;
+  addGig: (gig: Gig) => void;
 }
 
 export interface GigPageState {
@@ -105,6 +106,9 @@ class GigPage extends Component<GigPageProps, GigPageState> {
             (g) => g.id.toString() === this.state.gigId
           )[0] ?? null,
       });
+    // if (prevState.gig !== this.state.gig && this.state.gig) {
+    //   this.props.addGig(this.state.gig);
+    // }
   }
 
   componentDidMount() {

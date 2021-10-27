@@ -127,10 +127,9 @@ class GigEdit extends Component {
       );
       const File = await res.json();
       console.log(File);
-      // await this.setState({photo: File.secure_url});
-      // await this.updateProfile({ photo: File.secure_url });
+      
+      this.setState({ photo: File.secure_url });
       if (this.state.gigCreate) {
-        this.setState({ photo: File.secure_url });
         this.context.handleSnackBar("Done!", "info");
         return;
       }
@@ -142,8 +141,8 @@ class GigEdit extends Component {
       });
       // alert(json.message);
       console.log(json);
-      json.success && this.context.handleSnackBar(json.message, "success");
       json.success && this.props.setGig(json.gig);
+      json.success && this.context.handleSnackBar(json.message, "success");
       return true;
     } catch (err) {
       console.error(err);
@@ -180,14 +179,14 @@ class GigEdit extends Component {
       payment,
       gigLocation,
       optionalInfo,
-      photo: this.state.photo,
+      [gigCreate? 'photo' : '']: this.state.photo
     };
 
     const json = await fetchHandler({
       url: `${API_URL}/gig/${this.state.gigCreate ? "" : gigId}`,
       method: this.state.gigCreate ? "post" : "put",
       body,
-      auth: localStorage.getItem("token" ?? this.context.token ?? ""),
+      auth: localStorage.getItem("token") ?? this.context.token ?? "",
     });
     console.log(json);
     json.success
@@ -229,6 +228,7 @@ class GigEdit extends Component {
         {/* {this.state.photo && <Grid display='flex' item xs={6} justifyContent='center'>
           <Avatar src={this.state.photo} variant='square' sx={{width: '100%', height:'auto'}} />
         </Grid>} */}
+        {this.state.photo ? <Avatar src={this.state.photo} /> : null}
         <Grid
           container
           item
