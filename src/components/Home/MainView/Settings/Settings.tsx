@@ -31,9 +31,9 @@ import EditProfile from "../Profile/EditProfile";
 import { AppState } from "../../../../App";
 
 interface SettingsProps extends RouteComponentProps {
-  setAppState: any,
-  user: User,
-  token: string
+  setAppState: any;
+  user: User;
+  token: string;
 }
 
 interface SettingsState {}
@@ -52,23 +52,23 @@ class Settings extends Component<SettingsProps, SettingsState> {
     const json = await fetchHandler({
       url: `${API_URL}/user/profile`,
       method: "PUT",
-      auth: localStorage.getItem('token') ?? this.context.token ?? '',
+      auth: localStorage.getItem("token") ?? this.context.token ?? "",
       body: { emails },
     });
-    this.props.setAppState('user', json.user);
+    this.props.setAppState("user", json.user);
   };
 
-  updateProfile = async(user: any):Promise<boolean> => {
+  updateProfile = async (user: any): Promise<boolean> => {
     const json = await fetchHandler({
       url: `${API_URL}/user/profile`,
       method: "PUT",
-      auth: localStorage.getItem('token') ?? this.context.token ?? '',
-      body: user ,
+      auth: localStorage.getItem("token") ?? this.context.token ?? "",
+      body: user,
     });
     // console.log(json)
-    json.user && this.props.setAppState('user', json.user); 
-    return json.success ? true : false 
-  }
+    json.user && this.props.setAppState("user", json.user);
+    return json.success ? true : false;
+  };
 
   uploadImage = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -110,23 +110,17 @@ class Settings extends Component<SettingsProps, SettingsState> {
   }
   render() {
     return (
-      <>
-        <Grid container spacing={0}>
-          <Grid item xs={6} sm={5} >
-            <Header
-              handlePhoto={this.uploadImage}
-              {...this.props}
-            />
-          </Grid>
+      <Grid container>
+        <Grid item xs={6} sm={5}>
+          <Header handlePhoto={this.uploadImage} {...this.props} />
         </Grid>
 
-        <Grid container spacing={2} flexWrap="wrap-reverse">
+        <Grid container item xs={12} spacing={2} flexWrap="wrap-reverse">
           <Grid item xs={12} sm={5} md={3}>
-            <Typography variant="h5" sx={{ paddingLeft: 2, marginTop: 5 }}>
-              Settings
-            </Typography>
-
-            <List>
+            <Grid>
+              <Typography variant="h5" sx={{ paddingLeft: 2, marginTop: 5 }}>
+                Settings
+              </Typography>
               <NavLink to={`${this.props.match.path}`}>
                 <ListItemButton>
                   <Typography variant="body1">Account</Typography>
@@ -137,54 +131,58 @@ class Settings extends Component<SettingsProps, SettingsState> {
                   <Typography variant="body1">Security</Typography>
                 </ListItemButton>
               </NavLink>
-              <div id="spacer" />
-              {/* <Divider /> */}
-              <ListItem>
-                <Typography variant="h5">Preferences</Typography>
-              </ListItem>
-              {/* Hello from Settings.tsx! */}
-              <ListItem>
-                <div className="toggle">
-                  <Typography variant="body1">Dark Mode</Typography>
-                  <div>
-                    <Switch
-                      onChange={this.context.toggleDark}
-                      checked={
-                        this.context.darkModeOn === "true" ? true : false
-                      }
-                    />
-                    <Typography display="inline" variant="body2">
-                      {this.context.darkModeOn === "true" ? "On" : "Off"}
-                    </Typography>
+            </Grid>
+            <div id="spacer" />
+            {/* <Divider /> */}
+            <List>
+              <Grid>
+                <ListItem>
+                  <Typography variant="h5">Preferences</Typography>
+                </ListItem>
+                {/* Hello from Settings.tsx! */}
+                <ListItem>
+                  <div className="toggle">
+                    <Typography variant="body1">Dark Mode</Typography>
+                    <div>
+                      <Switch
+                        onChange={this.context.toggleDark}
+                        checked={
+                          this.context.darkModeOn === "true" ? true : false
+                        }
+                      />
+                      <Typography display="inline" variant="body2">
+                        {this.context.darkModeOn === "true" ? "On" : "Off"}
+                      </Typography>
+                    </div>
                   </div>
-                </div>
-              </ListItem>
-              {/* <Divider /> */}
-              <ListItem>
-                <div className="toggle">
-                  <div>
-                    <Typography display="inline" variant="body1">
-                      Receive Emails?
-                    </Typography>
-                    <IconButton
-                      sx={{ position: "relative", bottom: 6 }}
-                      onClick={this.handleInfo}
-                    >
-                      <HelpOutlineIcon fontSize="small" />
-                    </IconButton>
+                </ListItem>
+                {/* <Divider /> */}
+                <ListItem>
+                  <div className="toggle">
+                    <div>
+                      <Typography display="inline" variant="body1">
+                        Receive Emails?
+                      </Typography>
+                      <IconButton
+                        sx={{ position: "relative", bottom: 6 }}
+                        onClick={this.handleInfo}
+                      >
+                        <HelpOutlineIcon fontSize="small" />
+                      </IconButton>
+                    </div>
+                    {/* <Typography variant='body1'>First call will send emails by default to keep you in the loop about any changes in the status of your gigs, but you can opt out if you wish!</Typography> */}
+                    <div>
+                      <Switch
+                        onChange={this.toggleEmail}
+                        checked={this.props.user.emails ?? true}
+                      />
+                      <Typography display="inline" variant="body2">
+                        {this.props.user.emails ? "On" : "Off"}
+                      </Typography>
+                    </div>
                   </div>
-                  {/* <Typography variant='body1'>First call will send emails by default to keep you in the loop about any changes in the status of your gigs, but you can opt out if you wish!</Typography> */}
-                  <div>
-                    <Switch
-                      onChange={this.toggleEmail}
-                      checked={this.props.user.emails ?? true}
-                    />
-                    <Typography display="inline" variant="body2">
-                      {this.props.user.emails ? "On" : "Off"}
-                    </Typography>
-                  </div>
-                </div>
-              </ListItem>
+                </ListItem>
+              </Grid>
               {/* <Divider /> */}
               {/* <ChangePass /> */}
             </List>
@@ -192,7 +190,10 @@ class Settings extends Component<SettingsProps, SettingsState> {
           <Grid item xs={12} sm={7} md={9}>
             <RouteSwitch>
               <Route exact path={`${this.props.match.path}/`}>
-                <EditProfile {...this.props} updateProfile={this.updateProfile} />
+                <EditProfile
+                  {...this.props}
+                  updateProfile={this.updateProfile}
+                />
               </Route>
               <Route exact path={`${this.props.match.path}/change-password`}>
                 <ChangePass />
@@ -200,7 +201,7 @@ class Settings extends Component<SettingsProps, SettingsState> {
             </RouteSwitch>
           </Grid>
         </Grid>
-      </>
+      </Grid>
     );
   }
 }

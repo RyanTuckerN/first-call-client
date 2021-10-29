@@ -1,45 +1,24 @@
 import * as React from "react";
 import { Component } from "react";
-import { Gig, CallStack, Post } from "../../../../../../types/API.types";
-import { DetailedGig } from "../../Gig.types";
-import { Prompt } from "react-router-dom";
 import {
-  FormControl,
-  FormHelperText,
-  Input,
   Button,
   Grid,
   TextField,
   Typography,
-  Autocomplete,
-  Snackbar,
-  Alert,
-  List,
-  Link,
-  Avatar,
   InputAdornment,
   IconButton,
 } from "@mui/material";
 import {
-  Settings,
   AttachMoney,
-  LocationOn,
-  CalendarToday,
-  ChevronRight,
-  CheckCircleOutline,
-  Circle,
-  ErrorOutline,
   Add,
   Backspace,
-  PhotoCameraBackOutlined,
   AddAPhoto,
   // Circle
 } from "@mui/icons-material";
 // import DateTimePicker from "react-datetime-picker";
 import { withRouter } from "react-router-dom";
-import { addHours, properizeNoTrim } from "../../../../../_helpers/helpers";
+import { properizeNoTrim } from "../../../../../_helpers/helpers";
 import "../../Gig.css";
-import { Box } from "@mui/system";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import API_URL from "../../../../../_helpers/environment";
 import { UserCtx } from "../../../../../Context/MainContext";
@@ -228,7 +207,6 @@ class GigEdit extends Component {
         {/* {this.state.photo && <Grid display='flex' item xs={6} justifyContent='center'>
           <Avatar src={this.state.photo} variant='square' sx={{width: '100%', height:'auto'}} />
         </Grid>} */}
-        {this.state.photo ? <Avatar src={this.state.photo} /> : null}
         <Grid
           container
           item

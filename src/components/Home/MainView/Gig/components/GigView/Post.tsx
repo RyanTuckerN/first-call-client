@@ -290,10 +290,13 @@ class PostComponent extends React.Component<
           <Grid
             item
             xs={12}
-            // sx={{
-            //   position: "relative",
-            //   left: this.props.i > 1 ? -22 * i : 0,
-            // }}
+            sx={{
+              position: "relative",
+              left: 25,
+              marginTop: -1,
+              // backgroundColor: "yellow",
+              maxWidth: `calc(100% - (${(i - 1) * 22}px))`,
+            }}
           >
             <Box
             action="submit"
@@ -304,6 +307,7 @@ class PostComponent extends React.Component<
             >
               <TextField
               autoFocus
+              fullWidth
                 value={
                   this.state.editing
                     ? this.state.editingText

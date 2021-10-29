@@ -27,7 +27,6 @@ import {
   Person,
   Home as HomeIcon,
   Logout,
-  ArrowDropDown,
   Add,
   Dashboard,
 } from "@mui/icons-material";
@@ -35,19 +34,13 @@ import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MailIcon from "@mui/icons-material/Mail";
-// import HomeIcon from "@mui/icons-material/Home";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import { UserCtx } from "../Context/MainContext";
-import Notifications from "./components/Notifications";
 import { Notification, User } from "../../types/API.types";
-// import { AppState } from "../../App";
 import { fetchHandler } from "../_helpers/fetchHandler";
-// import { MainViewProps } from "./MainView/MainView";
 import API_URL from "../_helpers/environment";
-import { HomeFunctions, WindowDimensions } from "./Home.types";
+import { WindowDimensions } from "./Home.types";
 import { Paper } from "@mui/material";
 import { DetailedGig } from "./MainView/Gig/Gig.types";
 import { AppState } from "../../App";
@@ -195,6 +188,7 @@ class Home extends Component<HomeProps, HomeState> {
                         size="medium"
                         id="home-button"
                         color="inherit"
+                        
                       >
                         <Dashboard />
                       </IconButton>
@@ -222,10 +216,7 @@ class Home extends Component<HomeProps, HomeState> {
                         <AccountCircle />
                       )}
                     </IconButton>
-                    {/* <ArrowDropDown
-                      className="arrow-dropdown"
-                      fontSize="small"
-                    /> */}
+                    
                     <Link to="/main/add">
                       <IconButton
                         size="small"
@@ -237,10 +228,7 @@ class Home extends Component<HomeProps, HomeState> {
                       >
                         <Add />
                       </IconButton>
-                      {/* <ArrowDropDown
-                        className="arrow-dropdown"
-                        fontSize="small"
-                      /> */}
+                      
                     </Link>
                   </Box>
                   <Menu

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import { useContext } from "react";
 import { Notification } from "../../../types/API.types";
 import Paper from "@mui/material/Paper";
@@ -53,6 +54,27 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
     "400": { color: "", icon: <MailOutlineOutlined color="primary" /> },
   };
 
+  const handleDelete = async (): Promise<boolean> => {
+    const deletions = notifications
+      .filter((n) => n.details.code !== 100 && n.details.code !== 400)
+      .map((n) => n.id);
+    const json = await fetchHandler({
+      url: `${API_URL}/notification/deleteMany`,
+      method: "delete",
+      body: { deletions },
+      auth: context?.token ?? localStorage.getItem("token") ?? "",
+    });
+    console.log(json)
+    return json.success
+  };
+
+  // useEffect(() => {
+  //   console.log('mounted!')
+  //   return () => {
+  //     handleDelete()
+  //   }
+  // }, [])
+
   const mapper = (notifications: Notification[]): any =>
     notifications
       .sort(
@@ -97,7 +119,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                   }}
                 >
                   <div>
-                    <Link smooth to={`/main/gig/${n.details.gigId}#gig-anchor`}>
+                    <Link smooth to={n.details.gigId ? `/main/gig/${n.details.gigId}#gig-anchor`: ``}>
                       {hash[code.toString()].icon}
                     </Link>
                     <Typography
@@ -122,7 +144,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                 {n.details.sender}
               </Typography> */}
                 <div />
-                <Typography variant="inherit">{n.text}</Typography>
+                <Typography variant="inherit">{n.details.subject ? `New message from ${n.details.sender}!` : n.text}</Typography>
               </ListItemText>
             </ListItem>
             {i < notifications.length - 1 && <Divider />}

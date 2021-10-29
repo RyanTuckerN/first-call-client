@@ -7,7 +7,7 @@ export interface User {
   role?: string;
   description?: string;
   location?: string;
-  paymentPreference?: { platform?: string; handle?: string } | null;
+  paymentPreference?: { [key: string]: string } | null;
   specialties?: string[];
   createdAt?: string;
   updatedAt?: string;
@@ -83,6 +83,8 @@ interface NotificationDetails {
   sender: string;
   dateTime: string;
   recieverExists: boolean;
+  body?: string;
+  subject?: string;
   nextUser?: string;
 }
 export interface UserAuth {

@@ -221,7 +221,7 @@ class CallStackCreate extends Component<
                 </Grid>
                 <List>
                   {stackTable[r].map((email, i) => (
-                    <>
+                    <React.Fragment key={i}>
                       <Box display="flex" alignItems='center'>
                         <ListItemText key={i}>
                           <Typography variant="body2">
@@ -232,7 +232,7 @@ class CallStackCreate extends Component<
                           <Backspace color='error' />
                         </IconButton>
                       </Box>
-                    </>
+                    </React.Fragment>
                   ))}
                 </List>
               </Grid>

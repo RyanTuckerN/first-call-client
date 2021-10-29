@@ -11,12 +11,21 @@ import {
   Grid,
   TextField,
   Typography,
+  IconButton,
   Autocomplete,
+  Box,
   Snackbar,
   Alert,
+  InputAdornment,
 } from "@mui/material";
 import { User } from "../../../../types/API.types";
 import Swal from "sweetalert2";
+import {
+  instrumentOptions,
+  paymentPlatforms,
+} from "../../../../types/AutocompleteOptions";
+import * as _ from "lodash";
+import { Add, DragHandle, Cancel, Reply } from "@mui/icons-material";
 
 // const payment = {
 //   venmo: "nick-tucker-12",
@@ -25,16 +34,17 @@ import Swal from "sweetalert2";
 // };
 // const keys = Object.entries(payment)
 
-interface EditProfileProps  {
+interface EditProfileProps {
   updateProfile: (prop: any) => Promise<boolean>;
-  user: User
+  user: User;
 }
 
 interface EditProfileState extends User {
-  handle?: string;
   platform?: string;
+  handle?: string;
   snackBarOpen: boolean;
   success: boolean | null;
+  paymentEditTarget: string;
   // stateChanged: boolean
   // user: User
 }
@@ -44,7 +54,8 @@ interface EditProfileState extends User {
 
 class EditProfile extends Component<EditProfileProps, EditProfileState> {
   static contextType = UserCtx;
-  stateChanged: boolean = false
+  // instrumentOptions = ['Bass', 'Guitar', 'Drums', 'Voice'];
+  stateChanged: boolean = false;
 
   constructor(props: EditProfileProps, context: any) {
     super(props, context);
@@ -55,6 +66,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
       platform: this.props.user.paymentPreference?.platform ?? "",
       snackBarOpen: false,
       success: null,
+      paymentEditTarget: "",
       // stateChanged: false
       // user: this.
     };
@@ -70,23 +82,30 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
     this.setState({ location: e.target.value });
   handleBio = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ description: e.target.value });
-  handlePlatform = (e: React.ChangeEvent<HTMLInputElement>): void =>
+  handlePlatform = (e: any): void =>
     this.setState({ platform: e.target.value });
   handleHandle = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ handle: e.target.value });
   // addPayment = ()
 
+  handleAddPayment = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!this.state.handle || !this.state.platform) return;
+    this.setState({
+      paymentPreference: {
+        ...this.state.paymentPreference,
+        [this.state.platform]: this.state.handle,
+      },
+      handle: "",
+      platform: "",
+    });
+  };
+
   handleSave = async (): Promise<void> => {
     if (!this.stateChanged) return;
-    const user: EditProfileState = {
-      ...this.state,
-      paymentPreference: {
-        handle: this.state.handle ?? "",
-        platform: this.state.platform ?? "",
-      },
-    };
+    // const user: EditProfileState = {...this.state};
     const { name, email, location, description, paymentPreference, role } =
-      user;
+      this.state;
     const body = {
       name,
       email,
@@ -103,14 +122,10 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
 
   componentDidMount() {
     this.stateChanged = false;
-
   }
   componentDidUpdate(prevProps: EditProfileProps, prevState: EditProfileState) {
     if (prevState !== this.state) {
-
       this.stateChanged = true;
-
-
     }
   }
 
@@ -127,7 +142,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
       return;
     }
     this.setState({ snackBarOpen: false });
-    this.stateChanged = false
+    this.stateChanged = false;
   };
 
   render() {
@@ -136,6 +151,11 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
     // const { user } = this.context;
     return (
       <Grid container spacing={2}>
+        <Grid container justifyContent="flex-end" sx={{ padding: 3 }}>
+          <Button color="success" variant="contained" onClick={this.handleSave}>
+            Save Changes
+          </Button>
+        </Grid>
         <Prompt
           when={this.stateChanged}
           message={"You have unsaved changes! Continue anyway?"}
@@ -153,16 +173,27 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
           />
         </Grid>
         <Grid item xs={12} sm={5}>
-          <Typography variant="h6">Title</Typography>
-          <TextField
-            onChange={this.handleRole}
-            fullWidth
-            variant="outlined"
-            placeholder="Guitarist"
-            id="title"
-            name="title"
+          <Typography variant="h6">Instrument</Typography>
+          <Autocomplete
+            id="instrument-input"
+            freeSolo
+            onChange={(e: any, newVal: string | null) => {
+              this.setState({ role: newVal ?? "" });
+            }}
             value={this.state.role ? properize(this.state.role) : ""}
-            // label="Name"
+            options={instrumentOptions.map((i) => i)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                onChange={this.handleRole}
+                fullWidth
+                variant="outlined"
+                placeholder="Guitar"
+                id="instrument"
+                name="instrument"
+                // label="Name"
+              />
+            )}
           />
         </Grid>
         <Grid item xs={12} sm={5}>
@@ -205,43 +236,106 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             variant="outlined"
             id="bio"
             name="bio"
-            value={this.state.description ?? ''}
+            value={this.state.description ?? ""}
             // label="Name"
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography variant="h6">Payment Preference</Typography>
+          <Typography variant="h6">Payment Preferences</Typography>
         </Grid>
         {/* {this.state.paymentPreference && Object.entries(this.state.paymentPreference) */}
         <Grid item xs={12} sm={6}>
           <Typography variant="caption">platform</Typography>
-          <TextField
-            onChange={this.handlePlatform}
-            fullWidth
-            variant="standard"
-            placeholder="Venmo, Cashapp, etc..."
-            id="payment-platform"
-            name="payment-platform"
+          <Autocomplete
+            id="payment-platform-input"
+            freeSolo
+            onChange={(e: any, newVal: string | null) => {
+              this.setState({ platform: newVal ?? "" });
+            }}
             value={
               this.state.platform?.length ? properize(this.state.platform) : ""
             }
-
-            // label="Name"
-          />
+            options={paymentPlatforms.map((pp) => pp)}
+            renderInput={(params) => (
+              <TextField
+              {...params}
+                onChange={this.handlePlatform}
+                fullWidth
+                variant="standard"
+                placeholder="Venmo, Cashapp, etc..."
+                id="payment-platform"
+                name="payment-platform"
+              />
+            )}
+            />
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="caption">handle</Typography>
-          <TextField
-            onChange={this.handleHandle}
-            fullWidth
-            variant="standard"
-            placeholder="your-name-12"
-            id="payment-handle"
-            name="payment-handle"
-            value={this.state.handle}
-            // label="Name"
-          />
+          <Box
+            component="form"
+            action="submit"
+            onSubmit={this.handleAddPayment}
+          >
+            <TextField
+              onChange={this.handleHandle}
+              fullWidth
+              variant="standard"
+              placeholder="your-name-12"
+              id="payment-handle"
+              name="payment-handle"
+              value={this.state.handle}
+              InputProps={{
+                endAdornment: (
+                  <IconButton>
+                    <InputAdornment position="end">
+                      <Add />
+                    </InputAdornment>
+                  </IconButton>
+                ),
+              }}
+              // label="Name"
+              />
+          </Box>
         </Grid>
+        {this.state.paymentPreference &&
+        !_.isEmpty(this.state.paymentPreference)
+          ? Object.keys(this.state.paymentPreference).map((p, i) => {
+              const platform = p;
+              const preferece = this.state.paymentPreference![platform];
+              return (
+                <Grid item xs={12} key={i} display="flex" alignItems="center">
+                  <IconButton
+                    onClick={() => {
+                      this.state.paymentEditTarget === platform
+                        ? this.setState({ paymentEditTarget: "" })
+                        : this.setState({ paymentEditTarget: platform });
+                    }}
+                  >
+                    {this.state.paymentEditTarget === platform ? (
+                      <Reply fontSize="small" />
+                    ) : (
+                      <DragHandle fontSize="small" />
+                    )}
+                  </IconButton>
+
+                  <Typography variant="body2">
+                    <strong>{platform}:</strong>&nbsp;&nbsp;{preferece}
+                  </Typography>
+                  {this.state.paymentEditTarget === platform && (
+                    <IconButton
+                      onClick={() => {
+                        const obj = { ...this.state.paymentPreference };
+                        delete obj[platform];
+                        this.setState({ paymentPreference: obj });
+                      }}
+                    >
+                      <Cancel color="error" fontSize="small" />
+                    </IconButton>
+                  )}
+                </Grid>
+              );
+            })
+          : null}
         <Grid container justifyContent="flex-end" sx={{ padding: 3 }}>
           <Button color="success" variant="contained" onClick={this.handleSave}>
             Save Changes
@@ -252,7 +346,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
           open={this.state.snackBarOpen}
           autoHideDuration={6000}
           onClose={this.handleClose}
-        >
+          >
           {this.state.success ? (
             <Alert severity="success">Success! Profile updated.</Alert>
           ) : (

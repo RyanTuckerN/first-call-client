@@ -14,6 +14,7 @@ import Profile from "./Profile/Profile";
 import Settings from "./Settings/Settings";
 import { DetailedGig, RouteOption } from "./Gig/Gig.types";
 import { Alert, Snackbar } from "@mui/material";
+import Inbox from "./Inbox/Inbox"
 
 export interface MainViewProps extends RouteComponentProps {
   // functions: HomeFunctions;
@@ -64,6 +65,9 @@ class MainView extends Component<MainViewProps, MainViewState> {
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
             <Settings {...this.props} />
+          </Route>
+          <Route path={`${this.props.match.path}/inbox`}>
+              <Inbox />
           </Route>
           <Route path={`${this.props.match.path}/`}>
             {this.props.user?.gigs && this.props.notifications ? (
