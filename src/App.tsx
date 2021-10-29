@@ -46,7 +46,7 @@ class App extends Component<AppProps, AppState> {
       user: null,
       token: "",
       auth: null,
-      darkModeOn: localStorage.getItem("darkModeOn") ?? "false",
+      darkModeOn: localStorage.getItem("darkModeOn") ?? "true",
       snackBarOpen: false,
       snackMessage: "",
       snackSeverity: "info",
@@ -106,9 +106,9 @@ class App extends Component<AppProps, AppState> {
 
   handleSnackBar = (
     snackMessage: string,
-    snackSeverity: "success" | "warning" | "error" | "info"
+    snackSeverity?: "success" | "warning" | "error" | "info"
   ): void => {
-    this.setState({ snackMessage, snackSeverity, snackBarOpen: true });
+    this.setState({ snackMessage, snackSeverity: snackSeverity ?? 'info', snackBarOpen: true });
   };
 
   componentDidMount() {
@@ -144,7 +144,7 @@ class App extends Component<AppProps, AppState> {
               autoHideDuration={4000}
               onClose={this.handleClose}
             >
-              <Alert severity={this.state.snackSeverity} variant='outlined'>
+              <Alert severity={this.state.snackSeverity} variant='standard'>
                 {this.state.snackMessage}
               </Alert>
             </Snackbar>

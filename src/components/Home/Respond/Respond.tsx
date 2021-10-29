@@ -8,8 +8,12 @@ import { Grid } from "@mui/material";
 import OpenGigInfo from "./OpenGigInfo";
 import OpenInvite from "./OpenInvite";
 import { properizeName } from "../../_helpers/helpers";
+import Swal from "sweetalert2";
+import { UserCtx } from "../../Context/MainContext";
+import { AppState } from "../../../App";
+import { RouteComponentProps, withRouter } from "react-router";
 
-interface RespondProps {}
+interface RespondProps extends RouteComponentProps {}
 
 interface QueryParams {
   gigId: string | null;
@@ -25,8 +29,10 @@ interface RespondState {
 }
 
 class Respond extends Component<RespondProps, RespondState> {
-  constructor(props: RespondProps) {
-    super(props);
+  static contextType = UserCtx;
+
+  constructor(props: RespondProps, context: AppState) {
+    super(props, context);
     this.state = {
       queryParams: { gigId: null, token: null, email: null, role: null },
       gig: null,
@@ -56,18 +62,27 @@ class Respond extends Component<RespondProps, RespondState> {
   };
 
   handleRespond = async (res: "accept" | "decline"): Promise<boolean> => {
-    const { name } = this.state;
-    const { gigId, token, email, role } = this.state.queryParams;
-    const json = await fetchHandler({
-      url: `${API_URL}/open/${gigId}/${res}/${email}/${role}/${token}`,
-      method: "post",
-      body: { name: properizeName(name) },
-    });
-    console.log(properizeName(name));
-    alert(json.message);
-    console.log("SUCCESS: ", json.success);
-    console.log("ACCEPT OR DECLINE JSON: ", json);
-    return json.success;
+    try {
+      const { name } = this.state;
+      const { gigId, token, email, role } = this.state.queryParams;
+      const json = await fetchHandler({
+        url: `${API_URL}/open/${gigId}/${res}/${email}/${role}/${token}`,
+        method: "post",
+        body: { name: properizeName(name) },
+      });
+      console.log(properizeName(name));
+      this.context.handleSnackBar(
+        json.message,
+        json.success ? "success" : "error"
+      );
+      console.log("SUCCESS: ", json.success);
+      console.log("ACCEPT OR DECLINE JSON: ", json);
+      this.props.history.push("/auth/signup/");
+      return json.success;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   };
 
   handleName = (e: React.ChangeEvent<HTMLInputElement>): void =>
@@ -111,4 +126,4 @@ class Respond extends Component<RespondProps, RespondState> {
   }
 }
 
-export default Respond;
+export default withRouter(Respond);

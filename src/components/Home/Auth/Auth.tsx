@@ -4,7 +4,6 @@ import Login from "./Login";
 import Signup from "./Signup";
 import {
   Route,
-  // Link,
   Switch,
   RouteComponentProps,
   withRouter,
@@ -14,10 +13,11 @@ import { LoginSignupProps, UserResponse } from "./Auth.types";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import { properize } from "../../_helpers/helpers";
 import { UserCtx } from "../../Context/MainContext";
+import { AppState } from "../../../App";
 
 interface AuthProps extends RouteComponentProps {
-  setToken: (token: string)=>void,
-  setAppState: (key: string, value: any)=>void
+  setToken: (token: string) => void;
+  setAppState: (key: string, value: any) => void;
 }
 
 interface AuthState {
@@ -29,8 +29,8 @@ interface AuthState {
 class Auth extends Component<AuthProps, AuthState> {
   static contextType = UserCtx;
 
-  constructor(props: AuthProps) {
-    super(props);
+  constructor(props: AuthProps, context: AppState) {
+    super(props, context);
     this.state = { email: "", first: "", last: "", password: "" };
   }
 
@@ -50,7 +50,7 @@ class Auth extends Component<AuthProps, AuthState> {
 
       e.preventDefault();
       if (!email || !password) {
-        alert("please fill out all fields!");
+        this.context.handleSnackBar("please fill out all fields!", "warning");
         return;
       }
 
@@ -59,16 +59,18 @@ class Auth extends Component<AuthProps, AuthState> {
         method: "post",
         body: { email, password },
       });
-      if(!json.user || !json.sessionToken){
-        alert(json.message)
-        return
+      if (!json.user || !json.sessionToken) {
+        this.context.handleSnackBar(json.message, "error");
+        return;
       }
-      
-      setToken(json.sessionToken);
-      setAppState('user', json.user);
-      this.props.history.push('/main')
-      alert(json.message);
 
+      setToken(json.sessionToken);
+      setAppState("user", json.user);
+      this.props.history.push("/main");
+      this.context.handleSnackBar(
+        `Welcome back, ${json.user!.name.split(" ")[0]}!`,
+        "success"
+      );
     },
     handleSignup: async (e: React.FormEvent<HTMLInputElement>) => {
       const { email, password, first, last } = this.state;
@@ -76,7 +78,7 @@ class Auth extends Component<AuthProps, AuthState> {
 
       e.preventDefault();
       if (!email || !password || !first || !last) {
-        alert("please fill out all fields!");
+        this.context.handleSnackBar("please fill out all fields!", "warning");
         return;
       }
       const json: UserResponse = await fetchHandler({
@@ -89,14 +91,14 @@ class Auth extends Component<AuthProps, AuthState> {
         },
       });
       console.log(json);
-      if(!json.user || !json.sessionToken){
-        alert(json.message)
-        return
+      if (!json.user || !json.sessionToken) {
+        this.context.handleSnackBar(json.message, "error");
+        return;
       }
       setToken(json.sessionToken);
-      setAppState('user', json.user);
-      this.props.history.push('/main')
-      alert(json.message);
+      setAppState("user", json.user);
+      this.props.history.push("/main");
+      this.context.handleSnackBar(json.message, "success");
     },
     clearState: () =>
       this.setState({ email: "", first: "", last: "", password: "" }),
@@ -105,7 +107,6 @@ class Auth extends Component<AuthProps, AuthState> {
   componentDidMount() {
     const context = this.context;
     console.log(context);
-    
   }
 
   render() {

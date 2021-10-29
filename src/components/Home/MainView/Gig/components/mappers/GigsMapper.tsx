@@ -27,7 +27,7 @@ class GigsMapper extends Component<GigsMapperProps, GigsMapperState> {
     return (
       <Grid container>
         {this.props[this.props.gigsOrOffers].map((gig) => (
-          <Grid item xs={12} sm={12} key={gig.id}>
+          <Grid item xs={12} md={6} key={gig.id}>
             {this.props.detailsHash && this.props.user ? <GigCard
               {...gig}
               userId={this.props.user?.id ?? null}

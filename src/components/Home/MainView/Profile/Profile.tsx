@@ -22,6 +22,7 @@ import {
   Add,
   MailOutline,
   AttachMoney,
+  Settings
 } from "@mui/icons-material";
 
 interface RouteParams {
@@ -114,7 +115,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
               justifyContent="center"
               alignItems="flex-end"
             >
-              {this.context.user.id === this.state.user?.id ? (
+              {this.context.user.id === user.id ? (
                 <Link to="/main/add">
                   <Add sx={{ position: "relative", right: 45, bottom: 20 }} />
                 </Link>
@@ -125,7 +126,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                   />
                 </Link>
               )}
-              {this.context.user.id === this.state.user?.id ? (
+              {this.context.user.id === user.id ? (
                 <Link to="/main/settings">
                   <Edit sx={{ position: "relative", left: 45, bottom: 20 }} />
                 </Link>
@@ -146,6 +147,18 @@ class Profile extends Component<ProfileProps, ProfileState> {
               flexDirection="column"
               alignItems="center"
             >
+              {(!user.role ||
+                !user.location ||
+                !user.paymentPreference ||
+                !user.photo) &&
+              this.context.user.id === user.id ? (
+                <Link to="/main/settings">
+                  <Typography variant="caption">
+                    {/* <Settings sx={{fontSize: 'small'}} />&nbsp; */}
+                    <i>Finish setting up your profile?</i>
+                  </Typography>
+                </Link>
+              ) : null}
               <Typography variant="h4">
                 {user.name}
                 {user.paymentPreference ? (
@@ -156,7 +169,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                       // variant="contained"
                       onClick={this.handleClick}
                     >
-                      <AttachMoney />
+                      <AttachMoney fontSize='small' color='success' />
                     </IconButton>
                     <Popover
                       id={id}
@@ -183,7 +196,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                   </>
                 ) : null}
               </Typography>
-              <Typography sx={{ p: 1 }} variant="body1">
+              <Typography sx={{ p: 0 }} variant="body1">
                 {user.role ? user.role : null}&nbsp;&nbsp;
                 {user.location && user.role ? <>&#183;</> : null}&nbsp;&nbsp;
                 {user.location ? user.location : null}
@@ -203,4 +216,3 @@ class Profile extends Component<ProfileProps, ProfileState> {
 }
 
 export default withRouter(Profile);
-

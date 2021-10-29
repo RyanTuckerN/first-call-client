@@ -155,7 +155,7 @@ class GigEdit extends Component {
     const body = {
       description,
       date,
-      payment,
+      payment: Math.floor(payment),
       gigLocation,
       optionalInfo,
       [gigCreate? 'photo' : '']: this.state.photo

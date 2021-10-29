@@ -68,12 +68,12 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
     return json.success
   };
 
-  // useEffect(() => {
-  //   console.log('mounted!')
-  //   return () => {
-  //     handleDelete()
-  //   }
-  // }, [])
+  useEffect(() => {
+    console.log('mounted!')
+    return () => {
+      handleDelete()
+    }
+  }, [])
 
   const mapper = (notifications: Notification[]): any =>
     notifications

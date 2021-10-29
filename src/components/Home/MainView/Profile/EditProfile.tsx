@@ -242,6 +242,10 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h6">Payment Preferences</Typography>
+          <Typography variant="caption">
+            {`Add as many platforms as you'd like. These will be displayed 
+            on your profile and sent to bandleaders after gigs.`}
+          </Typography>
         </Grid>
         {/* {this.state.paymentPreference && Object.entries(this.state.paymentPreference) */}
         <Grid item xs={12} sm={6}>
@@ -258,7 +262,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             options={paymentPlatforms.map((pp) => pp)}
             renderInput={(params) => (
               <TextField
-              {...params}
+                {...params}
                 onChange={this.handlePlatform}
                 fullWidth
                 variant="standard"
@@ -267,7 +271,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
                 name="payment-platform"
               />
             )}
-            />
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="caption">handle</Typography>
@@ -294,7 +298,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
                 ),
               }}
               // label="Name"
-              />
+            />
           </Box>
         </Grid>
         {this.state.paymentPreference &&
@@ -346,7 +350,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
           open={this.state.snackBarOpen}
           autoHideDuration={6000}
           onClose={this.handleClose}
-          >
+        >
           {this.state.success ? (
             <Alert severity="success">Success! Profile updated.</Alert>
           ) : (

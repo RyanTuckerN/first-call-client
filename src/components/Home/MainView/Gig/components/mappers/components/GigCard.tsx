@@ -8,7 +8,7 @@ import CardActions from "@mui/material/CardActions";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import {HashLink as Link} from 'react-router-hash-link'
+import { HashLink as Link } from "react-router-hash-link";
 import { Grid } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
@@ -20,9 +20,9 @@ import { LocationOn, AttachMoney } from "@mui/icons-material";
 import "../../../Gig.css";
 
 interface GigProps extends Gig {
-  detailsHash: { [key: string]: DetailedGig }  ;
+  detailsHash: { [key: string]: DetailedGig };
   userId: number | null;
-  user: User
+  user: User;
 }
 
 const GigCard: FunctionComponent<GigProps> = ({
@@ -35,7 +35,7 @@ const GigCard: FunctionComponent<GigProps> = ({
   payment,
   gigLocation,
   detailsHash,
-  user
+  user,
 }) => {
   const gigDate: Date = new Date(date);
   const avatarSize: number = 50;
@@ -58,143 +58,145 @@ const GigCard: FunctionComponent<GigProps> = ({
   // };
 
   return bandLeader ? (
-    // <Card elevation={5} sx={{ margin: 1, borderRadius:  }}>
-    <Card elevation={0} sx={{  }}>
-        
-        <Link smooth  to={`/main/gig/${id}#gig-anchor`}>
-          <CardActionArea>
-            <CardHeader
-              sx={{
-                // maxHeight: 75,
-                // backgroundImage: photo ?? "url(https://source.unsplash.com/random)",
-                background: '#fe3964' + "40",
-              }}
-              avatar={
-                bandLeader?.photo ? (
+    <Card elevation={5} sx={{ margin: 1, borderRadius: 3 }}>
+    {/* // <Card elevation={5} sx={{}}> */}
+      <Link smooth to={`/main/gig/${id}#gig-anchor`}>
+        <CardActionArea>
+          <CardHeader
+            sx={{
+              // maxHeight: 75,
+              // backgroundImage: photo ?? "url(https://source.unsplash.com/random)",
+              backgroundColor: "primary.dark",
+            }}
+            avatar={
+              bandLeader?.photo ? (
+                <Avatar
+                  {...defaultAvatarProps}
+                  src={bandLeader.photo}
+                  alt={bandLeader.name}
+                />
+              ) : (
+                // ** *** TERNARY *** ** //
+                // ** *** TERNARY *** ** //
+                <>
                   <Avatar
-                    {...defaultAvatarProps}
-                    src={bandLeader.photo}
+                    // sx={{height: 50}}
+                    {...stringAvatar(bandLeader.name, avatarSize)}
                     alt={bandLeader.name}
                   />
-                ) : (
-                  // ** *** TERNARY *** ** //
-                  // ** *** TERNARY *** ** //
-                  <>
-                    <Avatar
-                      // sx={{height: 50}}
-                      {...stringAvatar(bandLeader.name, avatarSize)}
-                      alt={bandLeader.name}
-                    />
-                  </>
-                )
-              }
-          
-              title={
-                <div className="justify">
-                  <Typography>{description}</Typography>
-                  <AttachMoney fontSize="inherit" color="success" sx={{marginLeft: 'auto', position: 'relative', top: 3}} />
-                  <Typography variant="caption" display="inline">
-                    {payment}
-                  </Typography>
-                </div>
-          
-              }
-              subheader={`${gigDate.toLocaleDateString()}, ${returnTime(gigDate)}`}
-            />
-          </CardActionArea>
-        </Link>
-        {/* AUTHORIZE GIG OWNER */}
-        {userId === bandLeader.id ? (
-          <>
-            <CardContent
-              sx={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Grid item xs={7}>
-                <Typography variant="caption">
-                  <strong>You</strong> are the bandleader.
+                </>
+              )
+            }
+            title={
+              <div className="justify">
+                <Typography>{description}</Typography>
+                <AttachMoney
+                  fontSize="inherit"
+                  color="success"
+                  sx={{ marginLeft: "auto", position: "relative", top: 3 }}
+                />
+                <Typography variant="caption" display="inline">
+                  {payment}
                 </Typography>
-              </Grid>
-              <Grid item xs={5}>
-      
-                <div className="justify">
-                  <LocationOn fontSize="small" color="error" />
-                  <Typography variant="caption" display="inline">
-                    {gigLocation}
-                  </Typography>
-                </div>
-              </Grid>
-            </CardContent>
-            <Grid container>
-              <Grid item xs={5} display="flex" justifyContent="space-around">
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton aria-label="share">
-                    <ShareIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    // expand={expanded}
-                    // onClick={handleExpandClick}
-                    // aria-expanded={expanded}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon fontSize="small" />
-                  </IconButton>
-                </CardActions>
-              </Grid>
+              </div>
+            }
+            subheader={`${gigDate.toLocaleDateString()}, ${returnTime(
+              gigDate
+            )}`}
+          />
+        </CardActionArea>
+      </Link>
+      {/* AUTHORIZE GIG OWNER */}
+      {userId === bandLeader.id ? (
+        <>
+          <CardContent
+            sx={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <Grid item xs={7}>
+              <Typography variant="caption">
+                <strong>You</strong> are the bandleader.
+              </Typography>
             </Grid>
-          </>
-        ) : (
-          // ** *** TERNARY *** ** //
-          // ** *** TERNARY *** ** //
-          <>
-            <CardContent
-              sx={{ display: "flex", justifyContent: "space-between" }}
-            >
-              {/* <div className='justify'>
+            <Grid item xs={5}>
+              <div className="justify">
+                <LocationOn fontSize="small" color="error" />
+                <Typography variant="caption" display="inline">
+                  {gigLocation}
+                </Typography>
+              </div>
+            </Grid>
+          </CardContent>
+          {/* <Grid container>
+            <Grid item xs={5} display="flex" justifyContent="space-around">
+              <CardActions disableSpacing>
+                <IconButton aria-label="add to favorites">
+                  <FavoriteIcon fontSize="small" />
+                </IconButton>
+                <IconButton aria-label="share">
+                  <ShareIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  // expand={expanded}
+                  // onClick={handleExpandClick}
+                  // aria-expanded={expanded}
+                  aria-label="show more"
+                >
+                  <ExpandMoreIcon fontSize="small" />
+                </IconButton>
+              </CardActions>
+            </Grid>
+          </Grid> */}
+        </>
+      ) : (
+        // ** *** TERNARY *** ** //
+        // ** *** TERNARY *** ** //
+        <>
+          <CardContent
+            sx={{ display: "flex", justifyContent: "space-between" }}
+          >
+            {/* <div className='justify'>
             <AttachMoney fontSize='small' color='success' /><Typography variant='caption' display='inline'>{payment}</Typography>
           </div>
           <div className='justify'>
             <LocationOn fontSize='small' color='error' /><Typography variant='caption' display='inline'>{location}</Typography>
           </div> */}
-              <Grid item xs={6}>
-                <Typography variant="caption">
-                  <strong>{bandLeader.name}</strong> invited you.
-                </Typography>
-              </Grid>
-              <Grid item xs={6} display="flex" flexDirection="column">
-                <div className="justify">
-                  <LocationOn fontSize="small" color="error" />
-                  <Typography variant="caption" display="inline">
-                    {gigLocation}
-                  </Typography>
-                </div>
-              </Grid>
-            </CardContent>
-            <Grid container>
-              <Grid item xs={5} display="flex" justifyContent="space-around">
-                <CardActions disableSpacing>
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton aria-label="share">
-                    <ShareIcon fontSize="small" />
-                  </IconButton>
-                  <IconButton
-                    // expand={expanded}
-                    // onClick={handleExpandClick}
-                    // aria-expanded={expanded}
-                    aria-label="show more"
-                  >
-                    <ExpandMoreIcon fontSize="small" />
-                  </IconButton>
-                </CardActions>
-              </Grid>
+            <Grid item xs={6}>
+              <Typography variant="caption">
+                <strong>{bandLeader.name}</strong> invited you.
+              </Typography>
             </Grid>
-          </>
-        )}
-      </Card>
+            <Grid item xs={6} display="flex" flexDirection="column">
+              <div className="justify">
+                <LocationOn fontSize="small" color="error" />
+                <Typography variant="caption" display="inline">
+                  {gigLocation}
+                </Typography>
+              </div>
+            </Grid>
+          </CardContent>
+          {/* <Grid container>
+            <Grid item xs={5} display="flex" justifyContent="space-around">
+              <CardActions disableSpacing>
+                <IconButton aria-label="add to favorites">
+                  <FavoriteIcon fontSize="small" />
+                </IconButton>
+                <IconButton aria-label="share">
+                  <ShareIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  // expand={expanded}
+                  // onClick={handleExpandClick}
+                  // aria-expanded={expanded}
+                  aria-label="show more"
+                >
+                  <ExpandMoreIcon fontSize="small" />
+                </IconButton>
+              </CardActions>
+            </Grid>
+          </Grid> */}
+        </>
+      )}
+    </Card>
   ) : null;
 };
 

@@ -180,7 +180,7 @@ class PostComponent extends React.Component<
           left: this.props.i > 1 ? 17 : 0,
           borderLeft: i > 1 ? 1 : 0,
           overflow: "hidden",
-          borderColor: "#3f3f3f",
+          borderColor: "divider",
         }}
         xs={12}
       >

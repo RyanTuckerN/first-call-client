@@ -106,7 +106,30 @@ class CallStackEdit extends React.Component<
         this.setState({
           stackTable: { ...this.state.stackTable, [role]: stack },
         });
+      success &&
+        this.props.setGig({
+          ...this.props.gig,
+          callStack: { ...this.state },
+        });
+
       return success;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
+
+  handleSendToNext = async (role: string): Promise<boolean> => {
+    try {
+      const json = await fetchHandler({
+        url: `${API_URL}/gig/${this.state.gigId}/callStack/sendToNext/${role}`,
+        method: "post",
+        auth: this.context.token ?? localStorage.getItem("token") ?? "",
+      });
+      console.log(json);
+      json.success && this.setState({ ...this.state, ...json.callStack });
+      json.success && this.props.setGig(json.gig);
+      return json.success;
     } catch (error) {
       console.log(error);
       return false;
@@ -130,8 +153,7 @@ class CallStackEdit extends React.Component<
           display="flex"
           // justifyContent="space-between"
         >
-          <Grid
-          >
+          <Grid>
             <Grid container item xs={12} sx={{ marginTop: 1 }}>
               <Typography variant="h4">Band</Typography>
               {/* <Button onClick={this.saveCallStackToDB}>save</Button> */}
@@ -183,47 +205,56 @@ class CallStackEdit extends React.Component<
               </Grid>
               {/* </FormControl> */}
             </form>
-            {roles.length ? (
-              roles.map((r, i) => (
-                <Grid item xs={12} sm={6} key={i}>
-                  <Grid item xs={12} sx={{ marginTop: 1 }}>
-                    <Typography variant="h6">{properize(r)}</Typography>
-                    <Typography variant="subtitle2">
-                      <strong>Confirmed: </strong>
-                      {stackTable[r].confirmed?.name ??
-                        stackTable[r].confirmed?.email ??
-                        stackTable[r].confirmed ?? <i>n/a</i>}
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      <strong>On Call: </strong>
-                      {stackTable[r].onCall ?? <i>n/a</i>}
-                    </Typography>
+            <Grid item container xs={12}>
+              {roles.length ? (
+                roles.map((r, i) => (
+                  <Grid item xs={6} sm={6} key={i}>
+                    <Grid item xs={12} sx={{ marginTop: 1 }}>
+                      <Typography variant="h6">{properize(r)}</Typography>
+                      {stackTable[r].onCall !== null && (
+                        <Button onClick={() => this.handleSendToNext(r)}>
+                          Remove on call
+                        </Button>
+                      )}
+                      <Typography variant="subtitle2">
+                        <strong>Confirmed: </strong>
+                        {stackTable[r].confirmed?.name ??
+                          stackTable[r].confirmed?.email ??
+                          stackTable[r].confirmed ?? <i>n/a</i>}
+                      </Typography>
+                      <Typography variant="subtitle2">
+                        <strong>On Call: </strong>
+                        {stackTable[r].onCall ?? <i>n/a</i>}
+                      </Typography>
+                    </Grid>
+                    <List>
+                      {stackTable[r].calls.map((email: string, i: number) => (
+                        <React.Fragment key={i}>
+                          <Box display="flex" alignItems="center">
+                            <ListItemText>
+                              <Typography variant="body2">
+                                <strong>
+                                  {i + 1}
+                                  {`.)`}
+                                </strong>{" "}
+                                &nbsp;&nbsp; {email}
+                              </Typography>
+                            </ListItemText>
+                            <IconButton
+                              onClick={() => this.handleDelete(r, email)}
+                            >
+                              <Backspace color="error" />
+                            </IconButton>
+                          </Box>
+                        </React.Fragment>
+                      ))}
+                    </List>
                   </Grid>
-                  <List>
-                    {stackTable[r].calls.map((email: string, i: number) => (
-                      <React.Fragment key={i}>
-                        <Box display="flex" alignItems="center">
-                          <ListItemText>
-                            <Typography variant="body2">
-                              <strong>
-                                {i + 1}
-                                {`.)`}
-                              </strong>{" "}
-                              &nbsp;&nbsp; {email}
-                            </Typography>
-                          </ListItemText>
-                          <IconButton onClick={() => this.handleDelete(r, email)}>
-                            <Backspace color="error" />
-                          </IconButton>
-                        </Box>
-                      </React.Fragment>
-                    ))}
-                  </List>
-                </Grid>
-              ))
-            ) : (
-              <Box height={200} />
-            )}
+                ))
+              ) : (
+                <Box height={200} />
+              )}
+            </Grid>
           </Grid>
           <div style={{ float: "left", clear: "both" }} />
         </Grid>
