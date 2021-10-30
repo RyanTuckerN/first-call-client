@@ -15,6 +15,7 @@ import Settings from "./Settings/Settings";
 import { DetailedGig, RouteOption } from "./Gig/Gig.types";
 import { Alert, Snackbar } from "@mui/material";
 import Inbox from "./Inbox/Inbox"
+import { Zoom, Fade } from "react-reveal";
 
 export interface MainViewProps extends RouteComponentProps {
   // functions: HomeFunctions;
@@ -61,7 +62,9 @@ class MainView extends Component<MainViewProps, MainViewState> {
         {/* Hello from MainView.tsx */}
         <Switch>
           <Route path={`${this.props.match.path}/profile/:userId`}>
-            <Profile />
+            <Zoom duration={400}>
+              <Profile />
+            </Zoom>
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
             <Settings {...this.props} />

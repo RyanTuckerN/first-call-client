@@ -8,6 +8,7 @@ import {
   Paper,
   IconButton,
   Popover,
+  Container,
 } from "@mui/material";
 import { User } from "../../../../types/API.types";
 import { withRouter, RouteComponentProps, Link } from "react-router-dom";
@@ -22,8 +23,18 @@ import {
   Add,
   MailOutline,
   AttachMoney,
-  Settings
+  Settings,
 } from "@mui/icons-material";
+
+const gigImages = [
+  "https://images.unsplash.com/photo-1600779547877-be592ef5aad3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
+  "https://images.unsplash.com/photo-1597158520886-43e23f1acb1e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
+  "https://images.unsplash.com/flagged/photo-1561203490-e032d2d1f4f9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=687&q=80",
+  "https://images.unsplash.com/photo-1546367791-e7447b431084?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
+  "https://images.unsplash.com/photo-1617174512292-aadc4a85151c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
+  "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1176&q=80",
+  "https://images.unsplash.com/photo-1582068019586-fd236dbad5e3?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fGdpZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+];
 
 interface RouteParams {
   userId: string;
@@ -66,6 +77,10 @@ class Profile extends Component<ProfileProps, ProfileState> {
 
   componentDidMount() {
     this.fetchUser();
+  }
+
+  componentDidUpdate(prevProps: ProfileProps, prevState: ProfileState) {
+    prevProps.match.params.userId !== this.props.match.params.userId && this.fetchUser()
   }
 
   render() {
@@ -122,7 +137,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
               ) : (
                 <Link to="#">
                   <MailOutline
-                    sx={{ position: "relative", right: 36, bottom: 20 }}
+                    sx={{ position: "relative", right: 36, bottom: 24 }}
                   />
                 </Link>
               )}
@@ -169,7 +184,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                       // variant="contained"
                       onClick={this.handleClick}
                     >
-                      <AttachMoney fontSize='small' color='success' />
+                      <AttachMoney fontSize="small" color="success" />
                     </IconButton>
                     <Popover
                       id={id}
@@ -201,15 +216,39 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 {user.location && user.role ? <>&#183;</> : null}&nbsp;&nbsp;
                 {user.location ? user.location : null}
               </Typography>
-              <Grid sx={{ maxWidth: 200 }} textAlign="justify">
+              {/* <Grid sx={{ maxWidth: 200 }} textAlign="justify">
                 <Typography variant="caption">
                   {user.description ? user.description : null}
                 </Typography>
-              </Grid>
+              </Grid> */}
             </Grid>
             <Grid item xs={4}></Grid>
           </Grid>
         )}
+        <div style={{ height: 40, width: "100%" }} />
+
+        <Container>
+          <Grid
+            container
+            display="flex"
+            flexWrap="wrap"
+            justifyContent="space-around"
+          >
+            {gigImages.map((photo, i) => (
+              <Grid item xs={12} md={6} lg={4} sx={{ p: 2 }} key={i} display='flex' justifyContent='center'>
+                <img
+                  src={photo}
+                  alt="random gig post"
+                  style={{
+                    objectFit: "cover",
+                    height: 300,
+                    width: 300,
+                  }}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       </>
     );
   }

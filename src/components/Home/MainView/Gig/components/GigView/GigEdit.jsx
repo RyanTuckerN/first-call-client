@@ -28,7 +28,7 @@ import DateAdapter from "@mui/lab/AdapterMoment";
 // import DateAdapter from '@mui/lab/AdapterDayjs';
 // import DateAdapter from '@mui/lab/AdapterLuxon';
 import DateTimePicker from "@mui/lab/DateTimePicker";
-
+import {Fade} from 'react-reveal'
 class GigEdit extends Component {
   static contextType = UserCtx;
 
@@ -340,35 +340,37 @@ class GigEdit extends Component {
             item
             xs={12}
           >
-            <Grid
+            {/* <Grid
               item
               container
               xs={12}
               // display="flex"
               flexDirection="row"
               // justifyContent="space-between"
-            >
+            > */}
               {keys.map((cat, i) => (
-                <React.Fragment key={i}>
-                  <Grid item xs={3}>
-                    <Typography variant="body1">
-                      <strong>{properizeNoTrim(cat)}</strong>
-                    </Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={7}
-                    display="flex"
-                    justifyContent="space-between"
-                  >
-                    <Typography variant="body1">
-                      {properizeNoTrim(optionalInfo[cat])}
-                    </Typography>
-                    <IconButton onClick={() => this.handleOptionalDelete(cat)}>
-                      <Backspace color="error" />
-                    </IconButton>
-                  </Grid>
-                </React.Fragment>
+                <Fade  key={i} >
+                    <Grid item container xs={12}>
+                      <Grid item xs={6}>
+                          <Typography variant="body1">
+                            <strong>{properizeNoTrim(cat)}</strong>
+                          </Typography>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={6}
+                        display="flex"
+                        justifyContent="space-between"
+                      >
+                        <Typography variant="body1">
+                          {properizeNoTrim(optionalInfo[cat])}
+                        </Typography>
+                        <IconButton onClick={() => this.handleOptionalDelete(cat)}>
+                          <Backspace color="error" />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                </Fade>
               ))}
               <form
                 action="submit"
@@ -411,7 +413,7 @@ class GigEdit extends Component {
                 </Grid>
               </form>
             </Grid>
-          </Grid>
+          {/* </Grid> */}
           {/* <div id="band">
             CALLSTACK MANIPULATION GO HERE, DIFFERENT FOR CREATING AND EDITING.
           </div> */}

@@ -36,6 +36,7 @@ import {Link} from 'react-router-dom'
 import { stringAvatar } from "../../../Settings/Header";
 import { Gig, User } from "../../../../../../types/API.types";
 import * as _ from "lodash";
+import { Zoom, Fade } from "react-reveal";
 
 const avatarSize: number = 35;
 

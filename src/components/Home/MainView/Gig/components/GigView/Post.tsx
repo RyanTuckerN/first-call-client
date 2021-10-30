@@ -235,6 +235,7 @@ class PostComponent extends React.Component<
           <Typography
             variant="body2"
             fontWeight={400}
+            sx={{pr: 5}}
             style={{ wordWrap: "break-word" }}
           >
             {post.text}

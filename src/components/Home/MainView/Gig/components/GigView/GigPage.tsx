@@ -24,6 +24,7 @@ import { posts } from "../../../../../_helpers/postOrganizer";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import API_URL from "../../../../../_helpers/environment";
 import CallStackEdit from "../../CallStack/CallStackEdit";
+import { Zoom, Fade } from "react-reveal";
 
 interface RouteParams {
   gigId: string;
