@@ -105,29 +105,29 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       });
     }
     if (prevState.notificationsHash !== this.state.notificationsHash) {
-      this.fetchOffers();
-      this.fetchDetails();
+      // this.fetchOffers();
+      // this.fetchDetails();
     }
     if (prevProps.user !== this.props.user && this.props.user) {
       this.setState({
         user: this.props.user,
         gigs: this.props.user.gigs ?? [],
       });
-      this.fetchOffers();
-      this.fetchDetails();
+      // this.fetchOffers();
+      // this.fetchDetails();
     }
     if (prevState.gigs !== this.state.gigs) {
-      this.fetchOffers();
+      // this.fetchOffers();
       this.fetchDetails();
     }
     if (prevState.offers !== this.state.offers) {
-      this.fetchDetails();
+      // this.fetchDetails();
     }
     // console.log(Object.entries(this.state.notificationsHash));
   }
 
   componentDidMount() {
-    this.fetchDetails();
+    // this.fetchDetails();
     this.fetchOffers();
   }
 

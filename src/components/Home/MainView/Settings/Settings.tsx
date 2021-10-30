@@ -3,11 +3,9 @@ import { Component } from "react";
 import ChangePass from "./ChangePass";
 import {
   NavLink,
-  Link,
   Route,
   RouteComponentProps,
   withRouter,
-  Switch as RouteSwitch,
 } from "react-router-dom";
 import {
   Typography,
@@ -188,7 +186,6 @@ class Settings extends Component<SettingsProps, SettingsState> {
             </List>
           </Grid>
           <Grid item xs={12} sm={7} md={9}>
-            <RouteSwitch>
               <Route exact path={`${this.props.match.path}/`}>
                 <EditProfile
                   {...this.props}
@@ -198,7 +195,6 @@ class Settings extends Component<SettingsProps, SettingsState> {
               <Route exact path={`${this.props.match.path}/change-password`}>
                 <ChangePass />
               </Route>
-            </RouteSwitch>
           </Grid>
         </Grid>
       </Grid>
