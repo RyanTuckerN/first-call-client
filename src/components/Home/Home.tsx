@@ -163,13 +163,20 @@ class Home extends Component<HomeProps, HomeState> {
 
   render() {
     const { auth } = this.context;
+    const routePaperSX = {
+      padding: 2,
+      marginBottom: 2,
+      minHeight: this.state.windowDimensions.height - this.appBarHeight - 30,
+      zIndex: 1,
+    };
 
     return (
       <>
         <Box sx={{ flexGrow: 1 }}>
           <AppBar
             position="fixed"
-            color="secondary"
+            // color="secondary"
+            sx={{backgroundColor: 'paper'}}
             style={{ height: this.appBarHeight }}
           >
             <Toolbar>
@@ -188,7 +195,6 @@ class Home extends Component<HomeProps, HomeState> {
                         size="medium"
                         id="home-button"
                         color="inherit"
-                        
                       >
                         <Dashboard />
                       </IconButton>
@@ -216,7 +222,7 @@ class Home extends Component<HomeProps, HomeState> {
                         <AccountCircle />
                       )}
                     </IconButton>
-                    
+
                     <Link to="/main/add">
                       <IconButton
                         size="small"
@@ -228,7 +234,6 @@ class Home extends Component<HomeProps, HomeState> {
                       >
                         <Add />
                       </IconButton>
-                      
                     </Link>
                   </Box>
                   <Menu
@@ -297,7 +302,7 @@ class Home extends Component<HomeProps, HomeState> {
               )}
             </Toolbar>
           </AppBar>
-          <div style={{minHeight: 90}}/>
+          <div style={{ minHeight: 90 }} />
         </Box>
         <div style={{ marginTop: 10 }} />
         <>
@@ -305,32 +310,27 @@ class Home extends Component<HomeProps, HomeState> {
 
           <Container maxWidth="lg">
             {/* box is just to show layout, should be removed */}
-            <Paper
-              sx={{
-                padding: 2,
-                marginBottom: 2,
-                minHeight:
-                  this.state.windowDimensions.height - this.appBarHeight - 30,
-                zIndex: 1,
-              }}
-            >
-              <Switch>
-                <Route
-                  exact
-                  path="/"
-                  render={() => {
-                    return auth ? (
-                      <Redirect to="main/" />
-                    ) : (
-                      <Redirect to="welcome" />
-                    );
-                  }}
-                />
-                <Route path="/respond">
+
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={() => {
+                  return auth ? (
+                    <Redirect to="main/" />
+                  ) : (
+                    <Redirect to="welcome" />
+                  );
+                }}
+              />
+              <Route path="/respond">
+                <Paper sx={routePaperSX}>
                   <Respond />
-                </Route>
-                <Route path="/main">
-                  {this.props.user ? (
+                </Paper>
+              </Route>
+              <Route path="/main">
+                {this.props.user ? (
+                  <Paper sx={routePaperSX}>
                     <MainView
                       {...this.props}
                       {...this.state}
@@ -339,19 +339,18 @@ class Home extends Component<HomeProps, HomeState> {
                       setHomeState={this.setHomeState}
                       user={this.props.user}
                     />
-                  ) : null}
-                </Route>
+                  </Paper>
+                ) : null}
+              </Route>
 
-                <Route path="/welcome">
-                  <Welcome />
-                </Route>
-
-                <Route path="/auth">
-                  <Auth {...this.props} />
-                </Route>
-              </Switch>
-            </Paper>
+              <Route path="/auth">
+                <Auth {...this.props} />
+              </Route>
+            </Switch>
           </Container>
+          <Route path="/welcome">
+            <Welcome />
+          </Route>
         </>
       </>
     );

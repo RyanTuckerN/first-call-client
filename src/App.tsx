@@ -114,6 +114,7 @@ class App extends Component<AppProps, AppState> {
   componentDidMount() {
     const token: string | null = localStorage.getItem("token");
     token ? this.authenticate(token) : this.setState({ auth: false });
+    // console.log(light, dark)
   }
 
   componentDidUpdate(prevProps: AppProps, prevState: AppState) {

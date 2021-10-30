@@ -57,16 +57,22 @@ const GigCard: FunctionComponent<GigProps> = ({
   //   return color;
   // };
 
+  const colors = [
+    "secondary.light",
+    "secondary.dark",
+    "secondary.main"
+  ];
   return bandLeader ? (
     <Card elevation={5} sx={{ margin: 1, borderRadius: 3 }}>
-    {/* // <Card elevation={5} sx={{}}> */}
+      {/* // <Card elevation={5} sx={{}}> */}
       <Link smooth to={`/main/gig/${id}#gig-anchor`}>
         <CardActionArea>
           <CardHeader
             sx={{
               // maxHeight: 75,
               // backgroundImage: photo ?? "url(https://source.unsplash.com/random)",
-              backgroundColor: "primary.dark",
+              color: "white",
+              backgroundColor: colors[Math.floor(Math.random() * 3)],
             }}
             avatar={
               bandLeader?.photo ? (
@@ -92,7 +98,6 @@ const GigCard: FunctionComponent<GigProps> = ({
                 <Typography>{description}</Typography>
                 <AttachMoney
                   fontSize="inherit"
-                  color="success"
                   sx={{ marginLeft: "auto", position: "relative", top: 3 }}
                 />
                 <Typography variant="caption" display="inline">
@@ -100,9 +105,9 @@ const GigCard: FunctionComponent<GigProps> = ({
                 </Typography>
               </div>
             }
-            subheader={`${gigDate.toLocaleDateString()}, ${returnTime(
+            subheader={(<Typography>{gigDate.toLocaleDateString()} {returnTime(
               gigDate
-            )}`}
+            )}</Typography>)}
           />
         </CardActionArea>
       </Link>

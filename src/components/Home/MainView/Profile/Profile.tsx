@@ -100,7 +100,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                     height: avatarSize,
                     width: avatarSize,
                     border: 3,
-                    borderColor: "primary.secondary",
+                    borderColor: "white",
                   }}
                   alt={user.name}
                 />

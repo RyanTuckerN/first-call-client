@@ -92,14 +92,14 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
 
   return (
     <>
-      <Paper
-        elevation={15}
+      <Grid
+        // elevation={15}
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
         <Typography variant="h5" paddingBottom={2} paddingTop={1}>
           {user && `Welcome back, ${user.name.split(" ")[0]}!`}
         </Typography>
-      </Paper>
+      </Grid>
       {routes[dashboardRoute]?.dash}
       <Grid container spacing={2} display="flex" justifyContent="center">
         {width >= 600 && (
