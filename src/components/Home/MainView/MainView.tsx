@@ -62,9 +62,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
         {/* Hello from MainView.tsx */}
         <Switch>
           <Route path={`${this.props.match.path}/profile/:userId`}>
-            <Zoom duration={400}>
               <Profile />
-            </Zoom>
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
             <Settings {...this.props} />

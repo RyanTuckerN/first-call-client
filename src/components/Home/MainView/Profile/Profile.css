@@ -1,0 +1,12 @@
+.image-thumbnail {
+  opacity: 1;
+  object-fit: contain;
+  transition-property: all;
+  transition-duration: .5s;
+  transition-timing-function: ease-in-out;
+}
+.image-thumbnail:hover {
+  opacity: .2667;
+  transform: scale(1.2667);
+  cursor: pointer;
+}

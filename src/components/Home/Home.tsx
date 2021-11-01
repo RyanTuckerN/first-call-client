@@ -354,7 +354,7 @@ class Home extends Component<HomeProps, HomeState> {
             <Welcome />
           </Route>
           <Route path="/story/:storyId">
-            <Story />
+              <Story />
           </Route>
         </>
       </>

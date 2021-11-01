@@ -118,7 +118,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
 
     const d = new Date(createdAt);
     return (
-      <Paper sx={{ width: "75%", minWidth: 320, mb: 3 }} elevation={0}>
+      <Paper sx={{ width: "51%", minWidth: 320, mb: 3 }} elevation={0}>
         <Grid container>
           <Grid
             display="flex"
@@ -281,3 +281,26 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
 }
 
 export default StoryCard;
+
+
+// interface User{
+//   id: number,
+//   name: string
+// }
+
+// interface FooProps{}
+
+// interface FooState extends User {}
+
+// class Foo extends React.Component<FooProps, FooState>{
+  
+//   handleFetch = () => {
+//     //FETCH
+//     this.setState({id: json.id, name: json.name})
+//   }
+
+//   componentDidMount() {
+//     this.handleFetch()
+//   }
+  
+// }

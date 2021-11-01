@@ -9,6 +9,8 @@ import {
   Container,
   Divider,
   Grid,
+  List,
+  ListSubheader,
   Paper,
   TextField,
 } from "@mui/material";
@@ -28,7 +30,7 @@ import { returnTime, returnTimeDifference } from "../../_helpers/helpers";
 import { Box } from "@mui/system";
 
 import React, { Component } from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter, Link } from "react-router-dom";
 import { AppState } from "../../../App";
 import { Story } from "../../../types/API.types";
 import { UserCtx } from "../../Context/MainContext";
@@ -52,10 +54,10 @@ class StoryComponent extends React.Component<
 > {
   static contextType = UserCtx;
 
-  constructor(props: StoryComponentProps, context: AppState) {
-    super(props, context);
-    // this.state = { :  };
-  }
+  // constructor(props: StoryComponentProps, context: AppState) {
+  //   super(props, context);
+  //   // this.state = { :  };
+  // }
 
   fetchStory = async (): Promise<boolean> => {
     try {
@@ -95,6 +97,7 @@ class StoryComponent extends React.Component<
     e: React.FormEvent<HTMLFormElement>
   ): Promise<boolean> => {
     e.preventDefault();
+    if (!this.state.storyPostText) return false;
     try {
       const text = this.state.storyPostText;
       const { success, post, message } = await fetchHandler({
@@ -107,8 +110,8 @@ class StoryComponent extends React.Component<
       success &&
         this.setState({
           posts: [
-            ...(this.state.posts ?? []),
             { ...post, user: { ...this.context.user } },
+            ...(this.state.posts ?? []),
           ],
           storyPostText: "",
         });
@@ -140,19 +143,37 @@ class StoryComponent extends React.Component<
     }
   };
 
+  togglePhoto = (): void => this.setState({ showImage: !this.state.showImage });
+
   componentDidMount() {
     this.fetchStory();
   }
 
+  componentDidUpdate(
+    prevProps: StoryComponentProps,
+    prevState: StoryComponentState
+  ) {
+    prevState?.imageUrl !== this.state?.imageUrl &&
+      this.setState({ showImage: true });
+  }
+
   render() {
     if (!this.state) return <div>loading</div>;
-    const { createdAt, text, imageUrl, likers, user, posts, storyPostText } =
-      this.state;
+    const {
+      createdAt,
+      text,
+      imageUrl,
+      likers,
+      user,
+      posts,
+      storyPostText,
+      showImage,
+    } = this.state;
 
     const d = new Date(createdAt);
     return (
       <Container
-        maxWidth={"xl"}
+        maxWidth={"lg"}
         sx={{ display: "flex", justifyContent: "center" }}
       >
         <Paper sx={{ width: "100%", minWidth: 320, mb: 3 }} elevation={4}>
@@ -180,9 +201,9 @@ class StoryComponent extends React.Component<
               container
               item
               xs={12}
-              md={10}
+              md={12}
               lg={8}
-              display="flex"
+              display={showImage ? "flex" : "none"}
               justifyContent="center"
             >
               <img
@@ -190,8 +211,12 @@ class StoryComponent extends React.Component<
                 alt={text}
                 style={{
                   objectFit: "cover",
+                  alignSelf: "flex-start",
                   height: "100%",
                   width: "100%",
+                  maxHeight: "85vh",
+
+                  // maxWidth: 600,
                 }}
               />
             </Grid>
@@ -201,184 +226,224 @@ class StoryComponent extends React.Component<
               // alignItems="center"
               // justifyContent="space-between"
 
-              sx={{ width: "100%" }}
+              sx={{
+                width: "100%",
+                maxHeight: "85vh",
+                overflowY: "scroll",
+                overflowX: "hidden",
+                alignSelf: "flex-start",
+                position: 'relative'
+              }}
               container
               item
               xs={12}
               md={12}
-              lg={4}
+              lg={showImage ? 4 : 12}
             >
-              <Grid p={1}>
-                <Grid item xs={12} ml={0.2667}>
-                  <Avatar
-                    src={user?.photo}
-                    sx={{ mx: 1, height: 70, width: 70, float: "left" }}
-                  />
-                  <Typography display="inline" variant="subtitle2">
-                    {user?.name}
-                  </Typography>
-                  <Typography
-                    sx={{ ml: 0.443 }}
-                    variant="subtitle2"
-                    display="inline"
-                    color={"GrayText"}
-                  >
-                    {returnTimeDifference(d, new Date())}
-                  </Typography>
-                  <Typography
-                    display="inline"
-                    variant="body1"
-                    fontWeight={300}
-                    sx={{ ml: 1 }}
-                  >
-                    <>{text}</>
-                  </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <IconButton onClick={this.handleLike}>
-                    {likers.includes(this.context.user.id) ? (
-                      <FavoriteIcon
-                        fontSize="small"
-                        sx={{ color: "error.light" }}
-                      />
-                    ) : (
-                      <FavoriteBorderIcon fontSize="small" />
-                    )}
-                  </IconButton>
-                  <Typography sx={{ mb: 0.2667 }} variant="caption">{`${
-                    likers.length
-                  } ${
-                    likers.length === 1
-                      ? "person likes this."
-                      : "people like this."
-                  }`}</Typography>
-                </Grid>
-              </Grid>
-              <Divider sx={{ mb: 4 }} />
-              {posts.length ? (
-                posts
-                  .sort((a, b) => b.voters.length - a.voters.length)
-                  .slice(0, posts.length > 8 ? 8 : posts.length)
-                  .map((post) => (
-                    <Grid key={post.id}>
-                      <Grid
-                        item
-                        container
-                        xs={12}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        ml={0.2667}
+              <List
+                sx={{
+                  bgcolor: "grey[200]",
+                  height: "100%",
+                }}
+              >
+                <ListSubheader sx={{ mt: -1, p: 0 }}>
+                  <Grid p={1}>
+                    <Grid item xs={12} ml={0.2667}>
+                      <Link to={`/main/profile/${user.id}`}>
+                        <Avatar
+                          src={user?.photo}
+                          sx={{ mx: 1, height: 70, width: 70, float: "left" }}
+                        />
+                      </Link>
+                      <Typography display="inline" variant="subtitle2">
+                        {user?.name}
+                      </Typography>
+                      <Typography
+                        sx={{ ml: 0.443 }}
+                        variant="subtitle2"
+                        display="inline"
+                        color={"GrayText"}
                       >
-                        <Grid>
-                          <Grid display="flex">
-                            <Avatar
-                              sx={{ height: 27, width: 27 }}
-                              src={post.user?.photo}
-                            />
-                            <Typography display="inline" variant="subtitle2">
-                              {post.user?.name}
-                            </Typography>
-
-                            <Typography
-                              display="inline"
-                              variant="body2"
-                              fontWeight={300}
-                              sx={{ ml: 1 }}
-                            >
-                              {post.text}
-                            </Typography>
+                        {returnTimeDifference(d, new Date())}
+                      </Typography>
+                      <Typography
+                        display="inline"
+                        variant="body1"
+                        fontWeight={300}
+                        sx={{ ml: 1 }}
+                      >
+                        <>{text}</>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <IconButton onClick={this.handleLike}>
+                        {likers.includes(this.context.user.id) ? (
+                          <FavoriteIcon
+                            fontSize="small"
+                            sx={{ color: "error.light" }}
+                          />
+                        ) : (
+                          <FavoriteBorderIcon fontSize="small" />
+                        )}
+                      </IconButton>
+                      <Typography sx={{ mb: 0.2667 }} variant="caption">{`${
+                        likers.length
+                      } ${
+                        likers.length === 1
+                          ? "person likes this."
+                          : "people like this."
+                      }`}</Typography>
+                    </Grid>
+                  </Grid>
+                </ListSubheader>
+                <Box sx={{ mb: 4 }} />
+                {posts.length ? (
+                  posts
+                    .sort((a, b) => b.voters.length - a.voters.length)
+                    .slice(
+                      0,
+                      //match with showImage or not
+                      showImage
+                        ? posts.length > 8
+                          ? 8
+                          : posts.length
+                        : posts.length
+                    )
+                    .map((post, i, arr) => (
+                      <Grid key={post.id}>
+                        <Grid
+                          item
+                          container
+                          xs={12}
+                          // display="flex"
+                          // alignItems="center"
+                          // justifyContent="space-between"
+                          ml={0.2667}
+                        >
+                          <Grid>
+                            <Grid display="flex">
+                              <Link to={`/main/profile/${post.author}`}>
+                                <Avatar
+                                  sx={{ height: 27, width: 27, mx: 1 }}
+                                  src={post.user?.photo}
+                                />
+                              </Link>
+                              <Typography display="inline" variant="subtitle2">
+                                {post.user?.name}
+                                <Typography
+                                  display="inline"
+                                  variant="body2"
+                                  fontWeight={300}
+                                  sx={{ ml: 1 }}
+                                >
+                                  {post.text}
+                                </Typography>
+                              </Typography>
+                            </Grid>
                           </Grid>
                         </Grid>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <Grid ml={2}>
-                          <Typography variant="caption" color="GrayText">
-                            {returnTimeDifference(
-                              new Date(),
-                              new Date(post.createdAt)
-                            )}{" "}
-                            ago
-                          </Typography>
-                          <IconButton
-                            disableRipple
-                            onClick={() => this.handlePostLike(post.id)}
-                          >
-                            {post.voters.includes(this.context.user.id) ? (
-                              <FavoriteIcon
-                                sx={{
-                                  height: 13,
-                                  width: 13,
-                                  color: "error.light",
-                                }}
-                                color="error"
-                              />
-                            ) : (
-                              <FavoriteBorderIcon
-                                sx={{ height: 13, width: 13 }}
-                              />
-                            )}
-                          </IconButton>
-                          <Typography
-                            sx={{
-                              color: "GrayText",
-                              position: "relative",
-                              left: 1,
-                              bottom: 1,
-                            }}
-                            variant="caption"
-                          >{`${post.voters.length} ${
-                            post.voters.length === 1 ? "like" : "likes"
-                          }`}</Typography>
+                        <Grid item xs={12}>
+                          <Grid ml={2}>
+                            <Typography variant="caption" color="GrayText">
+                              {returnTimeDifference(
+                                new Date(),
+                                new Date(post.createdAt)
+                              )}{" "}
+                              ago
+                            </Typography>
+                            <IconButton
+                              disableRipple
+                              onClick={() => this.handlePostLike(post.id)}
+                            >
+                              {post.voters.includes(this.context.user.id) ? (
+                                <FavoriteIcon
+                                  sx={{
+                                    height: 13,
+                                    width: 13,
+                                    color: "error.light",
+                                  }}
+                                  color="error"
+                                />
+                              ) : (
+                                <FavoriteBorderIcon
+                                  sx={{ height: 13, width: 13 }}
+                                />
+                              )}
+                            </IconButton>
+                            <Typography
+                              sx={{
+                                color: "GrayText",
+                                position: "relative",
+                                left: 1,
+                                bottom: 1,
+                              }}
+                              variant="caption"
+                            >{`${post.voters.length} ${
+                              post.voters.length === 1 ? "like" : "likes"
+                            }`}</Typography>
+                          </Grid>
                         </Grid>
+                        {i !== arr.length - 1 && (
+                          <Divider sx={{ opacity: 0.53, my: 1 }} />
+                        )}
                       </Grid>
-                    </Grid>
-                  ))
-              ) : (
-                <Typography sx={{ml: 2}} color="GrayText" variant="subtitle2">
-                  <i>...There are no comments!</i>
-                </Typography>
-              )}
-              {posts
-                ? posts.length > 8 && (
-                    <Typography variant="body2" ml={2} fontWeight={300}>
-                      <i>{`View all ${posts.length} comments.`}</i>
-                    </Typography>
-                  )
-                : null}
-              <Divider sx={{ width: "100%", mt: 1 }} />
-              <Grid
-                display="flex"
-                alignItems="center"
-                ml={0.2667}
-                sx={{ width: "100%" }}
-              >
-                <Box
-                  component="form"
-                  onSubmit={this.handleNewPost}
-                  sx={{ width: "100%" }}
+                    ))
+                ) : (
+                  <Typography
+                    sx={{ ml: 2 }}
+                    color="GrayText"
+                    variant="subtitle2"
+                  >
+                    <i>...There are no comments!</i>
+                  </Typography>
+                )}
+                {posts
+                  ? posts.length > 8 && (
+                      <Button onClick={this.togglePhoto}>
+                        <Typography variant="body2" ml={2} fontWeight={300}>
+                          {showImage ? (
+                            <i>{`View all ${posts.length} comments.`}</i>
+                          ) : (
+                            <i>{`Minimize comments.`}</i>
+                          )}
+                        </Typography>
+                      </Button>
+                    )
+                  : null}
+              </List>
+                <Grid
+                  display="flex"
+                  // alignItems="center"
+                  alignSelf="flex-end"
+                  sx={{ width: "100%", position:'sticky', bottom: 0, bgcolor: "black"}}
                 >
-                  <TextField
-                    InputProps={{
-                      disableUnderline: true,
-                      sx: { fontWeight: 300 },
-                      fullWidth: true,
-                      startAdornment: <SentimentSatisfied fontSize="small" />,
-                      endAdornment: (
-                        <Button disabled={!Boolean(this.state.storyPostText)}>
-                          POST
-                        </Button>
-                      ),
-                    }}
-                    variant="standard"
-                    size="small"
-                    placeholder="    add a comment"
-                    value={storyPostText}
-                    onChange={this.handleReplyText}
-                    fullWidth
-                  />
-                </Box>
-              </Grid>
+                  <Box
+                    component="form"
+                    onSubmit={this.handleNewPost}
+                    sx={{ width: "100%" }}
+                  >
+                    <Box sx={{ width: "100%", mt: 1 }} />
+                    <TextField
+                      InputProps={{
+                        disableUnderline: true,
+                        sx: { fontWeight: 300, height: 20 },
+                        fullWidth: true,
+                        startAdornment: <SentimentSatisfied fontSize="small" />,
+                        endAdornment: (
+                          <Button disabled={!Boolean(this.state.storyPostText)}>
+                            POST
+                          </Button>
+                        ),
+                      }}
+                      variant="standard"
+                      size="small"
+                      placeholder="    add a comment"
+                      value={storyPostText}
+                      onChange={this.handleReplyText}
+                      fullWidth
+                    />
+                  </Box>
+                </Grid>
             </Grid>
           </Grid>
         </Paper>

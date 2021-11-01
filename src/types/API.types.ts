@@ -101,7 +101,7 @@ export interface Story {
   createdAt: string;
   updatedAt?: string;
   userId: number;
-  user: {name: string, photo: string};
+  user: {name: string, photo: string, id: number};
   posts: Post[]
 }
 export interface DetailsHash{

@@ -28,9 +28,12 @@ import {
   AttachMoney,
   Settings,
   Image,
+  ChatBubble,
+  Favorite,
 } from "@mui/icons-material";
 import BasicModal from "../../components/BasicModal";
 import StoryCard from "./StoryCard";
+import "./Profile.css";
 
 const gigImages = [
   "https://images.unsplash.com/photo-1600779547877-be592ef5aad3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
@@ -331,33 +334,71 @@ class Profile extends Component<ProfileProps, ProfileState> {
             justifyContent="space-around"
           >
             {this.state.stories.reverse().map((story, i) => (
-              // <Grid
-              //   item
-              //   key={i}
-              //   xs={12}
-              //   md={6}
-              //   lg={4}
-              //   sx={{ p: 2 }}
-              //   display="flex"
-              //   flexDirection="column"
-              //   alignItems="center"
-              // >
-              //   {/* <Paper elevation={0}> */}
-              //   <img
-              //     src={story.imageUrl}
-              //     alt={story.text}
-              //     style={{
-              //       objectFit: "cover",
-              //       height: 300,
-              //       width: 300,
-              //     }}
-              //   />
-              //   {/* </Paper> */}
-              // </Grid>
-              <StoryCard
-                key={story.id}
-                {...story}
-              />
+              <Grid
+                key={i}
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                sx={{ p: 2 }}
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+              >
+                {/* <Paper elevation={0}> */}
+                <Link
+                  to={`/story/${story.id}`}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    height: 300,
+                    width: 300,
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    className="image-thumbnail"
+                    src={story.imageUrl}
+                    alt={story.text}
+                    style={{
+                      zIndex: 999,
+                      objectFit: "cover",
+                      height: 300,
+                      width: 300,
+                    }}
+                  />
+                  <div
+                    style={{
+                      backgroundColor: "white",
+                      zIndex: 997,
+                      objectFit: "cover",
+                      position: "absolute",
+                      height: 300,
+                      width: 300,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      variant="h5"
+                      fontWeight={700}
+                      sx={{ zIndex: 1000, color: "#00000060" }}
+                    >
+                      {story.likers.length} <Favorite />{" "}
+                      &nbsp;&nbsp;&nbsp;&nbsp; {story.posts.length}{" "}
+                      <ChatBubble />
+                    </Typography>
+                  </div>
+                </Link>
+                {/* </Paper> */}
+              </Grid>
+              // <StoryCard
+              //   key={story.id}
+              //   {...story}
+              // />
             ))}
           </Grid>
         </Container>
