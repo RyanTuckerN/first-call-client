@@ -18,7 +18,7 @@ import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { ExitToApp, OpenInNew, SentimentSatisfied } from "@mui/icons-material";
+import { ExitToApp, KeyboardReturn, OpenInNew, SentimentSatisfied } from "@mui/icons-material";
 import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -41,7 +41,9 @@ interface Params {
   storyId: string;
 }
 
-interface StoryComponentProps extends RouteComponentProps<Params> {}
+interface StoryComponentProps extends RouteComponentProps<Params> {
+  storyId?: number
+}
 
 interface StoryComponentState extends Story {
   storyPostText: string;
@@ -54,15 +56,15 @@ class StoryComponent extends React.Component<
 > {
   static contextType = UserCtx;
 
-  // constructor(props: StoryComponentProps, context: AppState) {
-  //   super(props, context);
-  //   // this.state = { :  };
-  // }
+  constructor(props: StoryComponentProps, context: AppState) {
+    super(props, context);
+    // this.state = { :  };
+  }
 
   fetchStory = async (): Promise<boolean> => {
     try {
       const { story, success, message } = await fetchHandler({
-        url: `${API_URL}/story/${this.props.match.params.storyId}`,
+        url: `${API_URL}/story/${this.props.match.params.storyId ?? this.props.storyId}`,
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
       // alert(message);
@@ -173,7 +175,7 @@ class StoryComponent extends React.Component<
     const d = new Date(createdAt);
     return (
       <Container
-        maxWidth={"lg"}
+        maxWidth={"xl"}
         sx={{ display: "flex", justifyContent: "center" }}
       >
         <Paper sx={{ width: "100%", minWidth: 320, mb: 3 }} elevation={4}>
@@ -229,6 +231,7 @@ class StoryComponent extends React.Component<
               sx={{
                 width: "100%",
                 maxHeight: "85vh",
+                height: "100%",
                 overflowY: "scroll",
                 overflowX: "hidden",
                 alignSelf: "flex-start",
@@ -244,6 +247,7 @@ class StoryComponent extends React.Component<
                 sx={{
                   bgcolor: "grey[200]",
                   height: "100%",
+                  mb:7
                 }}
               >
                 <ListSubheader sx={{ mt: -1, p: 0 }}>
@@ -315,6 +319,7 @@ class StoryComponent extends React.Component<
                           item
                           container
                           xs={12}
+                          sx={{width: '97%'}}
                           // display="flex"
                           // alignItems="center"
                           // justifyContent="space-between"
@@ -404,7 +409,7 @@ class StoryComponent extends React.Component<
                           {showImage ? (
                             <i>{`View all ${posts.length} comments.`}</i>
                           ) : (
-                            <i>{`Minimize comments.`}</i>
+                            <KeyboardReturn />
                           )}
                         </Typography>
                       </Button>
@@ -415,7 +420,7 @@ class StoryComponent extends React.Component<
                   display="flex"
                   // alignItems="center"
                   alignSelf="flex-end"
-                  sx={{ width: "100%", position:'sticky', bottom: 0, bgcolor: "black"}}
+                  sx={{ width: "100%", position:'sticky', bottom: 0, bgcolor: this.context.darkModeOn === 'true' ? 'black' : 'white', opacity: 1}}
                 >
                   <Box
                     component="form"
@@ -426,7 +431,7 @@ class StoryComponent extends React.Component<
                     <TextField
                       InputProps={{
                         disableUnderline: true,
-                        sx: { fontWeight: 300, height: 20 },
+                        sx: { fontWeight: 300, height: 20, },
                         fullWidth: true,
                         startAdornment: <SentimentSatisfied fontSize="small" />,
                         endAdornment: (

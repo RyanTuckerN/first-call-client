@@ -34,6 +34,7 @@ import {
 import BasicModal from "../../components/BasicModal";
 import StoryCard from "./StoryCard";
 import "./Profile.css";
+import StoryComponent from '../../Stories/Story'
 
 const gigImages = [
   "https://images.unsplash.com/photo-1600779547877-be592ef5aad3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
@@ -59,6 +60,8 @@ interface ProfileState {
   storyText: string;
   storyError: string;
   stories: Story[];
+  storyModalOpen: boolean;
+  storyModalId: number
 }
 
 class Profile extends Component<ProfileProps, ProfileState> {
@@ -74,6 +77,8 @@ class Profile extends Component<ProfileProps, ProfileState> {
       storyText: "",
       storyError: "",
       stories: [],
+      storyModalOpen: false,
+      storyModalId: 0
     };
   }
 
@@ -131,6 +136,8 @@ class Profile extends Component<ProfileProps, ProfileState> {
   };
 
   setModalOpen = (b: boolean): void => this.setState({ modalOpen: b });
+  setStoryModalOpen = (b: boolean): void => this.setState({ storyModalOpen: b });
+
 
   handleStoryText = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ storyText: e.target.value, storyError: "" });
@@ -177,6 +184,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
   componentDidUpdate(prevProps: ProfileProps, prevState: ProfileState) {
     prevProps.match.params.userId !== this.props.match.params.userId &&
       this.fetchUser();
+    prevState.storyModalOpen && !this.state.storyModalOpen && this.setState({storyModalId: 0})
   }
 
   render() {
@@ -333,73 +341,88 @@ class Profile extends Component<ProfileProps, ProfileState> {
             flexWrap="wrap"
             justifyContent="space-around"
           >
-            {this.state.stories.reverse().map((story, i) => (
-              <Grid
-                key={i}
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                sx={{ p: 2 }}
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-              >
-                {/* <Paper elevation={0}> */}
-                <Link
-                  to={`/story/${story.id}`}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    flexWrap: "wrap",
-                    height: 300,
-                    width: 300,
-                    overflow: "hidden",
-                  }}
+            {this.state.stories.length ? (
+              this.state.stories.reverse().map((story, i) => (
+                <Grid
+                  key={i}
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  sx={{ p: 2 }}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
                 >
-                  <img
-                    className="image-thumbnail"
-                    src={story.imageUrl}
-                    alt={story.text}
+                  {/* <Paper elevation={0}> */}
+                  <Link
+                    // to={`/story/${story.id}`}
+                    to={`/story/${story.id}`}
                     style={{
-                      zIndex: 999,
-                      objectFit: "cover",
-                      height: 300,
-                      width: 300,
-                    }}
-                  />
-                  <div
-                    style={{
-                      backgroundColor: "white",
-                      zIndex: 997,
-                      objectFit: "cover",
-                      position: "absolute",
-                      height: 300,
-                      width: 300,
                       display: "flex",
-                      justifyContent: "center",
+                      flexDirection: "column",
                       alignItems: "center",
+                      flexWrap: "wrap",
+                      height: 300,
+                      width: 300,
+                      overflow: "hidden",
                     }}
                   >
-                    <Typography
-                      variant="h5"
-                      fontWeight={700}
-                      sx={{ zIndex: 1000, color: "#00000060" }}
+                    <img
+                      className="image-thumbnail"
+                      src={story.imageUrl}
+                      alt={story.text}
+                      style={{
+                        zIndex: 999,
+                        objectFit: "cover",
+                        height: 300,
+                        width: 300,
+                      }}
+                    />
+                    <div
+                      style={{
+                        backgroundColor: "white",
+                        zIndex: 997,
+                        objectFit: "cover",
+                        position: "absolute",
+                        height: 300,
+                        width: 300,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
                     >
-                      {story.likers.length} <Favorite />{" "}
-                      &nbsp;&nbsp;&nbsp;&nbsp; {story.posts.length}{" "}
-                      <ChatBubble />
-                    </Typography>
-                  </div>
-                </Link>
-                {/* </Paper> */}
+                      <Typography
+                        variant="h5"
+                        fontWeight={700}
+                        sx={{ zIndex: 1000, color: "#00000060" }}
+                      >
+                        {story.likers.length} <Favorite />{" "}
+                        &nbsp;&nbsp;&nbsp;&nbsp; {story.posts?.length ?? 0}{" "}
+                        <ChatBubble />
+                      </Typography>
+                    </div>
+                  </Link>
+                  {/* </Paper> */}
+                </Grid>
+                // <StoryCard
+                //   key={story.id}
+                //   {...story}
+                // />
+              ))
+            ) : (
+              <Grid display="flex" flexDirection="column" alignItems="center">
+                <Typography variant="overline" fontWeight={300}>
+                  No stories to display!
+                </Typography>
+                {this.state.user?.id === this.context.user.id && <Typography variant="subtitle1" fontWeight={100}>
+                  <IconButton onClick={() => this.setModalOpen(true)}>
+                    <Add />
+                  </IconButton>
+                  <i>Add one?</i>{" "}
+                </Typography>}
               </Grid>
-              // <StoryCard
-              //   key={story.id}
-              //   {...story}
-              // />
-            ))}
+            )}
           </Grid>
         </Container>
         <BasicModal
@@ -470,6 +493,9 @@ class Profile extends Component<ProfileProps, ProfileState> {
               </Grid>
             </Paper>
           </Box>
+        </BasicModal>
+        <BasicModal modalTitle='story-full-info' setOpen={this.setStoryModalOpen} open={this.state.storyModalOpen} >
+          <StoryComponent storyId={this.state.storyModalId}/>
         </BasicModal>
       </>
     );
