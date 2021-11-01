@@ -15,6 +15,7 @@ export interface User {
   gigs?: Gig[];
   posts?: Post[];
   notifications?: Notification[];
+  stories: Story[];
   photo?: string;
 }
 export interface Gig {
@@ -92,7 +93,17 @@ export interface UserAuth {
   user: User;
   err?: any;
 }
-
+export interface Story {
+  id: number;
+  text: string;
+  imageUrl: string;
+  likers: number[];
+  createdAt: string;
+  updatedAt?: string;
+  userId: number;
+  user: {name: string, photo: string};
+  posts: Post[]
+}
 export interface DetailsHash{
   [key: string|number]: DetailedGig
 }

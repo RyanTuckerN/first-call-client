@@ -22,7 +22,7 @@ export interface MainViewProps extends RouteComponentProps {
   notifications: Notification[];
   user: User;
   auth: boolean | null;
-  detailsHash: { [key: string]: DetailedGig } | null;
+  // detailsHash: { [key: string]: DetailedGig } | null;
   token: string;
   fetchNotifications: () => Promise<void>;
   setHomeState: (key: string, value: any) => void;

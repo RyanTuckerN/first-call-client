@@ -44,6 +44,8 @@ import { WindowDimensions } from "./Home.types";
 import { Paper } from "@mui/material";
 import { DetailedGig } from "./MainView/Gig/Gig.types";
 import { AppState } from "../../App";
+import BasicModal from "./components/BasicModal";
+import Story from "./Stories/Story";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
@@ -61,7 +63,7 @@ interface HomeState {
   open: boolean;
   windowDimensions: WindowDimensions;
   notifications: Notification[];
-  detailsHash: { [key: string | number]: DetailedGig } | null;
+  // detailsHash: { [key: string | number]: DetailedGig } | null;
 }
 
 class Home extends Component<HomeProps, HomeState> {
@@ -72,7 +74,7 @@ class Home extends Component<HomeProps, HomeState> {
   constructor(props: HomeProps, context: AppState) {
     super(props, context);
     this.state = {
-      detailsHash: null,
+      // detailsHash: null,
       anchorEl: null,
       isMenuOpen: false,
       isNotificationsOpen: false,
@@ -176,7 +178,7 @@ class Home extends Component<HomeProps, HomeState> {
           <AppBar
             position="fixed"
             // color="secondary"
-            sx={{backgroundColor: 'paper'}}
+            sx={{ backgroundColor: "black" }}
             style={{ height: this.appBarHeight }}
           >
             <Toolbar>
@@ -350,6 +352,9 @@ class Home extends Component<HomeProps, HomeState> {
           </Container>
           <Route path="/welcome">
             <Welcome />
+          </Route>
+          <Route path="/story/:storyId">
+            <Story />
           </Route>
         </>
       </>

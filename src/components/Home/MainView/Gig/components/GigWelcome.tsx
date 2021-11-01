@@ -69,6 +69,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
           notifications={filterNotifications(messageCode, notifications)}
           setHomeState={props.setHomeState}
         />
+        // <div />
       ),
       dash: <NotificationsDashBoard {...props} width={width} />,
     },

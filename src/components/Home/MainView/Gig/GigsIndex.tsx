@@ -27,7 +27,7 @@ interface GigIndexProps extends RouteComponentProps {
   notifications: Notification[]; //Home State
   user: User | null; //App State
   dashboardRoute: RouteOption; //Main state
-  detailsHash: { [key: string]: DetailedGig } | null;
+  // detailsHash: { [key: string]: DetailedGig } | null;
   setAppState: (key: string, value: any) => void;
   setHomeState: (key: string, value: any) => void;
   setMainState: (key: string, value: any) => void;
@@ -40,6 +40,7 @@ export interface GigIndexState {
   notificationsHash: NotificationsHash;
   user: User | null;
   messageCode: number | null;
+  detailsHash: { [key: string]: DetailedGig } | null;
   setGigState: (key: string, value: any) => void;
 }
 
@@ -56,6 +57,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       notificationsHash: this.notificationHash(this.props.notifications),
       user: this.props.user,
       messageCode: null,
+      detailsHash: null,
       setGigState: this.setGigState,
     };
   }
@@ -78,7 +80,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       auth: localStorage.getItem("token") ?? this.context?.token ?? "",
       body,
     });
-    success && this.props.setHomeState("detailsHash", hash);
+    console.log(success, hash)
+    success && this.setState({detailsHash: hash});
   };
 
   setGigState = (key: string, value: any) => {
@@ -105,30 +108,30 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       });
     }
     if (prevState.notificationsHash !== this.state.notificationsHash) {
-      // this.fetchOffers();
-      // this.fetchDetails();
+      this.fetchOffers();
+      this.fetchDetails();
     }
     if (prevProps.user !== this.props.user && this.props.user) {
       this.setState({
         user: this.props.user,
         gigs: this.props.user.gigs ?? [],
       });
-      // this.fetchOffers();
-      // this.fetchDetails();
+      this.fetchOffers();
+      this.fetchDetails();
     }
     if (prevState.gigs !== this.state.gigs) {
-      // this.fetchOffers();
+      this.fetchOffers();
       this.fetchDetails();
     }
     if (prevState.offers !== this.state.offers) {
-      // this.fetchDetails();
+      this.fetchDetails();
     }
     // console.log(Object.entries(this.state.notificationsHash));
   }
 
-  componentDidMount() {
-    // this.fetchDetails();
-    this.fetchOffers();
+  async componentDidMount() {
+    await this.fetchOffers();
+    // await this.fetchDetails();
   }
 
   render() {
@@ -136,22 +139,22 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       <>
 
         <Route exact path="/main">
-          {this.props.detailsHash ? (
+          {this.state.detailsHash ? (
             <GigWelcome
               {...this.props}
               {...this.state}
-              detailsHash={this.props.detailsHash}
+              detailsHash={this.state.detailsHash}
             />
           ) : null}
         </Route>
 
         <Route exact path="/main/gig/:gigId">
-          {this.props.detailsHash && this.state.user ? (
+          {this.state.detailsHash && this.state.user ? (
             <GigPage
               {...this.props}
               {...this.state}
               user={this.state.user}
-              detailsHash={this.props.detailsHash}
+              detailsHash={this.state.detailsHash}
               addGig={this.addGig}
             />
           ) : null}
