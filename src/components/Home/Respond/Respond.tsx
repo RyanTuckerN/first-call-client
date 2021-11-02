@@ -77,7 +77,26 @@ class Respond extends Component<RespondProps, RespondState> {
       );
       console.log("SUCCESS: ", json.success);
       console.log("ACCEPT OR DECLINE JSON: ", json);
-      this.props.history.push("/auth/signup/");
+      json.success &&
+        Swal.fire(
+          res === "accept"
+            ? {
+                title: "Gig Accepted!",
+                text: "Thanks! Consider signing up for FirstCall!",
+                icon: "success",
+              }
+            : {
+                title: "Gig Declined",
+                text: "Maybe next time! Consider signing up for FirstCall!",
+              }
+        );
+      this.props.history.push(
+        res === "accept"
+          ? `/auth/signup/?email=${json.confirmed.email}&first=${
+              json.confirmed.name.split(" ")[0]
+            }&last=${json.confirmed.name.split(" ").slice(1).join(" ")}`
+          : "/auth/signup/"
+      );
       return json.success;
     } catch (error) {
       console.log(error);

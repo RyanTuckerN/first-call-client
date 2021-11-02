@@ -65,3 +65,15 @@ export const returnTimeDifference = (d1: Date, d2: Date): string => {
     ? `${(m - (m % 60)) / 60}h`
     : `${Math.floor(m / 24 / 60)}d`;
 };
+
+export const returnParams = () => {
+  return window.location.search
+    .slice(1)
+    .split("&")
+    .reduce((a: any, b: string) => {
+      const arr = b.split("=");
+      const [key, val] = [arr[0], arr[1]];
+      a[key] = val;
+      return a;
+    }, {});
+};

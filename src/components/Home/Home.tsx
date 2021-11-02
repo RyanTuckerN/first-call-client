@@ -29,6 +29,7 @@ import {
   Logout,
   Add,
   Dashboard,
+  DynamicFeed
 } from "@mui/icons-material";
 import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
@@ -46,6 +47,7 @@ import { DetailedGig } from "./MainView/Gig/Gig.types";
 import { AppState } from "../../App";
 import BasicModal from "./components/BasicModal";
 import Story from "./Stories/Story";
+import StoryFeed from "./Stories/StoryFeed";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
@@ -195,10 +197,19 @@ class Home extends Component<HomeProps, HomeState> {
                     <Link to={`${this.props.match.path}main/`}>
                       <IconButton
                         size="medium"
-                        id="home-button"
+                        id="dashboard-button"
                         color="inherit"
                       >
                         <Dashboard />
+                      </IconButton>
+                    </Link>
+                    <Link to={`${this.props.match.path}feed/`}>
+                      <IconButton
+                        size="medium"
+                        id="feed-button"
+                        color="inherit"
+                      >
+                        <DynamicFeed />
                       </IconButton>
                     </Link>
                     <IconButton
@@ -310,7 +321,7 @@ class Home extends Component<HomeProps, HomeState> {
         <>
           <CssBaseline />
 
-          <Container maxWidth="lg">
+          <Container maxWidth="lg" >
             {/* box is just to show layout, should be removed */}
 
             <Switch>
@@ -355,6 +366,9 @@ class Home extends Component<HomeProps, HomeState> {
           </Route>
           <Route path="/story/:storyId">
               <Story />
+          </Route>
+          <Route path="/feed">
+              <StoryFeed />
           </Route>
         </>
       </>

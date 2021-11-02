@@ -11,7 +11,7 @@ import {
 import API_URL from "../../_helpers/environment";
 import { LoginSignupProps, UserResponse } from "./Auth.types";
 import { fetchHandler } from "../../_helpers/fetchHandler";
-import { properize } from "../../_helpers/helpers";
+import { properize, returnParams } from "../../_helpers/helpers";
 import { UserCtx } from "../../Context/MainContext";
 import { AppState } from "../../../App";
 
@@ -107,6 +107,7 @@ class Auth extends Component<AuthProps, AuthState> {
   componentDidMount() {
     const context = this.context;
     console.log(context);
+    this.setState({...this.state, ...returnParams()})
   }
 
   render() {

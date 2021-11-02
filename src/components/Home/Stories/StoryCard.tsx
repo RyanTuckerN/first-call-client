@@ -1,30 +1,19 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import { Button, Divider, Grid, Paper, TextField } from "@mui/material";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { ExitToApp, OpenInNew, SentimentSatisfied } from "@mui/icons-material";
-import { red } from "@mui/material/colors";
+import { OpenInNew, SentimentSatisfied } from "@mui/icons-material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Story } from "../../../../types/API.types";
-import { returnTime } from "../../../_helpers/helpers";
-import { AppState } from "../../../../App";
-import { fetchHandler } from "../../../_helpers/fetchHandler";
-import API_URL from "../../../_helpers/environment";
-import { UserCtx } from "../../../Context/MainContext";
+import { Link } from "react-router-dom";
+import { Story } from "../../../types/API.types";
+import { AppState } from "../../../App";
+import { fetchHandler } from "../../_helpers/fetchHandler";
+import API_URL from "../../_helpers/environment";
+import { UserCtx } from "../../Context/MainContext";
 import { Box } from "@mui/system";
+import { returnTimeDifference } from "../../_helpers/helpers";
 
 interface StoryCardProps extends Story {
   // handleLike: (id: number) => Promise<boolean>;
@@ -33,7 +22,7 @@ interface StoryCardProps extends Story {
 
 interface StoryCardState extends Story {
   storyPostText: string;
-  author: { name: string; photo: string };
+  author: { name: string; photo: string; id: number };
 }
 
 class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
@@ -75,7 +64,6 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
         method: "post",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      // console.log(post, message, respons, response);
       success &&
         this.setState({
           posts: [
@@ -113,12 +101,20 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
   };
 
   render() {
-    const { createdAt, text, imageUrl, likers, author, posts, storyPostText } =
-      this.state;
+    const {
+      createdAt,
+      text,
+      imageUrl,
+      likers,
+      author,
+      posts,
+      storyPostText,
+      id,
+    } = this.state;
 
     const d = new Date(createdAt);
     return (
-      <Paper sx={{ width: "51%", minWidth: 320, mb: 3 }} elevation={0}>
+      <Paper sx={{ width: "100%", maxWidth:720, minWidth: 320, mb: 3 }} elevation={0}>
         <Grid container>
           <Grid
             display="flex"
@@ -126,34 +122,33 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
             justifyContent="space-between"
             sx={{ width: "100%" }}
           >
-            {/* <Grid item xs={9}> */}
-            <Grid display="flex" alignItems="center">
-              <Avatar
-                src={author?.photo}
-                sx={{ ml: 1, height: 30, width: 30 }}
-              />
-              <Typography sx={{ ml: 1 }} variant="caption">
-                {author?.name}
-                {/* {`${d.toLocaleDateString()}, ${returnTime(d)}`}{" "} */}
-              </Typography>
-            </Grid>
-            {/* </Grid> */}
-            {/* <Grid item xs={3} display='flex'> */}
-            <IconButton>
+            <Link to={`/main/profile/${author.id}`}>
+              <Grid display="flex" alignItems="center">
+                <Avatar
+                  src={author?.photo}
+                  sx={{ ml: 1, height: 30, width: 30 }}
+                />
+                <Typography sx={{ ml: 1 }} variant="caption">
+                  {author?.name}
+                </Typography>
+              </Grid>
+            </Link>
+            <Link to={`/story/${id}`}>
               <OpenInNew fontSize="small" />
-            </IconButton>
-            {/* </Grid> */}
+            </Link>
           </Grid>
           <Grid container display="flex" justifyContent="center">
-            <img
-              src={imageUrl}
-              alt={text}
-              style={{
-                objectFit: "cover",
-                height: "100%",
-                width: "100%",
-              }}
-            />
+            <Link to={`/story/${id}`}>
+              <img
+                src={imageUrl}
+                alt={text}
+                style={{
+                  objectFit: "cover",
+                  height: "100%",
+                  width: "100%",
+                }}
+              />
+            </Link>
           </Grid>
         </Grid>
         <Grid
@@ -163,8 +158,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
           sx={{ width: "100%" }}
           container
         >
-          {/* <Grid item xs={9}> */}
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <IconButton onClick={this.handleLike}>
               {likers.includes(this.context.user.id) ? (
                 <FavoriteIcon fontSize="small" sx={{ color: "error.light" }} />
@@ -178,10 +172,19 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
               likers.length === 1 ? "person likes this." : "people like this."
             }`}</Typography>
           </Grid>
-          <Grid item xs={12} ml={0.2667}>
-            <Typography display="inline" variant="subtitle2">
-              {author?.name}
+          <Grid item xs={6} display='flex' justifyContent='flex-end' pr={2}>
+            <Typography variant={"caption"}>
+              <i>
+                {returnTimeDifference(new Date(createdAt), new Date())} ago
+              </i>
             </Typography>
+          </Grid>
+          <Grid item xs={12} ml={0.2667}>
+            <Link to={`/main/profile/${author.id}`}>
+              <Typography display="inline" variant="subtitle2">
+                {author?.name}
+              </Typography>
+            </Link>
             <Typography
               display="inline"
               variant="body2"
@@ -193,9 +196,11 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
           </Grid>
           {posts
             ? posts.length > 1 && (
-                <Typography variant="body2" ml={2} fontWeight={300}>
-                  <i>{`View all ${posts.length} comments.`}</i>
-                </Typography>
+                <Link to={`/story/${id}`}>
+                  <Typography variant="body2" ml={2} fontWeight={300}>
+                    <i>{`View all ${posts.length} comments.`}</i>
+                  </Typography>
+                </Link>
               )
             : null}
           {posts
@@ -214,9 +219,11 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                     ml={0.2667}
                   >
                     <Grid>
-                      <Typography display="inline" variant="subtitle2">
-                        {post.user?.name}
-                      </Typography>
+                      <Link to={`/main/profile/${post.user?.id}`}>
+                        <Typography display="inline" variant="subtitle2">
+                          {post.user?.name}
+                        </Typography>
+                      </Link>
                       <Typography
                         display="inline"
                         variant="body2"
@@ -258,16 +265,19 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                   disableUnderline: true,
                   sx: { fontWeight: 300 },
                   fullWidth: true,
-                  startAdornment: <SentimentSatisfied fontSize="small" />,
+                  startAdornment: <SentimentSatisfied fontSize="small" sx={{marginRight: 2, marginLeft: 1}}/>,
                   endAdornment: (
-                    <Button disabled={!Boolean(this.state.storyPostText)}>
+                    <Button
+                      disabled={!Boolean(this.state.storyPostText)}
+                      type="submit"
+                    >
                       POST
                     </Button>
                   ),
                 }}
                 variant="standard"
                 size="small"
-                placeholder="    add a comment"
+                placeholder=" add a comment"
                 value={storyPostText}
                 onChange={this.handleReplyText}
                 fullWidth
@@ -281,26 +291,3 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
 }
 
 export default StoryCard;
-
-
-// interface User{
-//   id: number,
-//   name: string
-// }
-
-// interface FooProps{}
-
-// interface FooState extends User {}
-
-// class Foo extends React.Component<FooProps, FooState>{
-  
-//   handleFetch = () => {
-//     //FETCH
-//     this.setState({id: json.id, name: json.name})
-//   }
-
-//   componentDidMount() {
-//     this.handleFetch()
-//   }
-  
-// }

@@ -1,4 +1,5 @@
-// import * as React from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import {
   // Route,
   Link,
@@ -18,6 +19,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { returnParams } from "../../_helpers/helpers";
 
 interface SignupProps {
   functions: any;
@@ -33,6 +35,20 @@ const Signup = (props: SignupProps) => {
     handleSignup,
     clearState,
   } = props.functions;
+
+  const {first, last, email, password} = props.authState
+  // const [firstState, setFirst] = useState('');
+  // const [lastState, setLast] = useState('');
+  // const [emailState, setEmail] = useState('');
+
+  // const handleLoad = ():void => {
+  //   const {first, last, email} = returnParams()
+  //   setFirst(first ?? '')
+  //   setLast(last ?? '')
+  //   setEmail(email ?? '')
+  // } 
+
+  // useEffect(handleLoad, [])
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,44 +75,54 @@ const Signup = (props: SignupProps) => {
                 name="firstName"
                 required
                 fullWidth
+                value={first}
                 onChange={handleFirst}
                 id="firstName"
                 label="First Name"
-                autoFocus
+                autoFocus={!first ? true : false}
+                InputProps={{required: true}}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 required
                 fullWidth
+                value={last}
                 onChange={handleLast}
                 id="lastName"
                 label="Last Name"
                 name="lastName"
                 autoComplete="family-name"
+                aria-required
+                InputProps={{required: true}}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
+                value={email}
                 onChange={handleEmail}
                 fullWidth
                 id="email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                InputProps={{required: true}}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
+                autoFocus={first && last && email ? true: false}
                 fullWidth
+                value={password}
                 onChange={handlePassword}
                 name="password"
                 label="Password"
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                InputProps={{required: true}}
               />
             </Grid>
             <Grid item xs={12}>

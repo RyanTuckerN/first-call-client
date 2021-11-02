@@ -32,7 +32,7 @@ import {
   Favorite,
 } from "@mui/icons-material";
 import BasicModal from "../../components/BasicModal";
-import StoryCard from "./StoryCard";
+import StoryCard from "../../Stories/StoryCard";
 import "./Profile.css";
 import StoryComponent from '../../Stories/Story'
 
