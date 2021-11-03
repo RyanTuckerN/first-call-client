@@ -1,4 +1,13 @@
-import { Container, Paper, Grid } from "@mui/material";
+import {
+  Container,
+  Paper,
+  Grid,
+  List,
+  ListItem,
+  ListSubheader,
+  IconButton,
+} from "@mui/material";
+import { Language, Groups } from "@mui/icons-material";
 import React from "react";
 import { Story } from "../../../types/API.types";
 import API_URL from "../../_helpers/environment";
@@ -31,32 +40,63 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
     }
   };
 
+  
+
   componentDidMount() {
     this.handleFetch();
   }
 
   render() {
     return (
-      <Container maxWidth={"lg"}>
-        <Paper elevation={7}>
+      <Container maxWidth={"lg"} >
+        <Paper elevation={7} >
           <Grid
             container
             sx={{
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              p: 0.4781,
             }}
           >
-            {this.state.stories
-              .sort(
-                (a, b) =>
-                  new Date(b.createdAt).getTime() -
-                  new Date(a.createdAt).getTime()
-              )
-              .map((story) => (
-                <StoryCard {...story} key={story.id} />
-              ))}
+            <List
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {/* <ListSubheader
+                sx={{
+                  mt: 0,
+                  py: 0.3333,
+                  position: "fixed",
+                  zIndex: 9999,
+                  top: 40,
+                  width: 200,
+                  display: "flex",
+                  justifyContent: "space-around",
+                  bgcolor: 'transparent'
+                }}
+              >
+                <IconButton title='Global Feed'>
+                  <Language />
+                </IconButton>
+                <IconButton title='Personal Feed'>
+                  <Groups />
+                </IconButton>
+              </ListSubheader> */}
+              {this.state.stories
+                .sort(
+                  (a, b) =>
+                    new Date(b.createdAt).getTime() -
+                    new Date(a.createdAt).getTime()
+                )
+                .map((story) => (
+                  <ListItem key={story.id} sx={{px: .5}} >
+                    <StoryCard {...story} />
+                  </ListItem>
+                ))}
+            </List>
           </Grid>
         </Paper>
       </Container>

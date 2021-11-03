@@ -65,3 +65,51 @@
     transform: translate(24px, 0);
   }
 }
+
+/* SWAL STYLING */
+.dark-mode-swal .swal2-popup {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09));
+  background-color: #121212;
+}
+
+.dark-mode-swal .swal2-icon.swal2-success {
+  background-color: #12121200 !important ;
+}
+
+.dark-mode-swal .swal2-success-circular-line-left{
+  background-color: #12121200 !important;
+}
+
+.dark-mode-swal .swal2-success-circular-line-right{
+  background-color: #12121200 !important;
+}
+
+.dark-mode-swal .swal2-success-ring{
+  background-color: #12121200 !important;
+}
+
+.dark-mode-swal .swal2-icon.swal2-success .swal2-success-fix {
+  background-color: #12121200 !important;
+}
+
+#swal2-title{
+  font-family: Oswald;
+}
+
+
+.dark-mode-swal #swal2-title{
+  color: #e4e4e4
+}
+
+.dark-mode-swal .swal2-html-container{
+  color: #ababab
+}
+
+.swal2-html-container{
+  font-family: Lato;
+}
+
+/* .dark-mode-swal .swal2-icon.swal2-success .swal2-success-fix{
+  background-image: linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09));
+  background-color: #121212;
+} */

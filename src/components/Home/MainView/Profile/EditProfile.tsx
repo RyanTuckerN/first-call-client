@@ -19,7 +19,7 @@ import {
   InputAdornment,
 } from "@mui/material";
 import { User } from "../../../../types/API.types";
-import Swal from "sweetalert2";
+
 import {
   instrumentOptions,
   paymentPlatforms,
@@ -80,8 +80,8 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
     this.setState({ role: e.target.value });
   handleLocation = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ location: e.target.value });
-  handleBio = (e: React.ChangeEvent<HTMLInputElement>): void =>
-    this.setState({ description: e.target.value });
+  // handleBio = (e: React.ChangeEvent<HTMLInputElement>): void =>
+  //   this.setState({ description: e.target.value });
   handlePlatform = (e: any): void =>
     this.setState({ platform: e.target.value });
   handleHandle = (e: React.ChangeEvent<HTMLInputElement>): void =>
@@ -104,13 +104,13 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
   handleSave = async (): Promise<void> => {
     if (!this.stateChanged) return;
     // const user: EditProfileState = {...this.state};
-    const { name, email, location, description, paymentPreference, role } =
+    const { name, email, location, paymentPreference, role } =
       this.state;
     const body = {
       name,
       email,
       location,
-      description,
+      // description,
       paymentPreference,
       role,
     };
@@ -222,7 +222,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             // label="Name"
           />
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Typography variant="h6">Bio</Typography>
           <Typography variant="subtitle2">
             Briefly describe yourself!
@@ -239,7 +239,7 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             value={this.state.description ?? ""}
             // label="Name"
           />
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Typography variant="h6">Payment Preferences</Typography>
           <Typography variant="caption">

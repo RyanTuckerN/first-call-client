@@ -84,10 +84,18 @@ class Respond extends Component<RespondProps, RespondState> {
                 title: "Gig Accepted!",
                 text: "Thanks! Consider signing up for FirstCall!",
                 icon: "success",
+                customClass: {
+                  container:
+                    this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+                },
               }
             : {
                 title: "Gig Declined",
                 text: "Maybe next time! Consider signing up for FirstCall!",
+                customClass: {
+                  container:
+                    this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+                },
               }
         );
       this.props.history.push(

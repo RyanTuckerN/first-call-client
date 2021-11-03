@@ -5,10 +5,12 @@ export interface User {
   email: string;
   name: string;
   role?: string;
-  description?: string;
+  // description?: string;
   location?: string;
   paymentPreference?: { [key: string]: string } | null;
-  specialties?: string[];
+  // specialties?: string[];
+  followers: number[],
+  following: number[],
   createdAt?: string;
   updatedAt?: string;
   emails?: boolean;

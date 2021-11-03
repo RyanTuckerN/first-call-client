@@ -11,6 +11,7 @@ import {
   IconButton,
   Popover,
   Container,
+  Divider,
   TextField,
 } from "@mui/material";
 import { Story, User } from "../../../../types/API.types";
@@ -22,6 +23,7 @@ import { UserCtx } from "../../../Context/MainContext";
 import { AppState } from "../../../../App";
 import {
   PersonAdd,
+  PersonRemove,
   Edit,
   Add,
   MailOutline,
@@ -34,7 +36,7 @@ import {
 import BasicModal from "../../components/BasicModal";
 import StoryCard from "../../Stories/StoryCard";
 import "./Profile.css";
-import StoryComponent from '../../Stories/Story'
+import StoryComponent from "../../Stories/Story";
 
 const gigImages = [
   "https://images.unsplash.com/photo-1600779547877-be592ef5aad3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
@@ -61,7 +63,7 @@ interface ProfileState {
   storyError: string;
   stories: Story[];
   storyModalOpen: boolean;
-  storyModalId: number
+  storyModalId: number;
 }
 
 class Profile extends Component<ProfileProps, ProfileState> {
@@ -78,7 +80,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
       storyError: "",
       stories: [],
       storyModalOpen: false,
-      storyModalId: 0
+      storyModalId: 0,
     };
   }
 
@@ -103,6 +105,25 @@ class Profile extends Component<ProfileProps, ProfileState> {
 
   handleClose = (): void => this.setState({ anchorEl: null });
 
+  handleFollow = async (id: number): Promise<boolean> => {
+    try {
+      const json = await fetchHandler({
+        url: `${API_URL}/user/${
+          !!this.context.user?.following?.includes(id) ? "un" : ""
+        }follow/${id}`,
+        method: "post",
+        auth: this.context.token ?? localStorage.getItem("token") ?? "",
+      });
+      const { success, message, followers, following } = json;
+      console.log(message, json);
+      this.setState({ user: { ...this.state.user!, followers } });
+      this.context.setAppState("user", { ...this.context.user, following });
+      return success;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
+  };
   componentDidMount() {
     this.fetchUser();
   }
@@ -136,8 +157,8 @@ class Profile extends Component<ProfileProps, ProfileState> {
   };
 
   setModalOpen = (b: boolean): void => this.setState({ modalOpen: b });
-  setStoryModalOpen = (b: boolean): void => this.setState({ storyModalOpen: b });
-
+  setStoryModalOpen = (b: boolean): void =>
+    this.setState({ storyModalOpen: b });
 
   handleStoryText = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ storyText: e.target.value, storyError: "" });
@@ -184,7 +205,9 @@ class Profile extends Component<ProfileProps, ProfileState> {
   componentDidUpdate(prevProps: ProfileProps, prevState: ProfileState) {
     prevProps.match.params.userId !== this.props.match.params.userId &&
       this.fetchUser();
-    prevState.storyModalOpen && !this.state.storyModalOpen && this.setState({storyModalId: 0})
+    prevState.storyModalOpen &&
+      !this.state.storyModalOpen &&
+      this.setState({ storyModalId: 0 });
   }
 
   render() {
@@ -238,26 +261,38 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 <IconButton
                   onClick={() => this.setModalOpen(true)}
                   sx={{ position: "relative", right: 45, bottom: 20 }}
+                  title='Add a Gig Story'
                 >
                   <Add />
                 </IconButton>
               ) : (
-                <Link to="#">
-                  <MailOutline
-                    sx={{ position: "relative", right: 36, bottom: 24 }}
-                  />
-                </Link>
+                // <Link to="#">
+                <MailOutline
+                  sx={{
+                    position: "relative",
+                    right: 36,
+                    bottom: 24,
+                    color: "#00000000",
+                  }}
+                />
+                // </Link>
               )}
               {this.context.user.id === user.id ? (
-                <Link to="/main/settings">
+                <Link to="/main/settings" title='Edit Profile'>
                   <Edit sx={{ position: "relative", left: 45, bottom: 20 }} />
                 </Link>
               ) : (
                 <>
                   <IconButton
                     sx={{ position: "relative", left: 45, bottom: 20 }}
+                    onClick={() => this.handleFollow(user.id)}
+                    title={this.context.user?.following?.includes(user.id) ? `Unfollow ${user.name.split(' ')[0]}` : `Follow ${user.name.split(' ')[0]}`}
                   >
-                    <PersonAdd />
+                    {this.context.user.following.includes(user.id) ? (
+                      <PersonRemove />
+                    ) : (
+                      <PersonAdd sx={{transform: 'scaleX(-1)'}} />
+                    )}
                   </IconButton>
                 </>
               )}
@@ -282,6 +317,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 </Link>
               ) : null}
               <Typography variant="h4">
+                {!!user.paymentPreference && <>&nbsp;&nbsp;&nbsp;&nbsp;</>}
                 {user.name}
                 {user.paymentPreference ? (
                   <>
@@ -318,10 +354,29 @@ class Profile extends Component<ProfileProps, ProfileState> {
                   </>
                 ) : null}
               </Typography>
-              <Typography sx={{ p: 0 }} variant="body1">
+              <Typography sx={{ p: 0 }} variant="body1" fontWeight={500}>
                 {user.role ? user.role : null}&nbsp;&nbsp;
                 {user.location && user.role ? <>&#183;</> : null}&nbsp;&nbsp;
                 {user.location ? user.location : null}
+              </Typography>
+              <Typography sx={{ p: 0.3333, fontSize: 16 }} variant="caption">
+                {!!user.stories.length && (
+                  <>
+                    <strong style={{ fontWeight: 900 }}>
+                      {user.stories.length}
+                    </strong>
+                    &nbsp; stories &nbsp;
+                  </>
+                )}
+                {!!user.stories.length && <>&#183;&nbsp;&nbsp;</>}
+                <strong style={{ fontWeight: 900 }}>
+                  {user.followers.length}
+                </strong>
+                &nbsp; followers &nbsp; &#183;&nbsp;&nbsp;
+                <strong style={{ fontWeight: 900 }}>
+                  {user.following.length}
+                </strong>
+                &nbsp; following
               </Typography>
               {/* <Grid sx={{ maxWidth: 200 }} textAlign="justify">
                 <Typography variant="caption">
@@ -332,8 +387,11 @@ class Profile extends Component<ProfileProps, ProfileState> {
             <Grid item xs={4}></Grid>
           </Grid>
         )}
-        <div style={{ height: 40, width: "100%" }} />
+        {/* <div style={{ height: 40, width: "100%" }} /> */}
 
+        <Grid container display="flex" justifyContent="center">
+          <Divider sx={{ width: 150, my: 3, alignSelf: "center" }} />
+        </Grid>
         <Container>
           <Grid
             container
@@ -415,12 +473,16 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 <Typography variant="overline" fontWeight={300}>
                   No stories to display!
                 </Typography>
-                {this.state.user?.id === this.context.user.id && <Typography variant="subtitle1" fontWeight={100}>
-                  <IconButton onClick={() => this.setModalOpen(true)}>
-                    <Add />
-                  </IconButton>
-                  <i>Add one?</i>{" "}
-                </Typography>}
+                {this.state.user?.id === this.context.user.id && (
+                  <Typography variant="subtitle1" fontWeight={100}>
+                    <IconButton onClick={() => this.setModalOpen(true)}
+                  title='Add a Gig Story'
+                  >
+                      <Add />
+                    </IconButton>
+                    <i>Add one?</i>{" "}
+                  </Typography>
+                )}
               </Grid>
             )}
           </Grid>
@@ -494,8 +556,12 @@ class Profile extends Component<ProfileProps, ProfileState> {
             </Paper>
           </Box>
         </BasicModal>
-        <BasicModal modalTitle='story-full-info' setOpen={this.setStoryModalOpen} open={this.state.storyModalOpen} >
-          <StoryComponent storyId={this.state.storyModalId}/>
+        <BasicModal
+          modalTitle="story-full-info"
+          setOpen={this.setStoryModalOpen}
+          open={this.state.storyModalOpen}
+        >
+          <StoryComponent storyId={this.state.storyModalId} />
         </BasicModal>
       </>
     );

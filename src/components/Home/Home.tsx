@@ -170,7 +170,7 @@ class Home extends Component<HomeProps, HomeState> {
     const routePaperSX = {
       padding: 2,
       marginBottom: 2,
-      minHeight: this.state.windowDimensions.height - this.appBarHeight - 30,
+      minHeight: this.state.windowDimensions.height - this.appBarHeight - 50,
       zIndex: 1,
     };
 

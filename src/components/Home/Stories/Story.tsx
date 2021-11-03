@@ -1,9 +1,3 @@
-import { styled } from "@mui/material/styles";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import {
   Button,
   Container,
@@ -13,25 +7,20 @@ import {
   ListSubheader,
   Paper,
   TextField,
+  Dialog,
+  Popover,
 } from "@mui/material";
-import Collapse from "@mui/material/Collapse";
 import Avatar from "@mui/material/Avatar";
 import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import {
   CancelOutlined,
-  ExitToApp,
   KeyboardReturn,
-  OpenInNew,
   SentimentSatisfied,
 } from "@mui/icons-material";
-import { red } from "@mui/material/colors";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { returnTime, returnTimeDifference } from "../../_helpers/helpers";
 import { Box } from "@mui/system";
 
@@ -42,6 +31,10 @@ import { Story } from "../../../types/API.types";
 import { UserCtx } from "../../Context/MainContext";
 import API_URL from "../../_helpers/environment";
 import { fetchHandler } from "../../_helpers/fetchHandler";
+import Picker from "emoji-picker-react";
+import "./Stories.css";
+// import DarkCss from "../../Theme/Dark"
+import './Dark.css'
 
 interface Params {
   storyId: string;
@@ -54,6 +47,8 @@ interface StoryComponentProps extends RouteComponentProps<Params> {
 interface StoryComponentState extends Story {
   storyPostText: string;
   showImage: boolean;
+  anchorEl: HTMLButtonElement | null;
+  photoDialogOpen: boolean;
 }
 
 class StoryComponent extends React.Component<
@@ -61,11 +56,25 @@ class StoryComponent extends React.Component<
   StoryComponentState
 > {
   static contextType = UserCtx;
+  messagesEndRef = React.createRef<HTMLDivElement>();
 
   constructor(props: StoryComponentProps, context: AppState) {
     super(props, context);
-    // this.state = { :  };
   }
+
+  scrollToBottom = (): void =>
+    this.messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+  handlePickerClose = () => this.setState({ anchorEl: null });
+  handlePicker = (event: React.MouseEvent<HTMLButtonElement>) =>
+    this.setState({ anchorEl: event.currentTarget });
+
+  handlePick = (e: any, emoji: any): void => {
+    this.setState({
+      storyPostText: `${this.state.storyPostText ?? "" + emoji.emoji}`,
+      anchorEl: null,
+    });
+  };
 
   fetchStory = async (): Promise<boolean> => {
     try {
@@ -120,8 +129,8 @@ class StoryComponent extends React.Component<
       success &&
         this.setState({
           posts: [
-            { ...post, user: { ...this.context.user } },
             ...(this.state.posts ?? []),
+            { ...post, user: { ...this.context.user } },
           ],
           storyPostText: "",
         });
@@ -157,14 +166,25 @@ class StoryComponent extends React.Component<
 
   componentDidMount() {
     this.fetchStory();
+    this.context.darkModeOn === "true" && require("./Dark.css");
   }
 
   componentDidUpdate(
     prevProps: StoryComponentProps,
     prevState: StoryComponentState
   ) {
+    this.context.darkModeOn === "true" && require("./Dark.css");
     prevState?.imageUrl !== this.state?.imageUrl &&
       this.setState({ showImage: true });
+    prevState?.posts === null &&
+      !!this.state.posts &&
+      this.setState({
+        posts: [
+          ...this.state.posts.sort((a, b) => b.voters.length - a.voters.length),
+        ],
+      });
+    prevState?.posts?.length < this.state?.posts?.length &&
+      this.scrollToBottom();
   }
 
   render() {
@@ -178,16 +198,20 @@ class StoryComponent extends React.Component<
       posts,
       storyPostText,
       showImage,
+      anchorEl,
     } = this.state;
 
     const d = new Date(createdAt);
+    const pickerOpen = !!anchorEl;
+    const menuId = pickerOpen ? "emoji-picker-for-story-comment" : undefined;
+
     return (
       <Container
         maxWidth={"xl"}
         sx={{ display: "flex", justifyContent: "center" }}
       >
         <Paper sx={{ width: "100%", minWidth: 320, mb: 0 }} elevation={4}>
-          <Grid container>
+          <Grid container border={1} borderColor="divider">
             <Grid
               container
               item
@@ -196,28 +220,62 @@ class StoryComponent extends React.Component<
               lg={8}
               display={showImage ? "flex" : "none"}
               justifyContent="center"
+              bgcolor={
+                this.context.darkModeOn === "true" ? "black" : "white"
+              }
             >
               <img
+                id="click-to-zoom"
                 src={imageUrl}
                 alt={text}
+                onClick={() => this.setState({ photoDialogOpen: true })}
                 style={{
                   objectFit: "cover",
-                  alignSelf: "flex-start",
-                  height: "100%",
+                  alignSelf: "center",
+                  height: "100",
                   width: "100%",
-                  minHeight: "75vh",
                   maxHeight: "75vh",
+                  // minHeight: "75vh",
+                  // maxHeight: "75vh",
                 }}
               />
+              <Dialog
+                open={this.state?.photoDialogOpen ?? false}
+                fullWidth
+                maxWidth="xl"
+                onClose={() => this.setState({ photoDialogOpen: false })}
+                sx={{ overflow: "scroll" }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row-reverse",
+                  }}
+                >
+                  <IconButton
+                    onClick={() => this.setState({ photoDialogOpen: false })}
+                  >
+                    <CancelOutlined />
+                  </IconButton>
+                </Box>
+                <img
+                  src={imageUrl}
+                  alt={text}
+                  onClick={() => this.setState({ photoDialogOpen: true })}
+                  style={{
+                    height: "100",
+                    width: "100%",
+                  }}
+                />
+              </Dialog>
             </Grid>
 
             <Grid
               display="block"
               sx={{
                 width: "100%",
-                maxHeight: "75vh",
-                height: "100%",
-
+                height: "75vh",
                 alignSelf: "flex-start",
                 position: "relative",
               }}
@@ -233,14 +291,17 @@ class StoryComponent extends React.Component<
                     bgcolor: "grey[200]",
                     height: "100%",
                     width: "100%",
-                    maxHeight: "75vh",
+                    maxHeight: "71vh",
                     overflowY: "scroll",
                     // overflowX: "hidden",
-                    // mb:7
+                    mb: 7,
                     pt: 0,
+                    p: 0,
                   }}
                 >
-                  <ListSubheader sx={{ mt: 0, p: 0, width: "100%" }}>
+                  <ListSubheader
+                    sx={{ mt: 0, p: 0, width: "100%", lineHeight: 0 }}
+                  >
                     <Grid item xs={12} display="flex" justifyContent="flex-end">
                       {!showImage && (
                         <IconButton
@@ -251,16 +312,16 @@ class StoryComponent extends React.Component<
                       )}
                     </Grid>
                     <Grid p={1} container display="flex">
-                      <Grid item xs={10} ml={0.2667}>
+                      <Grid item xs={12} ml={0.2667}>
                         <Link to={`/main/profile/${user.id}`}>
                           <Avatar
                             src={user?.photo}
                             sx={{ mx: 1, height: 70, width: 70, float: "left" }}
                           />
+                          <Typography display="inline" variant="subtitle2">
+                            {user?.name}
+                          </Typography>
                         </Link>
-                        <Typography display="inline" variant="subtitle2">
-                          {user?.name}
-                        </Typography>
                         <Typography
                           sx={{ ml: 0.443 }}
                           variant="subtitle2"
@@ -277,35 +338,37 @@ class StoryComponent extends React.Component<
                         >
                           <>{text}</>
                         </Typography>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <IconButton onClick={this.handleLike}>
-                          {likers.includes(this.context.user.id) ? (
-                            <FavoriteIcon
-                              fontSize="small"
-                              sx={{ color: "error.light" }}
-                            />
-                          ) : (
-                            <FavoriteBorderIcon fontSize="small" />
-                          )}
-                        </IconButton>
-                        <Typography sx={{ mb: 0.2667 }} variant="caption">{`${
-                          likers.length
-                        } ${
-                          likers.length === 1
-                            ? "person likes this."
-                            : "people like this."
-                        }`}</Typography>
+                        <Grid item xs={12}>
+                          <IconButton onClick={this.handleLike}>
+                            {likers.includes(this.context.user.id) ? (
+                              <FavoriteIcon
+                                fontSize="small"
+                                sx={{ color: "error.light" }}
+                              />
+                            ) : (
+                              <FavoriteBorderIcon fontSize="small" />
+                            )}
+                          </IconButton>
+                          <Typography sx={{ mb: 0.2667 }} variant="caption">
+                            {!!likers.length &&
+                              `${likers.length} ${
+                                likers.length === 1
+                                  ? "person likes this."
+                                  : likers.length
+                                  ? "people like this."
+                                  : null
+                              }`}
+                          </Typography>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </ListSubheader>
                   <Box sx={{ mb: 4 }} />
                   {posts.length ? (
                     posts
-                      .sort((a, b) => b.voters.length - a.voters.length)
+                      // .sort((a, b) => b.voters.length - a.voters.length)
                       .slice(
                         0,
-                        //match with showImage or not
                         showImage
                           ? posts.length > 8
                             ? 8
@@ -319,9 +382,6 @@ class StoryComponent extends React.Component<
                             container
                             xs={12}
                             sx={{ width: "97%" }}
-                            // display="flex"
-                            // alignItems="center"
-                            // justifyContent="space-between"
                             ml={0.2667}
                           >
                             <Grid>
@@ -336,15 +396,19 @@ class StoryComponent extends React.Component<
                                   display="inline"
                                   variant="subtitle2"
                                 >
-                                  {post.user?.name}
-                                  <Typography
+                                  <Link to={`/main/profile/${post.author}`}>
+                                    {post.user?.name}
+                                  </Link>
+                                  <Box
+                                    component="span"
                                     display="inline"
-                                    variant="body2"
+                                    fontFamily="lato"
+                                    fontSize={14}
                                     fontWeight={300}
                                     sx={{ ml: 1 }}
                                   >
                                     {post.text}
-                                  </Typography>
+                                  </Box>
                                 </Typography>
                               </Grid>
                             </Grid>
@@ -419,20 +483,17 @@ class StoryComponent extends React.Component<
                     : null}
                 </List>
               </Grid>
+              <Box sx={{ mb: 4 }} ref={this.messagesEndRef} />
+
               <Grid
-                // display="flex"
-                // alignItems="center"
-                // container
                 item
                 xs={12}
-                // alignSelf="flex-end"
                 sx={{
-                  position: "sticky",
+                  position: "absolute",
                   bottom: 0,
                   bgcolor:
                     this.context.darkModeOn === "true" ? "black" : "white",
                   width: "100%",
-                  // height: 45,
                   overflowY: "hidden",
                 }}
               >
@@ -446,10 +507,19 @@ class StoryComponent extends React.Component<
                     InputProps={{
                       disableUnderline: true,
                       sx: { fontWeight: 300, height: 20 },
-                      // fullWidth: true,
-                      startAdornment: <SentimentSatisfied fontSize="small" />,
+                      startAdornment: (
+                        <IconButton onClick={this.handlePicker}>
+                          <SentimentSatisfied
+                            fontSize="small"
+                            sx={{ marginRight: 0, marginLeft: 0 }}
+                          />
+                        </IconButton>
+                      ),
                       endAdornment: (
-                        <Button disabled={!Boolean(this.state.storyPostText)}>
+                        <Button
+                          type="submit"
+                          disabled={!Boolean(this.state.storyPostText)}
+                        >
                           POST
                         </Button>
                       ),
@@ -457,7 +527,7 @@ class StoryComponent extends React.Component<
                     variant="standard"
                     size="small"
                     placeholder="    add a comment"
-                    value={storyPostText}
+                    value={storyPostText ?? ""}
                     onChange={this.handleReplyText}
                     fullWidth
                   />
@@ -466,6 +536,16 @@ class StoryComponent extends React.Component<
             </Grid>
           </Grid>
         </Paper>
+        <Popover
+          onClose={this.handlePickerClose}
+          open={pickerOpen}
+          id={menuId}
+          anchorEl={anchorEl}
+          transformOrigin={{ vertical: "bottom", horizontal: "center" }}
+          className={this.context.darkModeOn === 'true' ? 'emoji-dark' : '' }
+        >
+          <Picker onEmojiClick={this.handlePick}  />
+        </Popover>
       </Container>
     );
   }

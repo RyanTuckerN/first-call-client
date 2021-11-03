@@ -45,17 +45,17 @@ class App extends Component<AppProps, AppState> {
     this.state = {
       user: null,
       token: "",
-      auth: null,
-      darkModeOn: localStorage.getItem("darkModeOn") ?? "true",
+      auth: null, //
+      darkModeOn: localStorage.getItem("darkModeOn") ?? "true", //
       snackBarOpen: false,
       snackMessage: "",
       snackSeverity: "info",
-      handleSnackBar: this.handleSnackBar,
-      authenticate: this.authenticate,
-      logout: this.logout,
+      handleSnackBar: this.handleSnackBar, //
+      authenticate: this.authenticate, //
+      logout: this.logout, //
       toggleDark: this.toggleDark,
       setToken: this.setToken,
-      setAppState: this.setAppState,
+      setAppState: this.setAppState, //
     };
   }
 
@@ -133,9 +133,6 @@ class App extends Component<AppProps, AppState> {
             theme={this.state.darkModeOn === "true" ? dark : light}
           >
             <UserCtx.Provider value={this.state}>
-              {/* <div>
-                <Switch onChange={this.toggleDark} checked={this.state.darkModeOn}/>
-              </div> */}
               {/* replace null with loading screen if load times increase! */}
               {typeof this.state.auth === "boolean" ? (
                 <Home {...this.state} />

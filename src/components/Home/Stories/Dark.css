@@ -1,0 +1,44 @@
+.emoji-dark aside.emoji-picker-react {
+  background-image:linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09));
+  background-color: #121212;
+  border-color: #fbfbfb6e;
+
+}
+
+.emoji-dark .emoji-picker-react .emoji-categories button {
+  opacity: .75;
+  filter: invert(1);
+}
+
+.emoji-dark .emoji-picker-react .emoji-group:before{
+  background-image:linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09));
+  background-color: #121212;
+}
+
+.emoji-dark .emoji-picker-react input.emoji-search{
+    font: inherit;
+    letter-spacing: inherit;
+    color: currentColor;
+    border: solid 1px #ffffff27;
+    box-sizing: content-box;
+    background: none;
+    height: 1.4375em;
+    -webkit-tap-highlight-color: transparent;
+    display: block;
+    min-width: 0;
+    width: 80%;
+    -webkit-animation-name: mui-auto-fill-cancel;
+    animation-name: mui-auto-fill-cancel;
+    -webkit-animation-duration: 10ms;
+    animation-duration: 10ms;
+}
+
+
+.emoji-dark .emoji-picker-react ul.skin-tones-list {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  position: absolute;
+  top: 17px;
+  right: 45px;
+}

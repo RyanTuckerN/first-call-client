@@ -182,7 +182,7 @@ class CallStackEdit extends React.Component<
               >
                 <Grid item xs={12} sm={6} md={12}>
                   <TextField
-                    label="Role"
+                    label="Intrument"
                     value={properizeNoTrim(this.state.roleVal)}
                     onChange={this.handleRole}
                     fullWidth

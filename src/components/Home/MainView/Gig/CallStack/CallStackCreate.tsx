@@ -190,7 +190,7 @@ class CallStackCreate extends Component<
             >
               <Grid item xs={6}>
                 <TextField
-                  label="Role"
+                  label="Instrument"
                   value={properizeNoTrim(this.state.roleVal)}
                   onChange={this.handleRole}
                   fullWidth

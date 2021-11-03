@@ -100,6 +100,10 @@ class Settings extends Component<SettingsProps, SettingsState> {
     Swal.fire({
       icon: "question",
       text: "FirstCall will never send promotional materials, but email is a great way to stay informed about any changes to your gigs. Opt out anytime!",
+      customClass: {
+        container:
+          this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+      },
     });
   // handleEmail = ():void =>
 
