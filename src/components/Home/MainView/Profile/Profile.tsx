@@ -1,6 +1,4 @@
-// import * as React from 'react';
 import { Component } from "react";
-// import EditProfile from './EditProfile';
 import {
   Avatar,
   Grid,
@@ -28,25 +26,13 @@ import {
   Add,
   MailOutline,
   AttachMoney,
-  Settings,
   Image,
   ChatBubble,
   Favorite,
 } from "@mui/icons-material";
 import BasicModal from "../../components/BasicModal";
-import StoryCard from "../../Stories/StoryCard";
 import "./Profile.css";
 import StoryComponent from "../../Stories/Story";
-
-const gigImages = [
-  "https://images.unsplash.com/photo-1600779547877-be592ef5aad3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
-  "https://images.unsplash.com/photo-1597158520886-43e23f1acb1e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
-  "https://images.unsplash.com/flagged/photo-1561203490-e032d2d1f4f9?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=687&q=80",
-  "https://images.unsplash.com/photo-1546367791-e7447b431084?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
-  "https://images.unsplash.com/photo-1617174512292-aadc4a85151c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1170&q=80",
-  "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1176&q=80",
-  "https://images.unsplash.com/photo-1582068019586-fd236dbad5e3?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjB8fGdpZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
-];
 
 interface RouteParams {
   userId: string;

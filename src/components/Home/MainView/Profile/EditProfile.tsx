@@ -4,9 +4,6 @@ import { UserCtx } from "../../../Context/MainContext";
 import { properize, properizeNoTrim } from "../../../_helpers/helpers";
 import { Prompt } from "react-router-dom";
 import {
-  FormControl,
-  FormHelperText,
-  Input,
   Button,
   Grid,
   TextField,
@@ -191,7 +188,6 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
                 placeholder="Guitar"
                 id="instrument"
                 name="instrument"
-                // label="Name"
               />
             )}
           />

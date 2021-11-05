@@ -1,38 +1,33 @@
-// import * as React from "react";
 import { Component } from "react";
 import {
   Route,
-  // Link,
   Switch,
   RouteComponentProps,
   withRouter,
 } from "react-router-dom";
-import { HomeFunctions } from "../Home.types";
 import { Notification, User } from "../../../types/API.types";
 import GigIndex from "./Gig/GigsIndex";
 import Profile from "./Profile/Profile";
 import Settings from "./Settings/Settings";
-import { DetailedGig, RouteOption } from "./Gig/Gig.types";
-import { Alert, Snackbar } from "@mui/material";
+import { RouteOption } from "./Gig/Gig.types";
 import Inbox from "./Inbox/Inbox"
-import { Zoom, Fade } from "react-reveal";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import API_URL from "../../_helpers/environment";
 
 export interface MainViewProps extends RouteComponentProps {
-  // functions: HomeFunctions;
   notifications: Notification[];
   user: User;
   auth: boolean | null;
-  // detailsHash: { [key: string]: DetailedGig } | null;
   token: string;
   fetchNotifications: () => Promise<void>;
   setHomeState: (key: string, value: any) => void;
   setAppState: (key: string, value: any) => void;
+
 }
 
 interface MainViewState {
   setMainState: (key: string, value: any) => void;
+  followInfo: any[];
   dashboardRoute: RouteOption;
 }
 
@@ -41,6 +36,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
     super(props);
     this.state = {
       setMainState: this.setMainState,
+      followInfo: [],
       dashboardRoute: "notifications",
     };
   }
@@ -51,6 +47,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
       auth: this.context.token ?? localStorage.getItem('token') ?? ''
     })
     console.log('USERS --> ', users)
+    success && this.setState({followInfo: users})
     return success}catch(error){
       console.log(error)
       return false
@@ -74,7 +71,6 @@ class MainView extends Component<MainViewProps, MainViewState> {
   render() {
     return this.props.auth ? (
       <>
-        {/* Hello from MainView.tsx */}
         <Switch>
           <Route path={`${this.props.match.path}/profile/:userId`}>
               <Profile />

@@ -2,31 +2,24 @@ import * as React from "react";
 import { Component } from "react";
 import {
   withRouter,
-  Link,
   Route,
-  Switch,
   RouteComponentProps,
 } from "react-router-dom";
-import { CallStack, Gig, Notification, User } from "../../../../types/API.types";
+import { Gig, Notification, User } from "../../../../types/API.types";
 import API_URL from "../../../_helpers/environment";
 import { UserCtx } from "../../../Context/MainContext";
 import { fetchHandler } from "../../../_helpers/fetchHandler";
-import GigInvite from "./components/GigInvite";
 import GigPage from "./components/GigView/GigPage";
-import GigDashBoard from "./components/GigDashboard";
 import { DetailedGig, NotificationsHash, RouteOption } from "./Gig.types";
-import { WindowDimensions } from "../../Home.types";
 import GigWelcome from "./components/GigWelcome";
-import { Button } from "@mui/material";
-import { BottomNav } from "./components/Navigation";
 import { AppState } from "../../../../App";
 import GigCreate from "./GigCreate";
-import GigInfo from "./components/GigView/GigInfo";
 
 interface GigIndexProps extends RouteComponentProps {
   notifications: Notification[]; //Home State
   user: User | null; //App State
   dashboardRoute: RouteOption; //Main state
+  followInfo: any[];
   // detailsHash: { [key: string]: DetailedGig } | null;
   setAppState: (key: string, value: any) => void;
   setHomeState: (key: string, value: any) => void;

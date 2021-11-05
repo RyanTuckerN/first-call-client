@@ -1,18 +1,34 @@
 import { Grid, Button, Typography, Paper, Container } from "@mui/material";
 import { Box } from "@mui/system";
 import * as React from "react";
+import { RouteComponentProps, withRouter } from "react-router";
 import { Component } from "react";
 import { AppState } from "../../../../../App";
-import { Gig, User } from "../../../../../types/API.types";
+import { Gig, User, Post, CallStack } from "../../../../../types/API.types";
 import { UserCtx } from "../../../../Context/MainContext";
 import API_URL from "../../../../_helpers/environment";
 import { fetchHandler } from "../../../../_helpers/fetchHandler";
 import { DetailedGig } from "../Gig.types";
+import Swal from 'sweetalert2'
 
-interface GigInviteProps extends Gig {
+interface GigInviteProps extends RouteComponentProps {
   user: User;
   details: DetailedGig;
   setGig: (gig: Gig) => void;
+  id: number;
+  ownerId: number;
+  description: string;
+  gigLocation: string;
+  date: string; //date format
+  payment: number;
+  token: string; //uuid
+  openCalls: string[];
+  photo?: string;
+  optionalInfo?: { [key: string]: string };
+  createdAt?: string;
+  updatedAt?: string;
+  posts?: Post[];
+  callStack?: CallStack
 }
 
 interface GigInviteState {
@@ -46,7 +62,19 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
     console.log(json);
     // json.success && alert(json.message)
     json.success && this.props.setGig(json.gig);
-    json.success && this.context.handleSnackBar("Gig accepted!", "success");
+    json.success &&
+        Swal.fire(
+            {
+                title: "Gig Accepted!",
+                // text: "Thanks! Consider signing up for FirstCall!",
+                icon: "success",
+                customClass: {
+                  container:
+                    this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+                },
+              }
+            
+        );
     this.context.authenticate(
       this.context.token ?? localStorage.getItem("token") ?? ""
     );
@@ -61,10 +89,19 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
     console.log(json);
     // json.success && alert(json.message)
     json.success && this.props.setGig(json.gig);
-    this.context.handleSnackBar("Gig declined", "info");
+    json.success && Swal.fire({
+      title: "Gig Declined",
+      text: "Maybe next time!",
+      customClass: {
+        container:
+          this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+      },
+    })
     this.context.authenticate(
       this.context.token ?? localStorage.getItem("token") ?? ""
     );
+    json.success && this.props.history.push("/")
+
   };
 
   componentDidMount() {
@@ -72,14 +109,7 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
   }
 
   render() {
-    // const buttonGridProps = {
-    //   display: "flex",
-    //   flexDirection: "row",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    //   minHeight: 400,
-    // };
-
+    
     return (
       <Container
         sx={{ display: "flex", justifyContent: "center", marginTop: 10 }}
@@ -136,4 +166,4 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
   }
 }
 
-export default GigInvite;
+export default withRouter(GigInvite);

@@ -35,6 +35,7 @@ interface GigPageProps extends RouteComponentProps<RouteParams> {
   offers: Gig[];
   gigs: Gig[];
   user: User;
+  followInfo: any[];
   addGig: (gig: Gig) => void;
 }
 
@@ -218,6 +219,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                     ) : this.state.gig.callStack && this.state.editMode ? (
                       <CallStackEdit
                         {...this.state.gig.callStack}
+                        followInfo={this.props.followInfo}
                         setGig={this.setGig}
                         gig={this.state.gig}
                       />

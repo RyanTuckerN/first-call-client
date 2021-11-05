@@ -66,7 +66,6 @@ interface HomeState {
   open: boolean;
   windowDimensions: WindowDimensions;
   notifications: Notification[];
-  // detailsHash: { [key: string | number]: DetailedGig } | null;
 }
 
 class Home extends Component<HomeProps, HomeState> {
@@ -77,7 +76,6 @@ class Home extends Component<HomeProps, HomeState> {
   constructor(props: HomeProps, context: AppState) {
     super(props, context);
     this.state = {
-      // detailsHash: null,
       anchorEl: null,
       isMenuOpen: false,
       isNotificationsOpen: false,
@@ -146,7 +144,6 @@ class Home extends Component<HomeProps, HomeState> {
       isMenuOpen: false,
       isNotificationsOpen: false,
     });
-    // console.log(this.state.anchorEl?.id);
   };
 
   handleLogout = () => {
@@ -172,7 +169,6 @@ class Home extends Component<HomeProps, HomeState> {
         <Box sx={{ flexGrow: 1 }}>
           <AppBar
             position="fixed"
-            // color="secondary"
             sx={{ backgroundColor: "paper" }}
             style={{ height: this.appBarHeight }}
           >
@@ -208,7 +204,6 @@ class Home extends Component<HomeProps, HomeState> {
                     </Link>
                     <IconButton
                       size="medium"
-                      // edge="end"
                       id="account-menu-button"
                       aria-label="account of current user"
                       aria-controls={this.menuId}
@@ -233,7 +228,6 @@ class Home extends Component<HomeProps, HomeState> {
                     <Link to="/main/add">
                       <IconButton
                         size="small"
-                        // edge="end"
                         color="inherit"
                         id="add-new-gig"
                         aria-label="create a new gig"
@@ -302,7 +296,6 @@ class Home extends Component<HomeProps, HomeState> {
                     zIndex: (theme) => theme.zIndex.drawer + 1,
                   }}
                   open={this.state.open}
-                  // onClick={this.handleClose}
                 >
                   <CircularProgress color="inherit" />
                 </Backdrop>
@@ -316,7 +309,6 @@ class Home extends Component<HomeProps, HomeState> {
           <CssBaseline />
 
           <Container maxWidth="lg">
-            {/* box is just to show layout, should be removed */}
 
             <Switch>
               <Route

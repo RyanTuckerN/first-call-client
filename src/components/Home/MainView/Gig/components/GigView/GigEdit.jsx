@@ -15,7 +15,6 @@ import {
   AddAPhoto,
   // Circle
 } from "@mui/icons-material";
-// import DateTimePicker from "react-datetime-picker";
 import { withRouter } from "react-router-dom";
 import { properizeNoTrim, addHours } from "../../../../../_helpers/helpers";
 import "../../Gig.css";
@@ -24,9 +23,6 @@ import API_URL from "../../../../../_helpers/environment";
 import { UserCtx } from "../../../../../Context/MainContext";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateAdapter from "@mui/lab/AdapterMoment";
-// import moment from 'moment'
-// import DateAdapter from '@mui/lab/AdapterDayjs';
-// import DateAdapter from '@mui/lab/AdapterLuxon';
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { Fade } from "react-reveal";
 class GigEdit extends Component {
@@ -35,7 +31,6 @@ class GigEdit extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      // ...this.props,
       length: this.props.length ?? 1,
       gigId: this.props.id,
       date: this.props.date ?? addHours(new Date(), 24*7),
@@ -43,14 +38,11 @@ class GigEdit extends Component {
       payment: this.props.payment ?? 0,
       gigLocation: this.props.gigLocation ?? "",
       photo: this.props.photo ?? "",
-      // dateVal: new Date(this.props.date ?? new Date()),
       optionalKey: "",
       optionalVal: "",
       optionalInfo: this.props.optionalInfo ?? {},
       gigCreate: this.props.gigCreate ?? false,
       success: false,
-      // toggleEditMode: this.props.toggleEditMode
-      // testDate: moment(new Date())
     };
   }
 

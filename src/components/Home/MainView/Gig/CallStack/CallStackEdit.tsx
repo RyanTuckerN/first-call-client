@@ -6,9 +6,12 @@ import {
   IconButton,
   Button,
   List,
+  Autocomplete,
   ListItemText,
+  InputAdornment,
   Box,
 } from "@mui/material";
+import { instrumentOptions } from "../../../../../types/AutocompleteOptions";
 import { Backspace } from "@mui/icons-material";
 import { CallStack, Gig } from "../../../../../types/API.types";
 import { properize, properizeNoTrim } from "../../../../_helpers/helpers";
@@ -19,13 +22,13 @@ import { AppState } from "../../../../../App";
 
 interface CallStackEditProps extends CallStack {
   setGig: (gig: Gig) => void;
+  followInfo: any[];
   gig: Gig;
 }
 
 interface CallStackEditState extends CallStack {
-  roleVal: string;
-  emailVal: string;
-  message: string;
+  roleVal: string | null;
+  emailVal: string | null;
 }
 
 class CallStackEdit extends React.Component<
@@ -40,24 +43,24 @@ class CallStackEdit extends React.Component<
       ...this.props,
       roleVal: "",
       emailVal: "",
-      message: "",
     };
   }
 
   handleRole = (e: any) =>
     this.setState({ roleVal: e.target.value.toLowerCase() });
 
-  handleEmail = (e: any) =>
-    this.setState({ emailVal: e.target.value.toLowerCase() });
+  handleEmail = (e: any) => this.setState({ emailVal: e.target.value });
 
   handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<boolean> => {
     e.preventDefault();
     try {
+      console.log(this.state);
       const { roleVal, emailVal } = this.state;
       if (!emailVal || !roleVal) {
-        this.setState({ message: "Please fill out both fields" });
+        // this.setState({ message: "Please fill out both fields" });
+        this.context.handleSnackBar("Please fill out both fields!", "warning");
         return false;
       }
       if (this.state.stackTable[roleVal]) {
@@ -68,6 +71,11 @@ class CallStackEdit extends React.Component<
         });
         // console.log(callStack, success);
         success && this.setState({ stackTable: callStack });
+        success &&
+          this.props.setGig({
+            ...this.props.gig,
+            callStack: { ...this.state, stackTable: callStack },
+          });
         return success;
       } else {
         const { success, roleStack, message } = await fetchHandler({
@@ -84,7 +92,10 @@ class CallStackEdit extends React.Component<
         success &&
           this.props.setGig({
             ...this.props.gig,
-            callStack: { ...this.state },
+            callStack: {
+              ...this.state,
+              stackTable: { ...this.state.stackTable, [roleVal]: roleStack },
+            },
           });
         return success;
       }
@@ -181,26 +192,69 @@ class CallStackEdit extends React.Component<
                 sx={{ marginTop: 1 }}
               >
                 <Grid item xs={12} sm={6} md={12}>
-                  <TextField
-                    label="Intrument"
-                    value={properizeNoTrim(this.state.roleVal)}
-                    onChange={this.handleRole}
-                    fullWidth
+                  <Autocomplete
+                    id="instrument-input"
+                    freeSolo
+                    onChange={(e: any, newVal: string | null) => {
+                      this.setState({ roleVal: newVal?.toLowerCase() ?? "" });
+                    }}
+                    value={
+                      this.state.roleVal ? properize(this.state.roleVal) : ""
+                    }
+                    options={[
+                      ...new Set([
+                        ...instrumentOptions.map((i) => i),
+                        ...roles.map((r) => properize(r)),
+                      ]),
+                    ].sort()}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        onChange={this.handleRole}
+                        fullWidth
+                        title="Instrument"
+                        label="Instrument"
+                        variant="outlined"
+                        id="instrument"
+                        name="instrument"
+                      />
+                    )}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} md={12}>
-                  <TextField
-                    label="Email"
-                    value={this.state.emailVal}
-                    onChange={this.handleEmail}
-                    fullWidth
-                    InputProps={{
-                      endAdornment: <Button type="submit">Add</Button>,
+                <Grid item xs={12} sm={6} md={12} pt={1}>
+                  <Autocomplete
+                    id="email-input"
+                    freeSolo
+                    value={this.state.emailVal?.toLowerCase() ?? ""}
+                    options={this.props.followInfo
+                      .filter(
+                        (user) =>
+                          user.role?.toLowerCase() ===
+                          this.state.roleVal?.toLowerCase()
+                      )
+                      .map((user) => user.email)}
+                    onChange={(e: any, option: any) => {
+                      this.setState({ emailVal: option?.toLowerCase() ?? ''  });
                     }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Email"
+                        fullWidth
+                        onChange={this.handleEmail}
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <>
+                              <InputAdornment position="end">
+                                <Button type="submit">Add</Button>
+                              </InputAdornment>
+                            </>
+                          ),
+                        }}
+                      />
+                    )}
                   />
-                  <Typography variant="caption" color="red">
-                    {/* {this.state.message} */}
-                  </Typography>
                 </Grid>
               </Grid>
               {/* </FormControl> */}
