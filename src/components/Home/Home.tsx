@@ -184,7 +184,18 @@ class Home extends Component<HomeProps, HomeState> {
               {auth ? (
                 <>
                   <Box sx={{ display: { xs: "flex" } }}>
-                    <Link to={`${this.props.match.path}main/`}>
+                  <Link to="/main/add" title='Create a Gig'>
+                      <IconButton
+                        size="small"
+                        color="inherit"
+                        id="add-new-gig"
+                        aria-label="create a new gig"
+                        style={{ position: "relative", top: 3 }}
+                      >
+                        <Add />
+                      </IconButton>
+                    </Link>
+                    <Link to={`${this.props.match.path}main/`} title='Gig Dashboard'>
                       <IconButton
                         size="medium"
                         id="dashboard-button"
@@ -193,7 +204,7 @@ class Home extends Component<HomeProps, HomeState> {
                         <Dashboard />
                       </IconButton>
                     </Link>
-                    <Link to={`${this.props.match.path}feed/`}>
+                    <Link to={`${this.props.match.path}feed/`} title='Gig Story Feed'>
                       <IconButton
                         size="medium"
                         id="feed-button"
@@ -210,6 +221,7 @@ class Home extends Component<HomeProps, HomeState> {
                       aria-haspopup="true"
                       onClick={this.handleProfileMenuOpen}
                       color="inherit"
+                      title='Account'
                     >
                       {this.context.user.photo ? (
                         <Avatar
@@ -225,17 +237,7 @@ class Home extends Component<HomeProps, HomeState> {
                       )}
                     </IconButton>
 
-                    <Link to="/main/add">
-                      <IconButton
-                        size="small"
-                        color="inherit"
-                        id="add-new-gig"
-                        aria-label="create a new gig"
-                        style={{ position: "relative", top: 3 }}
-                      >
-                        <Add />
-                      </IconButton>
-                    </Link>
+                    
                   </Box>
                   <Menu
                     anchorEl={this.state.anchorEl}
@@ -244,14 +246,14 @@ class Home extends Component<HomeProps, HomeState> {
                     open={this.state.isMenuOpen}
                     onClose={this.handleMenuClose}
                   >
-                    <Link to={`${this.props.match.path}main/`}>
+                    {/* <Link to={`${this.props.match.path}main/`}>
                       <MenuItem onClick={this.handleMenuClose}>
                         <ListItemIcon>
                           <HomeIcon />
                         </ListItemIcon>
                         Home
                       </MenuItem>
-                    </Link>
+                    </Link> */}
                     <Link
                       to={`${this.props.match.path}main/profile/${
                         this.props.user?.id ?? this.context.user.id

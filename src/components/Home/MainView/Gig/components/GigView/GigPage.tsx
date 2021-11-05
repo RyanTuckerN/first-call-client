@@ -63,21 +63,10 @@ class GigPage extends Component<GigPageProps, GigPageState> {
   }
   setAuthorizedView = (b: boolean) => this.setState({ authorizedView: b });
 
-  // gigInfoProps = {
-  //   user: this.props.user,
-  //   authorizedView: this.state.authorizedView,
-  //   editMode: this.state.editMode,
-  //   gigId: this.state.gigId,
-  //   setAuth: this.setAuthorizedView
-  // }
 
   setGig = (gig: Gig): void => this.setState({ gig });
 
-  // addCallStackToGig = (callStack: CallStack): void => {
-  //   const gig = { ...this.state.gig!, callStack };
-  //   this.setState({ gig });
-  // };
-
+  
   fetchPosts = async (): Promise<boolean> => {
     const json = await fetchHandler({
       url: `${API_URL}/board/${this.state.gigId}`,

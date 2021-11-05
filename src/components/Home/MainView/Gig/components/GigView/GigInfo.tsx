@@ -32,7 +32,7 @@ import {
   // Circle
 } from "@mui/icons-material";
 import { DetailedGig } from "../../Gig.types";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 import { stringAvatar } from "../../../Settings/Header";
 import { Gig, User } from "../../../../../../types/API.types";
 import * as _ from "lodash";
@@ -77,12 +77,19 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
   const roles = Object.keys(callStack?.stackTable ?? {});
   const filled = roles.filter((r) => callStack?.stackTable[r].filled);
   const typoSx = { paddingTop: 1.5 };
+  console.log(bandMembers);
+  const ids = roles.reduce((obj: any, role: any): any => {
+    obj[role] = bandMembers.filter(
+      (member) => member.email === callStack?.stackTable[role].confirmed.email
+    )[0].id;
+    return obj;
+  }, {});
 
   return (
     <Grid
       container
       display="flex"
-      flexDirection='row'
+      flexDirection="row"
       justifyContent="center"
       spacing={1}
       sx={{ padding: 1 }}
@@ -149,36 +156,36 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
               {`${d.toLocaleDateString()} at ${returnTime(d)}`}
             </Typography>
           </ListItem>
-      {!_.isEmpty(entries) && (
-        <>
-        {/* <Grid item xs={12} sm={6} md={3}> */}
-          {/* <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}> */}
-            {entries.length ? (
+          {!_.isEmpty(entries) && (
+            <>
+              {/* <Grid item xs={12} sm={6} md={3}> */}
+              {/* <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}> */}
+              {entries.length ? (
+                <Grid item xs={12}>
+                  {/* <Divider sx={{ paddingY: 1 }} /> */}
+                  <Typography {...typoSx} variant="h6">
+                    Additional Info
+                  </Typography>
+                </Grid>
+              ) : null}
               <Grid item xs={12}>
-                {/* <Divider sx={{ paddingY: 1 }} /> */}
-                <Typography {...typoSx} variant="h6">
-                  Additional Info
-                </Typography>
+                {entries.map((entry, i) => {
+                  return (
+                    <ListItem key={i}>
+                      {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
+                      <Typography sx={{}}>
+                        <strong>{properize(entry[0])}: &nbsp; </strong>
+                        {`${entry[1]}`}
+                      </Typography>
+                    </ListItem>
+                  );
+                })}
               </Grid>
-            ) : null}
-            <Grid item xs={12}>
-              {entries.map((entry, i) => {
-                return (
-                  <ListItem key={i}>
-                    {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
-                    <Typography sx={{}}>
-                      <strong>{properize(entry[0])}: &nbsp; </strong>
-                      {`${entry[1]}`}
-                    </Typography>
-                  </ListItem>
-                );
-              })}
-            </Grid>
-          {/* </Paper> */}
-        {/* </Grid> */}
-        </>
-      )}
-      <div id='gig-padding' style={{height:20}}/>
+              {/* </Paper> */}
+              {/* </Grid> */}
+            </>
+          )}
+          <div id="gig-padding" style={{ height: 20 }} />
         </Paper>
       </Grid>
       {/* <Divider sx={{ paddingY: 1 }} /> */}
@@ -231,14 +238,27 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
             {roles.length && !authorizedView ? (
               roles.map((r, i) => (
                 <ListItem key={i}>
-                  <Typography>
-                    <strong>{properize(r)}:</strong> &nbsp;{" "}
-                    {bandMembers.filter((p) => p.role === r)[0]?.name ??
-                      callStack?.stackTable[r]?.confirmed?.name ??
-                      callStack?.stackTable[r]?.confirmed?.email ?? (
-                        <i>Not filled</i>
-                      )}
-                  </Typography>
+                  {ids[r] ? (
+                    <Link to={`/main/profile/${ids[r]}`}>
+                      <Typography>
+                        <strong>{properize(r)}:</strong> &nbsp;{" "}
+                        {bandMembers.filter((p) => p.role === r)[0]?.name ??
+                          callStack?.stackTable[r]?.confirmed?.name ??
+                          callStack?.stackTable[r]?.confirmed?.email ?? (
+                            <i>Not filled</i>
+                          )}
+                      </Typography>
+                    </Link>
+                  ) : (
+                    <Typography>
+                      <strong>{properize(r)}:</strong> &nbsp;{" "}
+                      {bandMembers.filter((p) => p.role === r)[0]?.name ??
+                        callStack?.stackTable[r]?.confirmed?.name ??
+                        callStack?.stackTable[r]?.confirmed?.email ?? (
+                          <i>Not filled</i>
+                        )}
+                    </Typography>
+                  )}
                 </ListItem>
               ))
             ) : roles.length && authorizedView ? (
@@ -266,12 +286,28 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                     )}
                     <Grid container>
                       <Grid item xs={12}>
-                        <Typography>
-                          <strong>{properize(r)}:</strong> &nbsp;{" "}
-                          {bandMembers.filter((p) => p.role === r)[0]?.name ??
-                            role?.confirmed?.name ??
-                            role?.confirmed?.email ?? <i>Not filled</i>}
-                        </Typography>
+                        {ids[r] ? (
+                          <Link to={`/main/profile/${ids[r]}`}>
+                            <Typography>
+                              <strong>{properize(r)}:</strong> &nbsp;{" "}
+                              {bandMembers.filter((p) => p.role === r)[0]
+                                ?.name ??
+                                callStack?.stackTable[r]?.confirmed?.name ??
+                                callStack?.stackTable[r]?.confirmed?.email ?? (
+                                  <i>Not filled</i>
+                                )}
+                            </Typography>
+                          </Link>
+                        ) : (
+                          <Typography>
+                            <strong>{properize(r)}:</strong> &nbsp;{" "}
+                            {bandMembers.filter((p) => p.role === r)[0]?.name ??
+                              callStack?.stackTable[r]?.confirmed?.name ??
+                              callStack?.stackTable[r]?.confirmed?.email ?? (
+                                <i>Not filled</i>
+                              )}
+                          </Typography>
+                        )}
                       </Grid>
                       <div>
                         {!role.filled ? (
@@ -342,8 +378,7 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
             )}
             {/* </List> */}
           </Grid>
-      <div id='gig-padding' style={{height:20}}/>
-
+          <div id="gig-padding" style={{ height: 20 }} />
         </Paper>
       </Grid>
     </Grid>

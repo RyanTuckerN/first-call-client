@@ -33,13 +33,9 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
         <Grid
           style={{
             width: "100%",
-            // display: "flex",
-            // justifyContent: "center",
-            // marginBottom: 10,
             height: 600
           }}
         >
-          {/* <Avatar src={photo} sx={{height:150, width:150, position: 'absolute', top: 135, zIndex:2, background: 'rgba(0, 0, 0, 0.8)'}} /> */}
           <img
             src={photo}
             alt={gig.description}
@@ -47,12 +43,10 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
           />
         </Grid>
       )}
-
       <Grid
         item
         container
         xs={12}
-        // spacing={2}
         letterSpacing={1.5}
         id="gig-header"
         sx={{  padding: 1.5, paddingBottom: 2 }}
@@ -80,8 +74,6 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
           </Grid>
         )}
       </Grid>
-
-      {/* ASK JAKE! */}
     </>
   );
 };

@@ -95,6 +95,7 @@ class Auth extends Component<AuthProps, AuthState> {
         this.context.handleSnackBar(json.message, "error");
         return;
       }
+      console.log(json)
       setToken(json.sessionToken);
       setAppState("user", json.user);
       this.props.history.push("/main");

@@ -20,7 +20,7 @@ const BlockMapper: React.FunctionComponent<BlockMapperProps> = ({
   const handleClick = () => setGigState("messageCode", parseInt(code));
 
   return (
-    <Grid item xs={6} sm={3} display="flex" justifyContent="space-around">
+    <Grid item xs={6} sm={4} display="flex" justifyContent="space-around">
       {/* <CardActionArea sx={{padding:1}} > */}
       <Button
         variant="text"

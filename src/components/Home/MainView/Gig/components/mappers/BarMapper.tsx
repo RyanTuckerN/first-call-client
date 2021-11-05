@@ -19,7 +19,7 @@ const BarMapper: React.FunctionComponent<BarMapperProps> = ({
 
   return (
     <>
-      <Grid item xs={3} sm={3} display="flex" justifyContent="space-around">
+      <Grid item xs={4} display="flex" justifyContent="space-around">
         <CardActionArea onClick={handleClick}>
           <Paper
             sx={{
