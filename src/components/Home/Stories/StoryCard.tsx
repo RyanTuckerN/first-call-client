@@ -23,7 +23,6 @@ import { Box } from "@mui/system";
 import { returnTimeDifference } from "../../_helpers/helpers";
 import Picker from "emoji-picker-react";
 import "./emojiPicker.css";
-const DarkCss = React.lazy(() => import("../../Theme/Dark"));
 
 interface StoryCardProps extends Story {
   // handleLike: (id: number) => Promise<boolean>;

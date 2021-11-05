@@ -15,13 +15,18 @@ import IconButton, { IconButtonProps } from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import {
   CancelOutlined,
+  Delete,
   KeyboardReturn,
   SentimentSatisfied,
 } from "@mui/icons-material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import { returnTime, returnTimeDifference } from "../../_helpers/helpers";
+import {
+  returnTime,
+  returnTimeDifference,
+  smallImage,
+} from "../../_helpers/helpers";
 import { Box } from "@mui/system";
 
 import React, { Component } from "react";
@@ -33,8 +38,7 @@ import API_URL from "../../_helpers/environment";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import Picker from "emoji-picker-react";
 import "./Stories.css";
-// import DarkCss from "../../Theme/Dark"
-import './Dark.css'
+import "./Dark.css";
 
 interface Params {
   storyId: string;
@@ -220,9 +224,7 @@ class StoryComponent extends React.Component<
               lg={8}
               display={showImage ? "flex" : "none"}
               justifyContent="center"
-              bgcolor={
-                this.context.darkModeOn === "true" ? "black" : "white"
-              }
+              bgcolor={this.context.darkModeOn === "true" ? "black" : "white"}
             >
               <img
                 id="click-to-zoom"
@@ -315,7 +317,7 @@ class StoryComponent extends React.Component<
                       <Grid item xs={12} ml={0.2667}>
                         <Link to={`/main/profile/${user.id}`}>
                           <Avatar
-                            src={user?.photo}
+                            src={smallImage(user?.photo)}
                             sx={{ mx: 1, height: 70, width: 70, float: "left" }}
                           />
                           <Typography display="inline" variant="subtitle2">
@@ -359,6 +361,14 @@ class StoryComponent extends React.Component<
                                   : null
                               }`}
                           </Typography>
+                          {this.context.user.id === user.id && (
+                            <IconButton
+                              sx={{ float: "right" }}
+                              onClick={() => alert("add a delete!")}
+                            >
+                              <Delete fontSize="small" />
+                            </IconButton>
+                          )}
                         </Grid>
                       </Grid>
                     </Grid>
@@ -389,7 +399,7 @@ class StoryComponent extends React.Component<
                                 <Link to={`/main/profile/${post.author}`}>
                                   <Avatar
                                     sx={{ height: 27, width: 27, mx: 1 }}
-                                    src={post.user?.photo}
+                                    src={smallImage(post.user?.photo ?? "", 30)}
                                   />
                                 </Link>
                                 <Typography
@@ -542,9 +552,9 @@ class StoryComponent extends React.Component<
           id={menuId}
           anchorEl={anchorEl}
           transformOrigin={{ vertical: "bottom", horizontal: "center" }}
-          className={this.context.darkModeOn === 'true' ? 'emoji-dark' : '' }
+          className={this.context.darkModeOn === "true" ? "emoji-dark" : ""}
         >
-          <Picker onEmojiClick={this.handlePick}  />
+          <Picker onEmojiClick={this.handlePick} />
         </Popover>
       </Container>
     );

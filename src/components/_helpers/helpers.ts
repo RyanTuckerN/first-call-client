@@ -7,7 +7,11 @@ export const properize = (s: string): string =>
   s && s[0].toUpperCase() + s.slice(1).trim();
 export const properizeNoTrim = (s: string): string =>
   s && s[0].toUpperCase() + s.slice(1);
-export const properizeName = (name: string) => name.split(' ').map(n=>properize(n)).join(' ')
+export const properizeName = (name: string) =>
+  name
+    .split(" ")
+    .map((n) => properize(n))
+    .join(" ");
 
 /**
  *
@@ -52,7 +56,7 @@ export const formControl = {
     emailAddress.split("").includes("."),
   validatePasswordsMatch: (p1: string, p2: string): boolean => p1 === p2,
   validatePassword: (p1: string): boolean => p1.length >= 8,
-  validateName: (name: string): boolean => name.split(' ').length > 1
+  validateName: (name: string): boolean => name.split(" ").length > 1,
 };
 
 export const returnTimeDifference = (d1: Date, d2: Date): string => {
@@ -76,4 +80,16 @@ export const returnParams = () => {
       a[key] = val;
       return a;
     }, {});
+};
+
+
+export const smallImage = (url: string, height: number = 80): string => {
+  if (
+    url.substring(0, 49) !== "https://res.cloudinary.com/dpd08wa9g/image/upload"
+  ) {
+    return url;
+  }
+  const arr = url.split("/");
+  arr.splice(6, 0, `c_thumb,g_auto,h_${height}`);
+  return arr.join("/");
 };

@@ -61,12 +61,12 @@ class GigDashBoard extends React.Component<
               ...(notificationsHash["301"] ?? []),
             ]}
           />
-          <BlockMapper
+          {/* <BlockMapper
             {...this.props}
             code={"400"}
             color="#ba68c8"
             notifications={notificationsHash["400"] ?? []}
-          />
+          /> */}
         </Grid>
       </>
     ) : (
@@ -103,12 +103,12 @@ class GigDashBoard extends React.Component<
               ...(notificationsHash["301"] ?? []),
             ]}
           />
-          <BarMapper
+          {/* <BarMapper
             {...this.props}
             code={"400"}
             color="#ba68c8"
             notifications={notificationsHash["400"] ?? []}
-          />
+          /> */}
         </Grid>
       </>
     );

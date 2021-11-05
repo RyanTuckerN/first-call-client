@@ -57,7 +57,7 @@ class Auth extends Component<AuthProps, AuthState> {
       const json: UserResponse = await fetchHandler({
         url: `${API_URL}/user/login`,
         method: "post",
-        body: { email, password },
+        body: { email: email.toLowerCase().trim(), password },
       });
       if (!json.user || !json.sessionToken) {
         this.context.handleSnackBar(json.message, "error");
@@ -85,7 +85,7 @@ class Auth extends Component<AuthProps, AuthState> {
         url: `${API_URL}/user/signup`,
         method: "post",
         body: {
-          email,
+          email: email.toLowerCase().trim(),
           password,
           name: `${properize(first)} ${properize(last)}`,
         },
@@ -107,7 +107,7 @@ class Auth extends Component<AuthProps, AuthState> {
   componentDidMount() {
     const context = this.context;
     console.log(context);
-    this.setState({...this.state, ...returnParams()})
+    this.setState({ ...this.state, ...returnParams() });
   }
 
   render() {

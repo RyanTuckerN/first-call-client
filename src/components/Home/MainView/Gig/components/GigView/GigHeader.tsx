@@ -73,12 +73,7 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
             justifyContent={"flex-end"}
             alignItems="flex-start"
           >
-            {editMode && (
-              //save updates to gig
-              <IconButton>
-                <Save />
-              </IconButton>
-            )}
+            
             <IconButton onClick={toggleEditMode}>
               {editMode ? <HighlightOff /> : <Edit />}
             </IconButton>

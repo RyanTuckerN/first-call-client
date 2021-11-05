@@ -16,6 +16,8 @@ import { DetailedGig, RouteOption } from "./Gig/Gig.types";
 import { Alert, Snackbar } from "@mui/material";
 import Inbox from "./Inbox/Inbox"
 import { Zoom, Fade } from "react-reveal";
+import { fetchHandler } from "../../_helpers/fetchHandler";
+import API_URL from "../../_helpers/environment";
 
 export interface MainViewProps extends RouteComponentProps {
   // functions: HomeFunctions;
@@ -43,6 +45,18 @@ class MainView extends Component<MainViewProps, MainViewState> {
     };
   }
 
+  fetchFollowsInfo = async(): Promise<boolean> => {
+    try{const {success, users, message} = await fetchHandler({
+      url:`${API_URL}/user/follows`,
+      auth: this.context.token ?? localStorage.getItem('token') ?? ''
+    })
+    console.log('USERS --> ', users)
+    return success}catch(error){
+      console.log(error)
+      return false
+    }
+  }
+
   setMainState = (key: string, value: any): void => {
     const stateObj: any = {};
     stateObj[key] = value;
@@ -52,6 +66,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
   componentDidMount() {
     const { fetchNotifications } = this.props;
     fetchNotifications();
+    this.fetchFollowsInfo()
   }
 
 

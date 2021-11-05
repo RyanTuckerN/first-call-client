@@ -29,6 +29,7 @@ import { UserCtx } from "../../Context/MainContext";
 import { Transition } from "react-transition-group";
 import { Zoom, Fade } from "react-reveal";
 import { AppState } from "../../../App";
+import Logo from "../../assets/Logo";
 
 const duration = 300;
 
@@ -66,21 +67,9 @@ class Welcome extends React.Component {
                 flexDirection="column"
                 alignItems="center"
               >
-                <div style={{ height: 160 }} />{" "}
-                <Typography variant="h1" fontWeight={500} fontSize={70}>
-                  <Box component="span" sx={{ color: "" }}>
-                    F
-                  </Box>
-                  irst
-                  <Box
-                    component="span"
-                    sx={{ color: "secondary.light" }}
-                    fontWeight={900}
-                  >
-                    C
-                  </Box>
-                  all
-                </Typography>
+                <div style={{ height: 120 }} />{" "}
+                {/* <div style={{height: 10}}> */}
+                  <Logo  height={160} />
                 <Grid item xs={10}>
                   <Zoom duration={300} delay={1500}>
                     <Typography

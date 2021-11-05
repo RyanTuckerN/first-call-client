@@ -18,7 +18,6 @@ import AppBar from "@mui/material/AppBar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { Avatar, ListItemIcon } from "@mui/material";
@@ -29,9 +28,8 @@ import {
   Logout,
   Add,
   Dashboard,
-  DynamicFeed
+  DynamicFeed,
 } from "@mui/icons-material";
-import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import AccountCircle from "@mui/icons-material/AccountCircle";
@@ -43,11 +41,14 @@ import { fetchHandler } from "../_helpers/fetchHandler";
 import API_URL from "../_helpers/environment";
 import { WindowDimensions } from "./Home.types";
 import { Paper } from "@mui/material";
-import { DetailedGig } from "./MainView/Gig/Gig.types";
 import { AppState } from "../../App";
-import BasicModal from "./components/BasicModal";
 import Story from "./Stories/Story";
 import StoryFeed from "./Stories/StoryFeed";
+import Logo from "../assets/Logo";
+
+
+
+
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
@@ -105,14 +106,6 @@ class Home extends Component<HomeProps, HomeState> {
         notifications: json.notifications,
       });
   };
-
-  // fetchOffers: async (): Promise<any> => {
-  //   const json = await fetchHandler({
-  //     url: `${API_URL}/user/offers`,
-  //     auth: localStorage.getItem("token") ?? "",
-  //   });
-  //   this.setState({})
-  // },
 
   handleResize = (): void =>
     this.setState({
@@ -180,17 +173,18 @@ class Home extends Component<HomeProps, HomeState> {
           <AppBar
             position="fixed"
             // color="secondary"
-            sx={{ backgroundColor: "black" }}
+            sx={{ backgroundColor: "paper" }}
             style={{ height: this.appBarHeight }}
           >
             <Toolbar>
-              <Typography
-                variant="h6"
+              <Box
                 component="div"
-                sx={{ flexGrow: 1, zIndex: 9999 }}
+                sx={{ flexGrow: 1, zIndex: 9999, position:'relative', top: 8 }}
               >
-                <Link to="/welcome">FirstCall</Link>
-              </Typography>
+                <Link to="/welcome">
+                  <Logo height={23} />
+                </Link>
+              </Box>
               {auth ? (
                 <>
                   <Box sx={{ display: { xs: "flex" } }}>
@@ -321,7 +315,7 @@ class Home extends Component<HomeProps, HomeState> {
         <>
           <CssBaseline />
 
-          <Container maxWidth="lg" >
+          <Container maxWidth="lg">
             {/* box is just to show layout, should be removed */}
 
             <Switch>
@@ -365,10 +359,10 @@ class Home extends Component<HomeProps, HomeState> {
             <Welcome />
           </Route>
           <Route path="/story/:storyId">
-              <Story />
+            <Story />
           </Route>
           <Route path="/feed">
-              <StoryFeed />
+            <StoryFeed />
           </Route>
         </>
       </>

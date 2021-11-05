@@ -107,11 +107,12 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
         notifications: this.props.notifications,
       });
     }
-    if (prevState.notificationsHash !== this.state.notificationsHash) {
-      this.fetchOffers();
-      this.fetchDetails();
-    }
-    if (prevProps.user !== this.props.user && this.props.user) {
+    //MIGHT NEED TO PUT THESE BACK IN!!
+    // if (prevState.notificationsHash !== this.state.notificationsHash) {
+      // this.fetchOffers();
+      // this.fetchDetails();
+    // }
+    if (!prevProps.user && this.props.user) {
       this.setState({
         user: this.props.user,
         gigs: this.props.user.gigs ?? [],
