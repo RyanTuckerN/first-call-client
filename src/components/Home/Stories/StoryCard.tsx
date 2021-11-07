@@ -25,6 +25,7 @@ import Picker from "emoji-picker-react";
 import "./emojiPicker.css";
 
 interface StoryCardProps extends Story {
+  dashboard?: boolean;
   // handleLike: (id: number) => Promise<boolean>;
   // author: { name: string; photo: string };
 }
@@ -54,7 +55,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
 
   handlePick = (e: any, emoji: any): void => {
     this.setState({
-      storyPostText: `${this.state.storyPostText + emoji.emoji}`,
+      storyPostText: this.state.storyPostText + emoji.emoji,
       anchorEl: null,
     });
   };
@@ -126,10 +127,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
     }
   };
 
-  componentDidUpdate(
-    prevProps: StoryCardProps,
-    prevState: StoryCardState
-  ) {
+  componentDidUpdate(prevProps: StoryCardProps, prevState: StoryCardState) {
     this.context.darkModeOn === "true" && require("./Dark.css");
     prevState?.posts === null &&
       !!this.state.posts &&
@@ -140,10 +138,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
       });
   }
 
-  componentDidMount(){
-    this.context.darkModeOn === "true" && require("./Dark.css");
-
-  }
+  componentDidMount() {}
 
   render() {
     const {
@@ -165,7 +160,20 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
     return (
       <Grid container border={1} borderColor="divider">
         <Paper
-          sx={{ width: "100%", maxWidth: 720, minWidth: 250, p: 1, pb: 2 }}
+          sx={
+            this.props.dashboard
+              ? {
+                  width: "100%",
+                  p: 0.5,
+                  maxHeight: 200,
+                  backgroundImage: `url(${imageUrl})`,
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "100%",
+                  backgroundBlendMode: 'soft-light'
+                }
+              : { width: "100%", maxWidth: 720, minWidth: 250, p: 1, pb: 2 }
+          }
           elevation={0}
         >
           <Grid container>
@@ -200,6 +208,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                     objectFit: "cover",
                     height: "100%",
                     width: "100%",
+                    display: this.props.dashboard ? "none" : "",
                   }}
                 />
               </Link>
@@ -372,16 +381,22 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
             open={pickerOpen}
             id={menuId}
             anchorEl={anchorEl}
-            // anchorOrigin={{
-            //   vertical: "bottom",
-            //   horizontal: "center",
-            // }}
+            className={this.context.darkModeOn === "true" ? "emoji-dark" : ""}
             transformOrigin={{ vertical: "bottom", horizontal: "center" }}
           >
-            <Picker onEmojiClick={this.handlePick} />
-            {/* <React.Suspense fallback={() => null}>
-              {this.context.darkModeOn === "true" && <DarkCss />}
-            </React.Suspense> */}
+            <Picker
+              onEmojiClick={this.handlePick}
+              preload={false}
+              groupVisibility={{
+                flags: false,
+                animals_nature: false,
+                food_drink: false,
+                travel_places: false,
+                activities: false,
+                objects: false,
+                symbols: false,
+              }}
+            />
           </Popover>
         </Paper>
       </Grid>

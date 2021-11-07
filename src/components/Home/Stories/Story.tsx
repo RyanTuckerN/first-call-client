@@ -39,13 +39,15 @@ import { fetchHandler } from "../../_helpers/fetchHandler";
 import Picker from "emoji-picker-react";
 import "./Stories.css";
 import "./Dark.css";
+import Swal from "sweetalert2";
 
-interface Params {
-  storyId: string;
-}
+// interface Params {
+//   storyId: string;
+// }
 
-interface StoryComponentProps extends RouteComponentProps<Params> {
-  storyId?: number;
+interface StoryComponentProps extends RouteComponentProps {
+  storyId: number;
+  story: Story;
 }
 
 interface StoryComponentState extends Story {
@@ -64,6 +66,13 @@ class StoryComponent extends React.Component<
 
   constructor(props: StoryComponentProps, context: AppState) {
     super(props, context);
+    this.state = {
+      ...this.props.story,
+      storyPostText: "",
+      showImage: true,
+      photoDialogOpen: false,
+      anchorEl: null,
+    };
   }
 
   scrollToBottom = (): void =>
@@ -75,27 +84,54 @@ class StoryComponent extends React.Component<
 
   handlePick = (e: any, emoji: any): void => {
     this.setState({
-      storyPostText: `${this.state.storyPostText ?? "" + emoji.emoji}`,
+      storyPostText: this.state.storyPostText + emoji.emoji,
       anchorEl: null,
     });
   };
 
-  fetchStory = async (): Promise<boolean> => {
+  handleDelete = async (storyId: number): Promise<boolean> => {
     try {
-      const { story, success, message } = await fetchHandler({
-        url: `${API_URL}/story/${
-          this.props.match.params.storyId ?? this.props.storyId
-        }`,
+      const { result, success, message } = await fetchHandler({
+        url: `${API_URL}/story/${storyId}`,
+        method: "delete",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      // alert(message);
-      success && this.setState({ ...story });
+      console.log(result);
+      success &&
+        Swal.fire({
+          title: "Story Deleted",
+          icon: "success",
+          customClass: {
+            container:
+              this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+          },
+        });
+      success &&
+        this.props.history.push(
+          `/main/profile/${this.context.user.id ?? this.state.userId}`
+        );
       return success;
     } catch (error) {
-      alert(error);
+      console.log(error);
       return false;
     }
   };
+  // fetchStory = async (): Promise<boolean> => {
+  //   try {
+  //     const { story, success, message } = await fetchHandler({
+  //       url: `${API_URL}/story/${
+  //         this.props.match.params.storyId ?? this.props.storyId
+  //       }`,
+  //       auth: this.context.token ?? localStorage.getItem("token") ?? "",
+  //     });
+  //     // alert(message);
+  //     success && this.setState({ ...story });
+  //     return success;
+  //   } catch (error) {
+  //     alert(error);
+  //     return false;
+  //   }
+  // };
 
   handleLike = async (): Promise<boolean> => {
     try {
@@ -169,8 +205,7 @@ class StoryComponent extends React.Component<
   togglePhoto = (): void => this.setState({ showImage: !this.state.showImage });
 
   componentDidMount() {
-    this.fetchStory();
-    this.context.darkModeOn === "true" && require("./Dark.css");
+    // this.fetchStory();
   }
 
   componentDidUpdate(
@@ -189,6 +224,7 @@ class StoryComponent extends React.Component<
       });
     prevState?.posts?.length < this.state?.posts?.length &&
       this.scrollToBottom();
+    prevState?.storyPostText === null && this.setState({ storyPostText: "" });
   }
 
   render() {
@@ -203,6 +239,7 @@ class StoryComponent extends React.Component<
       storyPostText,
       showImage,
       anchorEl,
+      id,
     } = this.state;
 
     const d = new Date(createdAt);
@@ -317,7 +354,8 @@ class StoryComponent extends React.Component<
                       <Grid item xs={12} ml={0.2667}>
                         <Link to={`/main/profile/${user.id}`}>
                           <Avatar
-                            src={smallImage(user?.photo)}
+                            src={smallImage(user?.photo ?? "")}
+                            alt={user.name}
                             sx={{ mx: 1, height: 70, width: 70, float: "left" }}
                           />
                           <Typography display="inline" variant="subtitle2">
@@ -364,7 +402,7 @@ class StoryComponent extends React.Component<
                           {this.context.user.id === user.id && (
                             <IconButton
                               sx={{ float: "right" }}
-                              onClick={() => alert("add a delete!")}
+                              onClick={() => this.handleDelete(id)}
                             >
                               <Delete fontSize="small" />
                             </IconButton>
@@ -536,8 +574,8 @@ class StoryComponent extends React.Component<
                     }}
                     variant="standard"
                     size="small"
-                    placeholder="    add a comment"
-                    value={storyPostText ?? ""}
+                    placeholder=" add a comment"
+                    value={storyPostText}
                     onChange={this.handleReplyText}
                     fullWidth
                   />
@@ -554,7 +592,19 @@ class StoryComponent extends React.Component<
           transformOrigin={{ vertical: "bottom", horizontal: "center" }}
           className={this.context.darkModeOn === "true" ? "emoji-dark" : ""}
         >
-          <Picker onEmojiClick={this.handlePick} />
+          <Picker
+            onEmojiClick={this.handlePick}
+            preload={false}
+            groupVisibility={{
+              flags: false,
+              animals_nature: false,
+              food_drink: false,
+              travel_places: false,
+              activities: false,
+              objects: false,
+              symbols: false,
+            }}
+          />
         </Popover>
       </Container>
     );

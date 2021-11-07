@@ -16,11 +16,10 @@ import { AppState } from "../../../../App";
 import GigCreate from "./GigCreate";
 
 interface GigIndexProps extends RouteComponentProps {
-  notifications: Notification[]; //Home State
   user: User | null; //App State
+  notifications: Notification[]; //Home State
   dashboardRoute: RouteOption; //Main state
   followInfo: any[];
-  // detailsHash: { [key: string]: DetailedGig } | null;
   setAppState: (key: string, value: any) => void;
   setHomeState: (key: string, value: any) => void;
   setMainState: (key: string, value: any) => void;

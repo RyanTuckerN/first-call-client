@@ -14,7 +14,9 @@ import API_URL from "../../_helpers/environment";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import StoryCard from "./StoryCard";
 
-interface StoryFeedProps {}
+interface StoryFeedProps {
+  dashboard?: boolean;
+}
 
 interface StoryFeedState {
   stories: Story[];
@@ -40,23 +42,38 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
     }
   };
 
-  
-
   componentDidMount() {
     this.handleFetch();
   }
 
   render() {
     return (
-      <Container maxWidth={"lg"} >
-        <Paper elevation={7} >
+      <Container
+        maxWidth={"lg"}
+        sx={
+          this.props.dashboard
+            ? {
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                maxHeight: "100%",
+                overflowY: "scroll",
+              }
+            : {}
+        }
+      >
+        <Paper elevation={1}>
           <Grid
             container
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
+            sx={
+              !this.props.dashboard
+                ? {
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }
+                : {}
+            }
           >
             <List
               sx={{
@@ -92,8 +109,8 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
                     new Date(a.createdAt).getTime()
                 )
                 .map((story) => (
-                  <ListItem key={story.id} sx={{px: .5}} >
-                    <StoryCard {...story} />
+                  <ListItem key={story.id} sx={{ px: 0.5 }}>
+                    <StoryCard {...story} dashboard={this.props.dashboard} />
                   </ListItem>
                 ))}
             </List>

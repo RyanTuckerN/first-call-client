@@ -80,8 +80,9 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
   console.log(bandMembers);
   const ids = roles.reduce((obj: any, role: any): any => {
     obj[role] = bandMembers.filter(
-      (member) => member.email === callStack?.stackTable[role].confirmed.email
-    )[0].id;
+      (member) =>
+        member?.email === callStack?.stackTable?.[role]?.confirmed?.email
+    )[0]?.id;
     return obj;
   }, {});
 
@@ -94,12 +95,6 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
       spacing={1}
       sx={{ padding: 1 }}
     >
-      {/* <List> */}
-      {/* {gig.photo && (
-        <Grid item xs={12} sm={5} md={3}>
-          <Avatar variant="square" src={gig.photo} sx={{height: '100%', width:'100%'}} />
-        </Grid>
-      )} */}
       <Grid item xs={12} sm={7} md={4}>
         <Paper elevation={10} sx={{ paddingLeft: 2, minHeight: "100%" }}>
           <Typography {...typoSx} variant="h6">
@@ -119,7 +114,6 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                 )}
               </ListItemAvatar>
             </Link>
-            {/* <ListItemText  primary={bandLeader.name} /> */}
             {authorizedView ? (
               <Typography variant="subtitle1">
                 You are the bandleader
@@ -158,11 +152,8 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
           </ListItem>
           {!_.isEmpty(entries) && (
             <>
-              {/* <Grid item xs={12} sm={6} md={3}> */}
-              {/* <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}> */}
               {entries.length ? (
                 <Grid item xs={12}>
-                  {/* <Divider sx={{ paddingY: 1 }} /> */}
                   <Typography {...typoSx} variant="h6">
                     Additional Info
                   </Typography>
@@ -172,7 +163,6 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                 {entries.map((entry, i) => {
                   return (
                     <ListItem key={i}>
-                      {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
                       <Typography sx={{}}>
                         <strong>{properize(entry[0])}: &nbsp; </strong>
                         {`${entry[1]}`}
@@ -181,14 +171,11 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                   );
                 })}
               </Grid>
-              {/* </Paper> */}
-              {/* </Grid> */}
             </>
           )}
           <div id="gig-padding" style={{ height: 20 }} />
         </Paper>
       </Grid>
-      {/* <Divider sx={{ paddingY: 1 }} /> */}
       <Grid
         container
         item
@@ -197,8 +184,6 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
         md={4}
         display="flex"
         flexDirection="column"
-        // justifyContent="space-between"
-        // {...typoSx}
       >
         <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}>
           <Grid item xs={12} container>
@@ -342,7 +327,6 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                                 {role.calls?.length
                                   ? role.calls?.map((call: any, i: number) => (
                                       <Typography
-                                        // display="inline"
                                         sx={{ marginLeft: 3 }}
                                         variant="body2"
                                         key={i}
@@ -362,11 +346,9 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
               })
             ) : (
               <ListItem>
-                {/* <ListItemIcon> */}
                 <IconButton onClick={toggleEditMode}>
                   <AddBoxOutlined />
                 </IconButton>
-                {/* </ListItemIcon> */}
                 <Typography
                   display="inline"
                   sx={{ marginLeft: 1 }}
@@ -376,7 +358,6 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
                 </Typography>
               </ListItem>
             )}
-            {/* </List> */}
           </Grid>
           <div id="gig-padding" style={{ height: 20 }} />
         </Paper>
@@ -386,11 +367,3 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
 };
 
 export default GigInfo;
-
-/**
- *   {/* //*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */
-//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
-//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
-//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
-//CHANGE THIS IN THE SERVER TO ADD NAME AND EMAIL AS AN OBJECT
-//REQUIRE USER TO GIVE NAME WHEN ACCEPTING THE OFFER */}

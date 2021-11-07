@@ -14,6 +14,8 @@ import { fetchHandler } from "../../_helpers/fetchHandler";
 import { properize, returnParams } from "../../_helpers/helpers";
 import { UserCtx } from "../../Context/MainContext";
 import { AppState } from "../../../App";
+import { Container, Grid, Paper } from "@mui/material";
+import { light } from "../../Theme/Theme";
 
 interface AuthProps extends RouteComponentProps {
   setToken: (token: string) => void;
@@ -95,7 +97,7 @@ class Auth extends Component<AuthProps, AuthState> {
         this.context.handleSnackBar(json.message, "error");
         return;
       }
-      console.log(json)
+      console.log(json);
       setToken(json.sessionToken);
       setAppState("user", json.user);
       this.props.history.push("/main");
@@ -112,18 +114,23 @@ class Auth extends Component<AuthProps, AuthState> {
   }
 
   render() {
-    return (
-      <div>
-        {/* Hello from Auth! */}
-        <Switch>
-          <Route path={`${this.props.match.path}/signup`}>
-            <Signup functions={this.functions} authState={this.state} />
-          </Route>
-          <Route path={`${this.props.match.path}/login`}>
-            <Login functions={this.functions} authState={this.state} />
-          </Route>
-        </Switch>
-      </div>
+    return ( <Container maxWidth={"sm"} sx={{height: '100%'}}>
+          <Grid height={'100%'}>
+          {/* <div style={{height: '10vh'}}/> */}
+          <Paper
+            sx={{ mt: 3, pt: .0012, pb: 6, borderRadius: light.shape.borderRadius }}
+          >
+            <Switch>
+              <Route path={`${this.props.match.path}/signup`}>
+                <Signup functions={this.functions} authState={this.state} />
+              </Route>
+              <Route path={`${this.props.match.path}/login`}>
+                <Login functions={this.functions} authState={this.state} />
+              </Route>
+            </Switch>
+          </Paper>
+      </Grid>
+        </Container>
     );
   }
 }

@@ -1,7 +1,7 @@
 // import * as React from "react";
 import { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-// import "./App.css";
+import "./App.css";
 import Home from "./components/Home/Home";
 import { UserCtx } from "./components/Context/MainContext";
 import {

@@ -45,10 +45,8 @@ import { AppState } from "../../App";
 import Story from "./Stories/Story";
 import StoryFeed from "./Stories/StoryFeed";
 import Logo from "../assets/Logo";
-
-
-
-
+import StoryLoader from "./Stories/StoryLoader";
+import { dark, light } from "../Theme/Theme";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
@@ -57,6 +55,7 @@ interface HomeProps extends RouteComponentProps {
   token: string;
   auth: boolean | null;
   user: User | null;
+  darkModeOn: string;
 }
 
 interface HomeState {
@@ -66,6 +65,7 @@ interface HomeState {
   open: boolean;
   windowDimensions: WindowDimensions;
   notifications: Notification[];
+  darkModeOn: boolean;
 }
 
 class Home extends Component<HomeProps, HomeState> {
@@ -85,6 +85,7 @@ class Home extends Component<HomeProps, HomeState> {
         width: window.innerWidth,
       },
       notifications: [],
+      darkModeOn: this.props.darkModeOn === "true",
     };
   }
 
@@ -118,7 +119,12 @@ class Home extends Component<HomeProps, HomeState> {
     window.addEventListener("resize", this.handleResize);
   }
 
-  componentDidUpdate(prevProps: HomeProps, prevState: HomeState) {}
+  componentDidUpdate(prevProps: HomeProps, prevState: HomeState) {
+    prevProps.darkModeOn !== this.props.darkModeOn &&
+      this.setState({
+        darkModeOn: this.props.darkModeOn === "true",
+      });
+  }
 
   //protect unauthorized views
   authorize = (): void => {
@@ -156,6 +162,7 @@ class Home extends Component<HomeProps, HomeState> {
   handleClose = () => this.setState({ open: false });
 
   render() {
+    const logoColor = light.palette.primary.main
     const { auth } = this.context;
     const routePaperSX = {
       padding: 2,
@@ -169,22 +176,28 @@ class Home extends Component<HomeProps, HomeState> {
         <Box sx={{ flexGrow: 1 }}>
           <AppBar
             position="fixed"
-            sx={{ backgroundColor: "paper" }}
+            sx={{
+              backgroundColor: "#000000",
+            }}
             style={{ height: this.appBarHeight }}
           >
             <Toolbar>
               <Box
                 component="div"
-                sx={{ flexGrow: 1, zIndex: 9999, position:'relative', top: 8 }}
+                sx={{ flexGrow: 1, zIndex: 9999, position: "relative", top: 8 }}
               >
                 <Link to="/welcome">
-                  <Logo height={23} />
+                  <Logo
+                    height={23}
+                    mainfill={light.palette.background.paper}
+                    secfill={logoColor}
+                  />
                 </Link>
               </Box>
               {auth ? (
                 <>
                   <Box sx={{ display: { xs: "flex" } }}>
-                  <Link to="/main/add" title='Create a Gig'>
+                    <Link to="/main/add" title="Create a Gig">
                       <IconButton
                         size="small"
                         color="inherit"
@@ -195,7 +208,10 @@ class Home extends Component<HomeProps, HomeState> {
                         <Add />
                       </IconButton>
                     </Link>
-                    <Link to={`${this.props.match.path}main/`} title='Gig Dashboard'>
+                    <Link
+                      to={`${this.props.match.path}main/`}
+                      title="Gig Dashboard"
+                    >
                       <IconButton
                         size="medium"
                         id="dashboard-button"
@@ -204,7 +220,10 @@ class Home extends Component<HomeProps, HomeState> {
                         <Dashboard />
                       </IconButton>
                     </Link>
-                    <Link to={`${this.props.match.path}feed/`} title='Gig Story Feed'>
+                    <Link
+                      to={`${this.props.match.path}feed/`}
+                      title="Gig Story Feed"
+                    >
                       <IconButton
                         size="medium"
                         id="feed-button"
@@ -221,7 +240,7 @@ class Home extends Component<HomeProps, HomeState> {
                       aria-haspopup="true"
                       onClick={this.handleProfileMenuOpen}
                       color="inherit"
-                      title='Account'
+                      title="Account"
                     >
                       {this.context.user.photo ? (
                         <Avatar
@@ -236,8 +255,6 @@ class Home extends Component<HomeProps, HomeState> {
                         <AccountCircle />
                       )}
                     </IconButton>
-
-                    
                   </Box>
                   <Menu
                     anchorEl={this.state.anchorEl}
@@ -310,27 +327,27 @@ class Home extends Component<HomeProps, HomeState> {
         <>
           <CssBaseline />
 
-          <Container maxWidth="lg">
-
-            <Switch>
-              <Route
-                exact
-                path="/"
-                render={() => {
-                  return auth ? (
-                    <Redirect to="main/" />
-                  ) : (
-                    <Redirect to="welcome" />
-                  );
-                }}
-              />
-              <Route path="/respond">
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={() => {
+                return auth ? (
+                  <Redirect to="main/" />
+                ) : (
+                  <Redirect to="welcome" />
+                );
+              }}
+            />
+            <Route path="/respond">
+              <Container maxWidth="lg" sx={{ height: "100%" }}>
                 <Paper sx={routePaperSX}>
                   <Respond />
                 </Paper>
-              </Route>
-              <Route path="/main">
-                {this.props.user ? (
+              </Container>
+            </Route>
+            <Route path="/main">
+              {this.props.user ? (
                   <Paper sx={routePaperSX}>
                     <MainView
                       {...this.props}
@@ -341,19 +358,20 @@ class Home extends Component<HomeProps, HomeState> {
                       user={this.props.user}
                     />
                   </Paper>
-                ) : null}
-              </Route>
+              ) : null}
+            </Route>
 
-              <Route path="/auth">
+            <Route path="/auth">
+              <Container maxWidth="lg" sx={{ height: "100%" }}>
                 <Auth {...this.props} />
-              </Route>
-            </Switch>
-          </Container>
+              </Container>
+            </Route>
+          </Switch>
           <Route path="/welcome">
             <Welcome />
           </Route>
           <Route path="/story/:storyId">
-            <Story />
+            <StoryLoader />
           </Route>
           <Route path="/feed">
             <StoryFeed />

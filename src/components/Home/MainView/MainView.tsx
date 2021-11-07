@@ -12,6 +12,7 @@ import Settings from "./Settings/Settings";
 import { RouteOption } from "./Gig/Gig.types";
 import Inbox from "./Inbox/Inbox"
 import { fetchHandler } from "../../_helpers/fetchHandler";
+import { Container } from "@mui/material";
 import API_URL from "../../_helpers/environment";
 
 export interface MainViewProps extends RouteComponentProps {
@@ -72,11 +73,17 @@ class MainView extends Component<MainViewProps, MainViewState> {
     return this.props.auth ? (
       <>
         <Switch>
+
           <Route path={`${this.props.match.path}/profile/:userId`}>
+        <Container maxWidth="lg" sx={{ height: "100%" }}>
               <Profile />
+          </Container>
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
-            <Settings {...this.props} />
+          <Container maxWidth="lg" sx={{ height: "100%" }}>
+            
+              <Settings {...this.props} />
+            </Container>
           </Route>
           <Route path={`${this.props.match.path}/inbox`}>
               <Inbox />

@@ -257,7 +257,7 @@ class PostComponent extends React.Component<
           <IconButton onClick={this.handleLike}>
             <ArrowCircleUp
               fontSize="inherit"
-              color={post.voters.includes(user.id) ? "success" : undefined}
+              sx={{color: post.voters.includes(user.id) ? "orangered" : undefined}}
             />
             <Typography variant="caption">upvote</Typography>
           </IconButton>

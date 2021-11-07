@@ -30,6 +30,7 @@ import { Transition } from "react-transition-group";
 import { Zoom, Fade } from "react-reveal";
 import { AppState } from "../../../App";
 import Logo from "../../assets/Logo";
+import { dark, light } from "../../Theme/Theme";
 
 const duration = 300;
 
@@ -53,68 +54,83 @@ class Welcome extends React.Component {
     super(props, context);
     this.state = {};
   }
+  
 
   render() {
     return (
       <>
-        <Container maxWidth="lg" sx={{ minHeight: "90vh" }}>
-          <Zoom delay={200}>
-            <Grid container>
-              <Grid
-                item
-                xs={12}
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-              >
-                <div style={{ height: 120 }} />{" "}
-                {/* <div style={{height: 10}}> */}
-                  <Logo  height={160} />
-                <Grid item xs={10}>
-                  <Zoom duration={300} delay={1500}>
-                    <Typography
-                      variant="body2"
-                      fontWeight={600}
-                      textAlign="justify"
-                      sx={{ pt: 2, maxWidth: 280 }}
-                    >
-                      <i>We want to book your bands for you!</i>
-                    </Typography>
-                  </Zoom>
-                </Grid>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                id="welcome-photo"
-              >
-                <img
-                  src={band}
-                  alt="sihloutte of a band"
-                  style={{
-                    maxHeight: 350,
-                    filter: `invert(97%) sepia(4%) saturate(394%) hue-rotate(178deg) brightness(110%) contrast(68%)`,
-                  }}
-                />
-              </Grid>
-              {/* <Divider sx={{width: '100%', p: 3}} /> */}
-            </Grid>
-          </Zoom>
-          <div style={{ height: 40, width: "100%" }} />
-          <Zoom duration={300} delay={1500}>
-            <Grid item xs={12} display="flex" justifyContent="center">
-              <HashLink smooth to={`#text-anchor`}>
-                <ArrowDownward id={"hash-link"} />
-              </HashLink>
-            </Grid>
-          </Zoom>
-        </Container>
-        <div id="text-anchor" style={{ height: 90, width: "100%" }} />
-        <Container maxWidth={"lg"}>
+        <Container maxWidth="lg">
           <Paper>
+            <Zoom delay={200}>
+              <Grid container>
+                <Grid
+                  item
+                  xs={12}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                >
+                  <div style={{ height: 120 }} />{" "}
+                  <Logo
+                    height={160}
+                    mainfill={
+                      this.context.darkModeOn === "true"
+                        ? dark.palette.text.primary
+                        : "#00000098"
+                    }
+                    secfill={light.palette.primary.main}
+                  />
+                  <Grid item xs={10}>
+                    <Zoom duration={300} delay={1500}>
+                      <Typography
+                        variant="body2"
+                        fontWeight={600}
+                        // color={'#00000080'}
+                        textAlign="justify"
+                        sx={{ pt: 2, maxWidth: 280 }}
+                      >
+                        <i>We want to book your bands for you!</i>
+                      </Typography>
+                    </Zoom>
+                    <Zoom duration={300} delay={1500}>
+              <Grid item pt={2} xs={12} display="flex" justifyContent="center">
+                <HashLink smooth to={`#text-anchor`}>
+                  <ArrowDownward id={"hash-link"} />
+                </HashLink>
+              </Grid>
+            </Zoom>
+                  </Grid>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  id="welcome-photo"
+                >
+                  <img
+                    src={band}
+                    alt="sihloutte of a band"
+                    style={{
+                      maxHeight: 350,
+                      // opacity: .5,
+                      filter:
+                        this.context.darkModeOn === "true"
+                          ? "invert(100%) sepia(7%) saturate(7%) hue-rotate(70deg) brightness(107%) contrast(100%)"
+                          : "invert(42%) sepia(0%) saturate(0%) hue-rotate(167deg) brightness(94%) contrast(91%)"
+                    }}
+                  />
+                </Grid>
+
+                {/* <Divider sx={{width: '100%', p: 3}} /> */}
+              </Grid>
+            </Zoom>
+            <div style={{ height: 40, width: "100%" }} />
+            
+            {/* </Container> */}
+            <div id="text-anchor" style={{ height: 1, width: "100%" }} />
+            <div style={{ height: 100 }} /> {/* <Container maxWidth={"lg"}> */}
             <Grid container p={2}>
               <Grid
                 item
@@ -307,20 +323,19 @@ class Welcome extends React.Component {
                 </Fade>
               </Grid>
             </Grid>
-          <div style={{ height: 80, width: "100%" }} />
-          {!this.context?.auth && (
-            <Fade bottom duration={800}>
-              <Grid container display="flex" justifyContent="center">
-                <Link to="/auth/signup">
-                  <Button variant="contained" color="success" sx={{ p: 3 }}>
-                    <Typography variant="h3">Sign up today!</Typography>
-                  </Button>
-                </Link>
-              </Grid>
-            </Fade>
-          )}
-          <div style={{ height: 80, width: "100%" }} />
-
+            <div style={{ height: 80, width: "100%" }} />
+            {!this.context?.auth && (
+              <Fade bottom duration={800}>
+                <Grid container display="flex" justifyContent="center">
+                  <Link to="/auth/signup">
+                    <Button variant="contained" color="success" sx={{ p: 3 }}>
+                      <Typography variant="h3">Sign up today!</Typography>
+                    </Button>
+                  </Link>
+                </Grid>
+              </Fade>
+            )}
+            <div style={{ height: 80, width: "100%" }} />
           </Paper>
         </Container>
         <div style={{ height: 40, width: "100%" }} />

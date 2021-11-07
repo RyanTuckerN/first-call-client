@@ -21,6 +21,7 @@ import {
   TextField,
   DialogActions,
   Button,
+  Grid,
 } from "@mui/material";
 import {
   MailOutlineOutlined,
@@ -30,7 +31,7 @@ import {
   SentimentVeryDissatisfiedOutlined,
   SentimentVerySatisfiedOutlined,
   HighlightOffOutlined,
-  ExpandMoreOutlined
+  ExpandMoreOutlined,
 } from "@mui/icons-material";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import API_URL from "../../_helpers/environment";
@@ -39,11 +40,13 @@ import { UserCtx } from "../../Context/MainContext";
 interface NotificationsProps {
   notifications: Notification[];
   setHomeState: (key: string, value: any) => void;
+  // children: any
 }
 
 const Notifications: React.FunctionComponent<NotificationsProps> = ({
   notifications,
   setHomeState,
+  children,
 }) => {
   const context = useContext(UserCtx);
   const invite = "#2374D2";
@@ -109,79 +112,8 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
           return json.success;
         };
 
-        return n.details.code === 400 ? (
-          <Accordion key={n.id}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreOutlined />}
-              aria-controls={`message-from-${n.details.sender}-content`}
-              id={`message-from-${n.details.sender}-content`}
-            >
-              <ListItem dense style={{ whiteSpace: "normal" }}>
-                <ListItemText
-                  style={{
-                    borderRadius: 25,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "flex-end",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <div>
-                      <Link
-                        smooth
-                        to={
-                          n.details.gigId
-                            ? `/main/gig/${n.details.gigId}#gig-anchor`
-                            : ``
-                        }
-                      >
-                        {hash[code.toString()].icon}
-                      </Link>
-                      <Typography
-                        variant="overline"
-                        sx={{ position: "relative", bottom: 4, left: 5 }}
-                      >
-                        {n.createdAt &&
-                          new Date(n.createdAt).toLocaleDateString()}
-                      </Typography>
-                    </div>
-                    <IconButton
-                      sx={{  }}
-                      onClick={handleDelete}
-                    >
-                      <HighlightOffOutlined fontSize="small" />
-                    </IconButton>
-                  </div>
-                  {/* <Typography
-                            variant="inherit"
-                            sx={{ fontSize: 11, float: "right", marginLeft: 10 }}
-                          >
-                            {n.details.sender}
-                          </Typography> */}
-                  <div />
-                  <Typography variant="inherit">
-                    {n.details.subject
-                      ? `New message from ${n.details.sender}!`
-                      : n.text}
-                  </Typography>
-                </ListItemText>
-              </ListItem>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography variant="subtitle1">
-                <strong>{n.details.subject}</strong>
-              </Typography>
-              <Typography variant="body2" fontWeight={300}>
-                {n.details.body}
-              </Typography>
-            </AccordionDetails>
-            {i < notifications.length - 1 && <Divider />}
-          </Accordion>
-        ) : (
-          <List key={n.id}>
+        return (
+          <React.Fragment key={n.id}>
             <ListItem dense style={{ whiteSpace: "normal" }}>
               <ListItemText
                 style={{
@@ -200,38 +132,30 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                     justifyContent: "space-between",
                   }}
                 > */}
-                  <div>
-                    <Link
-                      smooth
-                      to={
-                        n.details.gigId
-                          ? `/main/gig/${n.details.gigId}#gig-anchor`
-                          : ``
-                      }
-                    >
-                      {hash[code.toString()].icon}
-                    </Link>
-                    <Typography
-                      variant="overline"
-                      sx={{ position: "relative", bottom: 4, left: 5 }}
-                    >
-                      {n.createdAt &&
-                        new Date(n.createdAt).toLocaleDateString()}
-                    </Typography>
-                  </div>
-                  <IconButton
-                    sx={{ float: "right", marginLeft: 10 }}
-                    onClick={handleDelete}
+                <div>
+                  <Link
+                    smooth
+                    to={
+                      n.details.gigId
+                        ? `/main/gig/${n.details.gigId}#gig-anchor`
+                        : ``
+                    }
                   >
-                    <HighlightOffOutlined fontSize="small" />
-                  </IconButton>
-                {/* </div> */}
-                {/* <Typography
-                variant="inherit"
-                sx={{ fontSize: 11, float: "right", marginLeft: 10 }}
-              >
-                {n.details.sender}
-              </Typography> */}
+                    {hash[code.toString()].icon}
+                  </Link>
+                  <Typography
+                    variant="overline"
+                    sx={{ position: "relative", bottom: 4, left: 5 }}
+                  >
+                    {n.createdAt && new Date(n.createdAt).toLocaleDateString()}
+                  </Typography>
+                </div>
+                <IconButton
+                  sx={{ float: "right", marginLeft: 10 }}
+                  onClick={handleDelete}
+                >
+                  <HighlightOffOutlined fontSize="small" />
+                </IconButton>
                 <div />
                 <Typography variant="inherit">
                   {n.details.subject
@@ -241,11 +165,18 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
               </ListItemText>
             </ListItem>
             {i < notifications.length - 1 && <Divider />}
-          </List>
+          </React.Fragment>
         );
       });
 
-  return <Paper>{mapper(notifications)}</Paper>;
+  return (
+    <Paper sx={{ width: "100%", height: 'calc(100% - 26px)', maxHeight: "100%", overflowY: "scroll",}}>
+      {/* <Grid item position="sticky">
+        {children}
+      </Grid> */}
+      <List sx={{  maxHeight:'100%' }}>{mapper(notifications)}</List>
+    </Paper>
+  );
 };
 
 export default Notifications;

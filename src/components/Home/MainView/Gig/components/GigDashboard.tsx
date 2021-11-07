@@ -26,7 +26,7 @@ class GigDashBoard extends React.Component<
   render() {
     const { notificationsHash, notifications } = this.props;
     const { width } = this.props;
-    return width >= 600 && notifications.length? (
+    return width >= 900 && notifications.length? (
       <>
         <Grid
           container
@@ -72,12 +72,16 @@ class GigDashBoard extends React.Component<
     ) : (
       <>
         <Grid
-          container
+          // container
+          item
+          xs={12}
+          width={'100%'}
           spacing={0}
           padding={0}
           display="flex"
           justifyContent="space-around"
-          marginBottom={10}
+          height={'26px'}
+          // marginBottom={1}
         >
           <BarMapper
             {...this.props}

@@ -92,7 +92,8 @@ const Login = (props: LoginProps) => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            color='secondary'
+            sx={{ mt: 3, mb: 2, color: 'white' }}
           >
             Sign In
           </Button>

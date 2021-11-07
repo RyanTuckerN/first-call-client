@@ -19,19 +19,19 @@ const BarMapper: React.FunctionComponent<BarMapperProps> = ({
 
   return (
     <>
-      <Grid item xs={4} display="flex" justifyContent="space-around">
+      {/* <Grid item xs={12}> */}
         <CardActionArea onClick={handleClick}>
           <Paper
             sx={{
               borderRadius: 0,
-              width: "100%",
+              // width: "100%",
               height: 24,
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-around",
               alignItems: "center",
-              background: color+'85',
-              color: parseInt(code) === messageCode ? 'white' : ""
+              background: color + "",
+              color: parseInt(code) === messageCode ? "white" : "",
             }}
             elevation={5}
           >
@@ -48,7 +48,7 @@ const BarMapper: React.FunctionComponent<BarMapperProps> = ({
             }}
           />
         </CardActionArea>
-      </Grid>
+      {/* </Grid> */}
     </>
   );
 };

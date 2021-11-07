@@ -137,7 +137,7 @@ const Signup = (props: SignupProps) => {
             fullWidth
             variant="contained"
             color="secondary"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, color: 'white' }}
           >
             Sign Up
           </Button>

@@ -33,6 +33,7 @@ import {
 import BasicModal from "../../components/BasicModal";
 import "./Profile.css";
 import StoryComponent from "../../Stories/Story";
+import Swal from "sweetalert2";
 
 interface RouteParams {
   userId: string;
@@ -171,7 +172,16 @@ class Profile extends Component<ProfileProps, ProfileState> {
         },
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      alert(message);
+      success &&
+        Swal.fire({
+          title: message,
+          icon: "success",
+          customClass: {
+            container:
+              this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+          },
+          returnFocus: false
+        });
       // success && this.setState({})
       success &&
         this.setState({
@@ -547,7 +557,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
           setOpen={this.setStoryModalOpen}
           open={this.state.storyModalOpen}
         >
-          <StoryComponent storyId={this.state.storyModalId} />
+          <StoryComponent storyId={this.state.storyModalId} story={this.state.stories.find(story=>story.id === this.state.storyModalId)!} />
         </BasicModal>
       </>
     );
