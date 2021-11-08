@@ -14,10 +14,25 @@ import API_URL from "../../../../_helpers/environment";
 import { UserCtx } from "../../../../Context/MainContext";
 import { dark } from "../../../../Theme/Theme";
 import StoryFeed from "../../../Stories/StoryFeed";
+import Drawer from "@mui/material/Drawer";
+import AppBar from "@mui/material/AppBar";
+import CssBaseline from "@mui/material/CssBaseline";
+import Toolbar from "@mui/material/Toolbar";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+import GigCreate from "../GigCreate";
+import { Redirect } from "react-router";
+import { Add } from "@mui/icons-material";
 
 interface GigWelcomeProps extends GigIndexState {
   dashboardRoute: RouteOption; //Main state
   detailsHash: { [key: string]: DetailedGig };
+  followInfo?: any;
   setMainState: (key: string, value: any) => void;
   setHomeState: (key: string, value: any) => void;
 }
@@ -30,6 +45,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
     notifications,
     messageCode,
     dashboardRoute,
+    followInfo,
     setGigState,
     setMainState,
   } = props;
@@ -83,15 +99,17 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       body: <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />,
       dash: <GigsDash {...props} gigsOrOffers="offers" />,
     },
-    gig: {
-      body: <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />,
-      dash: <GigsDash {...props} gigsOrOffers="offers" />,
+    addGig: {
+      body: <Redirect to="/main/add" />,
+      dash: <React.Fragment />,
     },
-    callStack: {
-      body: <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />,
+    addStory: {
+      body: <Redirect to={`/main/profile/${props.user?.id}`} />,
       dash: <GigsDash {...props} gigsOrOffers="offers" />,
     },
   };
+
+  const drawerWidth = 300;
 
   return width < 900 ? (
     <>
@@ -104,7 +122,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       </Grid>
       {routes[dashboardRoute]?.dash}
       <Grid container spacing={2} display="flex" justifyContent="center">
-        <Grid item xs={12} sm={9}>
+        <Grid item xs={12}>
           {routes[dashboardRoute]?.body}
           <Box display="flex" justifyContent="center" p={1}>
             {dashboardRoute === "notifications" && notifications.length ? (
@@ -133,7 +151,12 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
         </Grid>
       </Grid>
       <div id="spacer" className="small-screen" style={{ height: 40 }} />{" "}
-      <BottomNav {...props} setRoute={setRoute} route={dashboardRoute} />
+      <BottomNav
+        {...props}
+        setRoute={setRoute}
+        route={dashboardRoute}
+        setMainState={setMainState}
+      />
     </>
   ) : (
     /**
@@ -143,111 +166,233 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
      * *** *** *** *** *** ***
      * *** *** *** *** *** ***
      */
-    <Grid container height={"calc(100vh - 180px)"}>
-      <Grid
-        container
-        item
-        md={5}
-        lg={4}
-        display="flex"
-        flexDirection="column"
-        padding={2}
-        wrap={"nowrap"}
-        pr={4}
-        maxHeight={"100%"}
+    <>
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: "border-box",
+            backgroundColor: dark.palette.background.default,
+          },
+          // height: '100%'
+        }}
       >
-        {/* {props.gigs.map((gig, i) => (
-          <GigCardAlt {...gig} key={i} />
-        ))} */}
-        <Typography variant="subtitle1" fontWeight={600}>
-          Gigs
-        </Typography>
-        <Grid
-          border={1}
-          borderColor={"divider"}
-          style={{ maxHeight: "45%", overflowY: "scroll" }}
-        >
-          <GigsMapper {...props} gigsOrOffers="gigs" user={props.user} />
-          {!props.gigs.length && (
-            <Typography variant="overline" ml={2} fontWeight={300} color='#ffffff80'>
-              <i>... NO GIGS!</i>
-            </Typography>
-          )}
-        </Grid>
-        <Typography pt={1} variant="subtitle1" fontWeight={600}>
-          Offers
-        </Typography>
-        <Grid
-          border={1}
-          borderColor={"divider"}
-          style={{ maxHeight: "45%", overflowY: "scroll" }}
-        >
-          <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />
-          {!props.offers.length && (
-            <Typography variant="overline" ml={2} fontWeight={300} color='#ffffff80'>
-              <i>... NO OFFERS!</i>
-            </Typography>
-          )}
-        </Grid>
-      </Grid>
-      <Grid
-        item
-        md={7}
-        lg={4}
-        xl={5}
-        height="95%"
-        border={1}
-        borderColor={dark.palette.divider}
-      >
-        <NotificationsDashBoard {...props} width={599} />
-
-        <Notifications
-          notifications={filterNotifications(messageCode, notifications)}
-          setHomeState={props.setHomeState}
-        >
-          {/* <NotificationsDashBoard {...props} width={599} /> */}
-        </Notifications>
-        <Box display="flex" justifyContent="center" p={2}>
-          {dashboardRoute === "notifications" && notifications.length ? (
-            <>
-              <Button
-                variant="outlined"
-                color="error"
-                onClick={async () => console.log(await handleDeleteAll())}
-              >
-                Delete all notifications
+        <Toolbar />
+        <Box sx={{}}>
+          <Grid
+            container
+            item
+            xs={12}
+            display="flex"
+            flexDirection="column"
+            padding={2}
+            wrap={"nowrap"}
+            // pr={4}
+            // maxHeight={"100%"}
+            // bgcolor={dark.palette.background.default}
+          >
+            <Box
+              component="div"
+              sx={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <Typography variant="subtitle1" fontWeight={600} color="white">
+                Gigs
+              </Typography>
+              <Button onClick={() => setRoute("addGig")}>
+                <Add fontSize="small" /> new gig?
               </Button>
-              <Button
-                variant="outlined"
-                color="info"
-                onClick={() => setGigState("messageCode", null)}
-              >
-                show all notifications
-              </Button>
-            </>
-          ) : dashboardRoute === "notifications" ? (
-            <Button disabled sx={{ marginTop: 4 }}>
-              No Notifications!
-            </Button>
-          ) : null}
+            </Box>
+            <Grid
+              border={1}
+              borderColor={"divider"}
+              style={{ maxHeight: "45%", overflowY: "scroll" }}
+            >
+              <GigsMapper {...props} gigsOrOffers="gigs" user={props.user} />
+              {!props.gigs.length && (
+                <Typography
+                  variant="overline"
+                  ml={2}
+                  fontWeight={300}
+                  color="#ffffff80"
+                >
+                  <i>... NO GIGS!</i>
+                </Typography>
+              )}
+            </Grid>
+            <Typography
+              pt={1}
+              variant="subtitle1"
+              fontWeight={600}
+              color="white"
+            >
+              Offers
+            </Typography>
+            <Grid
+              border={1}
+              borderColor={"divider"}
+              style={{ maxHeight: "45%", overflowY: "scroll" }}
+            >
+              <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />
+              {!props.offers.length && (
+                <Typography
+                  variant="overline"
+                  ml={2}
+                  fontWeight={300}
+                  color="#ffffff80"
+                >
+                  <i>... NO OFFERS!</i>
+                </Typography>
+              )}
+            </Grid>
+          </Grid>
         </Box>
-      </Grid>
+      </Drawer>
       <Grid
         container
-        item
-        lg={4}
-        xl={3}
-        display="flex"
-        flexDirection="column"
-        padding={2}
-        wrap={"nowrap"}
-        pr={4}
-        maxHeight={"100%"}
-        sx={{ display: { xs: "none", lg: "block" } }}
+        width={`calc(100vw - ${drawerWidth + 30}px)`}
+        height={"calc(100vh - 150px)"}
+        sx={{ ml: `${drawerWidth + 15}px`, mr: "15px" }}
       >
-        <StoryFeed dashboard={true} />
+        {["notifications", "gigs", "offers"].includes(dashboardRoute) ? (
+          <>
+            <Grid
+              item
+              md={12}
+              lg={8}
+              xl={9}
+              height="calc(100% + 26px)"
+              border={1}
+              borderColor={dark.palette.divider}
+            >
+              <Box
+                component="div"
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <Typography pt={1} variant="h5" fontWeight={200}>
+                  {messageCode === 100
+                    ? "Offers"
+                    : messageCode === 200
+                    ? "Responses"
+                    : messageCode === 300
+                    ? "Updates"
+                    : "All activity"}
+                </Typography>
+                {dashboardRoute === "notifications" && notifications.length ? (
+                  <Box
+                    component="div"
+                    sx={{ display: "flex", alignItems: "flex-end", mb: -1 }}
+                  >
+                    <Button
+                      variant="text"
+                      color="error"
+                      onClick={async () => console.log(await handleDeleteAll())}
+                    >
+                      Clear
+                    </Button>
+                    <Button
+                      variant="text"
+                      color="info"
+                      onClick={() => setGigState("messageCode", null)}
+                    >
+                      show all
+                    </Button>
+                  </Box>
+                ) : dashboardRoute === "notifications" ? (
+                  <Box
+                    component="div"
+                    sx={{ display: "flex", alignItems: "flex-end", mb: -1 }}
+                  >
+                    <Button disabled>
+                      <i>No Notifications</i>
+                    </Button>
+                  </Box>
+                ) : null}
+              </Box>
+              <NotificationsDashBoard {...props} width={599} />
+              <Notifications
+                notifications={filterNotifications(messageCode, notifications)}
+                setHomeState={props.setHomeState}
+              >
+                {/* <NotificationsDashBoard {...props} width={599} /> */}
+              </Notifications>
+              <Box display="flex" justifyContent="center" p={2}></Box>
+            </Grid>
+            <Grid
+              container
+              item
+              lg={4}
+              xl={3}
+              display="flex"
+              flexDirection="column"
+              wrap={"nowrap"}
+              pl={1}
+              maxHeight={"95%"}
+              sx={{ display: { xs: "none", lg: "flex" } }}
+            >
+              <Grid item xs={12} sx={{ maxHeight: "45%", overflowY: "hidden" }}>
+                <Box
+                  component="div"
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography pt={1} variant="subtitle1" fontWeight={600}>
+                    Stories
+                  </Typography>
+                  <Button
+                    onClick={() => {
+                      setMainState("profileModalOpen", true);
+                      setRoute("addStory");
+                    }}
+                  >
+                    <Add fontSize="small" /> new Story?
+                  </Button>
+                </Box>
+                <Box
+                  border={1}
+                  borderColor={"divider"}
+                  component="div"
+                  sx={{ maxHeight: "100%", width: "100%", overflowY: "scroll" }}
+                >
+                  <StoryFeed dashboard={true} />
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} sx={{ maxHeight: "45%" }}>
+                {/* <Box
+                  component="div"
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                > */}
+                <Typography pt={1} variant="subtitle1" fontWeight={600}>
+                  People You Follow:
+                </Typography>
+
+                <Box
+                  border={1}
+                  borderColor={"divider"}
+                  component="ul"
+                  sx={{
+                    maxHeight: "100%",
+                    width: "100%",
+                    // overflowY: "scroll",
+                  }}
+                >
+                  {user?.following.map((userId) => (
+                    <Box key={userId} component="li">
+                      {!!followInfo?.length &&
+                        followInfo?.filter((u: any) => u.id === userId)[0].name}
+                    </Box>
+                  ))}
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        ) : (
+          routes[dashboardRoute].body
+        )}
       </Grid>
-    </Grid>
+    </>
   );
 };
 

@@ -10,7 +10,7 @@ import GigIndex from "./Gig/GigsIndex";
 import Profile from "./Profile/Profile";
 import Settings from "./Settings/Settings";
 import { RouteOption } from "./Gig/Gig.types";
-import Inbox from "./Inbox/Inbox"
+import Inbox from "./Inbox/Inbox";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import { Container } from "@mui/material";
 import API_URL from "../../_helpers/environment";
@@ -23,13 +23,13 @@ export interface MainViewProps extends RouteComponentProps {
   fetchNotifications: () => Promise<void>;
   setHomeState: (key: string, value: any) => void;
   setAppState: (key: string, value: any) => void;
-
 }
 
 interface MainViewState {
   setMainState: (key: string, value: any) => void;
   followInfo: any[];
   dashboardRoute: RouteOption;
+  profileModalOpen: boolean;
 }
 
 class MainView extends Component<MainViewProps, MainViewState> {
@@ -39,21 +39,24 @@ class MainView extends Component<MainViewProps, MainViewState> {
       setMainState: this.setMainState,
       followInfo: [],
       dashboardRoute: "notifications",
+      profileModalOpen: false,
     };
   }
 
-  fetchFollowsInfo = async(): Promise<boolean> => {
-    try{const {success, users, message} = await fetchHandler({
-      url:`${API_URL}/user/follows`,
-      auth: this.context.token ?? localStorage.getItem('token') ?? ''
-    })
-    console.log('USERS --> ', users)
-    success && this.setState({followInfo: users})
-    return success}catch(error){
-      console.log(error)
-      return false
+  fetchFollowsInfo = async (): Promise<boolean> => {
+    try {
+      const { success, users, message } = await fetchHandler({
+        url: `${API_URL}/user/follows`,
+        auth: this.context.token ?? localStorage.getItem("token") ?? "",
+      });
+      console.log("USERS --> ", users);
+      success && this.setState({ followInfo: users });
+      return success;
+    } catch (error) {
+      console.log(error);
+      return false;
     }
-  }
+  };
 
   setMainState = (key: string, value: any): void => {
     const stateObj: any = {};
@@ -64,29 +67,29 @@ class MainView extends Component<MainViewProps, MainViewState> {
   componentDidMount() {
     const { fetchNotifications } = this.props;
     fetchNotifications();
-    this.fetchFollowsInfo()
+    this.fetchFollowsInfo();
   }
 
-
+  // componentDidUpdate(prevProps: MainViewProps, prevState: MainViewState) {
+  //   this.props.
+  // }
 
   render() {
     return this.props.auth ? (
       <>
         <Switch>
-
           <Route path={`${this.props.match.path}/profile/:userId`}>
-        <Container maxWidth="lg" sx={{ height: "100%" }}>
-              <Profile />
-          </Container>
+            <Container maxWidth="lg" sx={{ height: "100%" }}>
+              <Profile modalOpen={this.state.profileModalOpen} setMainState={this.setMainState} />
+            </Container>
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
-          <Container maxWidth="lg" sx={{ height: "100%" }}>
-            
+            <Container maxWidth="lg" sx={{ height: "100%" }}>
               <Settings {...this.props} />
             </Container>
           </Route>
           <Route path={`${this.props.match.path}/inbox`}>
-              <Inbox />
+            <Inbox />
           </Route>
           <Route path={`${this.props.match.path}/`}>
             {this.props.user?.gigs && this.props.notifications ? (
@@ -94,7 +97,6 @@ class MainView extends Component<MainViewProps, MainViewState> {
             ) : null}
           </Route>
         </Switch>
-        
       </>
     ) : null;
   }

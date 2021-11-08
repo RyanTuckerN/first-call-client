@@ -1,10 +1,6 @@
 import * as React from "react";
 import { Component } from "react";
-import {
-  withRouter,
-  Route,
-  RouteComponentProps,
-} from "react-router-dom";
+import { withRouter, Route, RouteComponentProps } from "react-router-dom";
 import { Gig, Notification, User } from "../../../../types/API.types";
 import API_URL from "../../../_helpers/environment";
 import { UserCtx } from "../../../Context/MainContext";
@@ -64,7 +60,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     return success;
   };
 
-  fetchDetails = async ():Promise<void> => {
+  fetchDetails = async (): Promise<void> => {
     const body = [...this.state.gigs, ...this.state.offers].map((g) => g.id);
     const { hash, success } = await fetchHandler({
       method: "post",
@@ -72,8 +68,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       auth: localStorage.getItem("token") ?? this.context?.token ?? "",
       body,
     });
-    console.log(success, hash)
-    success && this.setState({detailsHash: hash});
+    console.log(success, hash);
+    success && this.setState({ detailsHash: hash });
   };
 
   setGigState = (key: string, value: any) => {
@@ -82,7 +78,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     this.setState(obj);
   };
 
-  addGig = (gig: Gig):void => this.setState({gigs: [...this.state.gigs, gig]})
+  addGig = (gig: Gig): void =>
+    this.setState({ gigs: [...this.state.gigs, gig] });
 
   notificationHash = (arr: Notification[]): NotificationsHash =>
     arr.reduce((obj: { [key: string]: Notification[] }, note: Notification) => {
@@ -101,8 +98,8 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     }
     //MIGHT NEED TO PUT THESE BACK IN!!
     // if (prevState.notificationsHash !== this.state.notificationsHash) {
-      // this.fetchOffers();
-      // this.fetchDetails();
+    // this.fetchOffers();
+    // this.fetchDetails();
     // }
     if (!prevProps.user && this.props.user) {
       this.setState({
@@ -127,10 +124,13 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     // await this.fetchDetails();
   }
 
+  componentWillUnmount() {
+    this.props.setMainState("dashboardRoute", "notifications");
+  }
+
   render() {
     return (
       <>
-
         <Route exact path="/main">
           {this.state.detailsHash ? (
             <GigWelcome
@@ -152,11 +152,17 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
             />
           ) : null}
         </Route>
-        
+
         <Route exact path="/main/add">
-          {this.state.user ? <GigCreate {...this.state.user} addGig={this.addGig} fetchDetails={this.fetchDetails} /> : null}
+          {this.state.user ? (
+            <GigCreate
+              {...this.state.user}
+              addGig={this.addGig}
+              fetchDetails={this.fetchDetails}
+              setMainState={this.props.setMainState}
+            />
+          ) : null}
         </Route>
-        
       </>
     );
   }

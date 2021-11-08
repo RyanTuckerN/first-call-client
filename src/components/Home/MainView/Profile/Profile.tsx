@@ -39,7 +39,10 @@ interface RouteParams {
   userId: string;
 }
 
-interface ProfileProps extends RouteComponentProps<RouteParams> {}
+interface ProfileProps extends RouteComponentProps<RouteParams> {
+  modalOpen?: boolean
+  setMainState: (key: string, value: any) => void
+}
 
 interface ProfileState {
   user: User | null;
@@ -61,7 +64,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
     this.state = {
       user: null,
       anchorEl: null,
-      modalOpen: false,
+      modalOpen: this.props.modalOpen ?? false,
       storyImage: "",
       storyText: "",
       storyError: "",
@@ -113,6 +116,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
   };
   componentDidMount() {
     this.fetchUser();
+    this.props.setMainState('profileModalOpen', false)
   }
 
   uploadImage = async (

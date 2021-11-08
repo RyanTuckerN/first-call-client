@@ -21,8 +21,8 @@ export interface Routes {
   notifications: Route;
   gigs: Route;
   offers: Route;
-  gig: Route;
-  callStack: Route;
+  addGig: Route;
+  addStory: Route;
 }
 
 export type BandMember = {
@@ -49,5 +49,5 @@ export type RouteOption =
   | "notifications"
   | "gigs"
   | "offers"
-  | "gig"
-  | "callStack";
+  | "addGig"
+  | "addStory";

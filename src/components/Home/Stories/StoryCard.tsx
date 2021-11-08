@@ -158,7 +158,11 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
     const menuId = pickerOpen ? "emoji-picker-for-story-comment" : undefined;
 
     return (
-      <Grid container border={1} borderColor="divider">
+      <Grid 
+      container 
+      border={1} 
+      borderColor="divider"
+      >
         <Paper
           sx={
             this.props.dashboard
@@ -170,7 +174,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "100%",
-                  backgroundBlendMode: 'soft-light'
+                  backgroundBlendMode: "soft-light",
                 }
               : { width: "100%", maxWidth: 720, minWidth: 250, p: 1, pb: 2 }
           }

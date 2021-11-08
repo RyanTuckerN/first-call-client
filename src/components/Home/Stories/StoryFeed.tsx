@@ -48,75 +48,44 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
 
   render() {
     return (
-      <Container
-        maxWidth={"lg"}
+      <Grid
+        container
         sx={
-          this.props.dashboard
+          !this.props.dashboard
             ? {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 maxHeight: "100%",
-                overflowY: "scroll",
               }
             : {}
         }
       >
-        <Paper elevation={1}>
-          <Grid
-            container
-            sx={
-              !this.props.dashboard
-                ? {
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }
-                : {}
-            }
-          >
-            <List
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              {/* <ListSubheader
-                sx={{
-                  mt: 0,
-                  py: 0.3333,
-                  position: "fixed",
-                  zIndex: 9999,
-                  top: 40,
-                  width: 200,
-                  display: "flex",
-                  justifyContent: "space-around",
-                  bgcolor: 'transparent'
-                }}
+        <List
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            p: 0,
+          }}
+        >
+          {this.state.stories
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime()
+            )
+            .map((story) => (
+              <ListItem
+                key={story.id}
+                sx={this.props.dashboard ? { p: 0, pb: 2 } : {}}
               >
-                <IconButton title='Global Feed'>
-                  <Language />
-                </IconButton>
-                <IconButton title='Personal Feed'>
-                  <Groups />
-                </IconButton>
-              </ListSubheader> */}
-              {this.state.stories
-                .sort(
-                  (a, b) =>
-                    new Date(b.createdAt).getTime() -
-                    new Date(a.createdAt).getTime()
-                )
-                .map((story) => (
-                  <ListItem key={story.id} sx={{ px: 0.5 }}>
-                    <StoryCard {...story} dashboard={this.props.dashboard} />
-                  </ListItem>
-                ))}
-            </List>
-          </Grid>
-        </Paper>
-      </Container>
+                <StoryCard {...story} dashboard={this.props.dashboard} />
+              </ListItem>
+            ))}
+        </List>
+      </Grid>
+      // </Container>
     );
   }
 }

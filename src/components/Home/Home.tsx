@@ -178,6 +178,7 @@ class Home extends Component<HomeProps, HomeState> {
             position="fixed"
             sx={{
               backgroundColor: "#000000",
+              zIndex: (theme) => theme.zIndex.drawer + 1
             }}
             style={{ height: this.appBarHeight }}
           >
@@ -348,7 +349,7 @@ class Home extends Component<HomeProps, HomeState> {
             </Route>
             <Route path="/main">
               {this.props.user ? (
-                  <Paper sx={routePaperSX}>
+                  // <Paper sx={routePaperSX}>
                     <MainView
                       {...this.props}
                       {...this.state}
@@ -357,7 +358,7 @@ class Home extends Component<HomeProps, HomeState> {
                       setHomeState={this.setHomeState}
                       user={this.props.user}
                     />
-                  </Paper>
+                  // </Paper>
               ) : null}
             </Route>
 
@@ -374,7 +375,11 @@ class Home extends Component<HomeProps, HomeState> {
             <StoryLoader />
           </Route>
           <Route path="/feed">
-            <StoryFeed />
+            <Container maxWidth={'lg'}>
+              <Paper elevation={1}>
+                <StoryFeed />
+              </Paper>
+            </Container>
           </Route>
         </>
       </>

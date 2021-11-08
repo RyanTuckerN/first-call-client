@@ -170,7 +170,7 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
       });
 
   return (
-    <Paper sx={{ width: "100%", height: 'calc(100% - 26px)', maxHeight: "100%", overflowY: "scroll",}}>
+    <Paper sx={{ width: "100%", height: 'calc(100% - 67px)', overflowY: "scroll",}}>
       {/* <Grid item position="sticky">
         {children}
       </Grid> */}

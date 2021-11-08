@@ -33,7 +33,7 @@ class GigEdit extends Component {
     this.state = {
       length: this.props.length ?? 1,
       gigId: this.props.id,
-      date: this.props.date ?? addHours(new Date(), 24*7),
+      date: this.props.date ?? addHours(new Date(), 24 * 7),
       description: this.props.description ?? "",
       payment: this.props.payment ?? 0,
       gigLocation: this.props.gigLocation ?? "",
@@ -134,7 +134,10 @@ class GigEdit extends Component {
       this.context.handleSnackBar("Empty field(s)!", "warning");
       return;
     }
-    !date._isValid && this.context.handleSnackBar("Invalid Date!", "warning");
+    // if (!date._isValid) {
+    //   this.context.handleSnackBar("Invalid Date!", "warning");
+    //   // return;
+    // }
 
     if (callStackEmpty && gigCreate) {
       this.context.handleSnackBar(
@@ -145,7 +148,7 @@ class GigEdit extends Component {
     }
     const body = {
       description,
-      date: date.toISOString(),
+      date: new Date(date).toISOString(),
       payment: Math.floor(payment),
       gigLocation,
       optionalInfo,
@@ -266,7 +269,6 @@ class GigEdit extends Component {
                 fullWidth
                 disablePast
                 ampmInClock={true}
-                
                 value={this.state.date}
                 onChange={this.handleDate}
                 // onOpen
