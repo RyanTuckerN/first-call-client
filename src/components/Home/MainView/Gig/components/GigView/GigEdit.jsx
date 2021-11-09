@@ -25,6 +25,11 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DateAdapter from "@mui/lab/AdapterMoment";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { Fade } from "react-reveal";
+import Swal from "sweetalert2";
+
+
+
+
 class GigEdit extends Component {
   static contextType = UserCtx;
 
@@ -141,7 +146,7 @@ class GigEdit extends Component {
 
     if (callStackEmpty && gigCreate) {
       this.context.handleSnackBar(
-        "Empty callStack! Fill out at least one role to submit.",
+        "Empty callStack! Add at least one instrument to submit.",
         "warning"
       );
       return;
@@ -167,7 +172,16 @@ class GigEdit extends Component {
         ? this.props.setGigId(json.newGig.id)
         : this.props.setGig(json.gig)
       : null;
-    json.success && this.context.handleSnackBar(json.message, "success");
+    json.success && !this.state.gigCreate && this.context.handleSnackBar(json.message, "success");
+    json.success && this.state.gigCreate && Swal.fire({
+      title: "Gig Created!",
+      icon: "success",
+      customClass: {
+        container:
+          this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+      },
+    })
+
     json.success &&
       this.setState({
         success: true,
@@ -219,13 +233,13 @@ class GigEdit extends Component {
           >
             <Typography variant="h4">Details</Typography>
             {/* {!this.state.gigCreate ? ( */}
-            <Button
+            {!!this.state.date && !!this.state.description && !!this.state.gigLocation && !!this.state.payment && <Button
               color="success"
               variant="contained"
               onClick={this.handleSave}
             >
               {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
-            </Button>
+            </Button>}
             {/* ) : null} */}
           </Grid>
           <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>
@@ -384,6 +398,7 @@ class GigEdit extends Component {
                     value={this.state.optionalKey}
                     placeholder="Any category"
                     fullWidth
+                    sx={{pr: 1}}
                   />
                 </Grid>
                 {/* <Typography variant="h4">:</Typography> */}
@@ -412,9 +427,13 @@ class GigEdit extends Component {
           </div> */}
         </Grid>
         <Grid display="flex" justifyContent="flex-end" padding={2}>
-          <Button color="success" variant="contained" onClick={this.handleSave}>
-            {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
-          </Button>
+        {!!this.state.date && !!this.state.description && !!this.state.gigLocation && !!this.state.payment && <Button
+              color="success"
+              variant="contained"
+              onClick={this.handleSave}
+            >
+              {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
+            </Button>}
         </Grid>
       </Grid>
     );

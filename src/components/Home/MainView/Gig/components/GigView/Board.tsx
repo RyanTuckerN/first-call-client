@@ -16,6 +16,9 @@ import PostComponent from "./Post";
 import API_URL from "../../../../../_helpers/environment";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import { Loading } from "../../../../../Skeletons";
+
+
+
 interface BoardProps {
   posts: Post[];
   gigId: string | number;
@@ -35,7 +38,7 @@ class Board extends Component<BoardProps, BoardState> {
     super(props);
     this.state = {
       posts: this.props.posts,
-      emptyBoard: !_.isEmpty(this.props.posts),
+      emptyBoard: _.isEmpty(this.props.posts),
       organizedPosts: postOrganizer(this.props.posts),
       text: "",
       showBoard: false,
@@ -80,11 +83,11 @@ class Board extends Component<BoardProps, BoardState> {
 
   // logEvent = (e: any): void => console.log(e.key);
 
-  timeOut: any = null;
-  timer = () =>
-    (this.timeOut = setTimeout(() => {
-      this.setState({ showBoard: true });
-    }, 1000));
+  // timeOut: any = null;
+  // timer = () =>
+  //   (this.timeOut = setTimeout(() => {
+  //     this.setState({ showBoard: true });
+  //   }, 400));
 
   componentDidUpdate(prevProps: BoardProps, prevState: BoardState) {
     if (prevProps.posts !== this.props.posts) {
@@ -96,15 +99,15 @@ class Board extends Component<BoardProps, BoardState> {
   }
 
   componentDidMount() {
-    this.timer();
+    // this.timer();
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timeOut);
+    // clearTimeout(this.timeOut);
   }
 
   render() {
-    return this.state.showBoard ? (
+    return this.state.posts ? (
       <Grid
         container
         item
@@ -228,7 +231,11 @@ class Board extends Component<BoardProps, BoardState> {
         border={1}
         sx={{ borderColor: "#3f3f3f50" }}
       >
-        <Loading />
+        <Paper
+         elevation={12}
+         sx={{ padding: 0.5, width: "100%", maxWidth: "100%" }}>
+          <Loading />
+        </Paper>
       </Grid>
     );
   }

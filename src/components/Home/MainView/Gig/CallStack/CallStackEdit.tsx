@@ -10,11 +10,16 @@ import {
   ListItemText,
   InputAdornment,
   Box,
+  Avatar,
 } from "@mui/material";
 import { instrumentOptions } from "../../../../../types/AutocompleteOptions";
 import { Backspace } from "@mui/icons-material";
 import { CallStack, Gig } from "../../../../../types/API.types";
-import { properize, properizeNoTrim } from "../../../../_helpers/helpers";
+import {
+  formControl,
+  properize,
+  properizeNoTrim,
+} from "../../../../_helpers/helpers";
 import { fetchHandler } from "../../../../_helpers/fetchHandler";
 import API_URL from "../../../../_helpers/environment";
 import { UserCtx } from "../../../../Context/MainContext";
@@ -61,6 +66,10 @@ class CallStackEdit extends React.Component<
       if (!emailVal || !roleVal) {
         // this.setState({ message: "Please fill out both fields" });
         this.context.handleSnackBar("Please fill out both fields!", "warning");
+        return false;
+      }
+      if (!formControl.validateEmail(emailVal)) {
+        this.context.handleSnackBar("Please choose a valid email!", "warning");
         return false;
       }
       if (this.state.stackTable[roleVal]) {
@@ -207,10 +216,13 @@ class CallStackEdit extends React.Component<
                         ...roles.map((r) => properize(r)),
                       ]),
                     ].sort()}
+                    onInputChange={(e: any, newVal: string | null) => {
+                      this.setState({ roleVal: newVal?.toLowerCase() ?? "" });
+                    }}
+                    openOnFocus
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        onChange={this.handleRole}
                         fullWidth
                         title="Instrument"
                         label="Instrument"
@@ -225,29 +237,49 @@ class CallStackEdit extends React.Component<
                   <Autocomplete
                     id="email-input"
                     freeSolo
+                    openOnFocus
                     value={this.state.emailVal?.toLowerCase() ?? ""}
-                    options={this.props.followInfo
-                      .filter(
+                    options={
+                      this.props.followInfo.filter(
                         (user) =>
                           user.role?.toLowerCase() ===
                           this.state.roleVal?.toLowerCase()
                       )
-                      .map((user) => user.email)}
+                      // .map((user) => user.email)
+                    }
                     onChange={(e: any, option: any) => {
-                      this.setState({ emailVal: option?.toLowerCase() ?? ''  });
+                      this.setState({
+                        emailVal: option?.email?.toLowerCase() ?? "",
+                      });
+                    }}
+                    onInputChange={(e: any, option: any) => {
+                      this.setState({ emailVal: option?.toLowerCase() ?? "" });
+                    }}
+                    renderOption={(props, option) => {
+                      console.log(option);
+                      return (
+                        <Box component="li" {...props}>
+                          <Avatar src={option.photo} alt="" />
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                          <Typography variant="subtitle1">
+                            {option.name}
+                          </Typography>{" "}
+                          &nbsp;&nbsp;
+                          <Typography variant="body1">{option.role}</Typography>
+                        </Box>
+                      );
                     }}
                     renderInput={(params) => (
                       <TextField
                         {...params}
                         label="Email"
                         fullWidth
-                        onChange={this.handleEmail}
                         InputProps={{
                           ...params.InputProps,
                           endAdornment: (
                             <>
                               <InputAdornment position="end">
-                                <Button type="submit">Add</Button>
+                              <Button type="submit" disabled={!this.state.emailVal || !this.state.roleVal}>Add</Button>
                               </InputAdornment>
                             </>
                           ),

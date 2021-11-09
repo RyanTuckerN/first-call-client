@@ -158,10 +158,12 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
     const menuId = pickerOpen ? "emoji-picker-for-story-comment" : undefined;
 
     return (
-      <Grid 
-      container 
-      border={1} 
-      borderColor="divider"
+      <Grid
+        container
+        border={this.props.dashboard ? 0 : 1}
+        borderTop={this.props.dashboard ? 1 : 0}
+        borderBottom={this.props.dashboard ? 1 : 0}
+        borderColor="divider"
       >
         <Paper
           sx={
@@ -171,10 +173,12 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                   p: 0.5,
                   maxHeight: 200,
                   backgroundImage: `url(${imageUrl})`,
+                  backgroundColor: "rgba(0,0,0,.7)",
                   backgroundPosition: "center",
                   backgroundRepeat: "no-repeat",
                   backgroundSize: "100%",
                   backgroundBlendMode: "soft-light",
+                  color: "white",
                 }
               : { width: "100%", maxWidth: 720, minWidth: 250, p: 1, pb: 2 }
           }
@@ -233,7 +237,10 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                     sx={{ color: "error.light" }}
                   />
                 ) : (
-                  <FavoriteBorderIcon fontSize="small" />
+                  <FavoriteBorderIcon
+                    fontSize="small"
+                    sx={this.props.dashboard ? { color: "white" } : {}}
+                  />
                 )}
               </IconButton>
               <Typography sx={{ mb: 0.2667 }} variant="caption">
@@ -328,7 +335,11 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                             />
                           ) : (
                             <FavoriteBorderIcon
-                              sx={{ height: 13, width: 13 }}
+                              sx={
+                                this.props.dashboard
+                                  ? { height: 13, width: 13, color: "white" }
+                                  : { height: 13, width: 13 }
+                              }
                             />
                           )}
                         </IconButton>
@@ -351,13 +362,17 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                 <TextField
                   InputProps={{
                     disableUnderline: true,
-                    sx: { fontWeight: 300 },
+                    sx: {
+                      fontWeight: 400,
+                      backgroundColor: "#00000070",
+                      color: "white",
+                    },
                     fullWidth: true,
                     startAdornment: (
                       <IconButton onClick={this.handlePicker}>
                         <SentimentSatisfied
                           fontSize="small"
-                          sx={{ marginRight: 0, marginLeft: 0 }}
+                          sx={{ marginRight: 0, marginLeft: 0, color: "white" }}
                         />
                       </IconButton>
                     ),

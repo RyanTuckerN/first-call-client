@@ -375,8 +375,8 @@ class Home extends Component<HomeProps, HomeState> {
             <StoryLoader />
           </Route>
           <Route path="/feed">
-            <Container maxWidth={'lg'}>
-              <Paper elevation={1}>
+            <Container maxWidth={'lg'} sx={{height: 'calc(100vh - 130px)'}} >
+              <Paper elevation={1} sx={{ display: 'flex', flexDirection: 'column'}}>
                 <StoryFeed />
               </Paper>
             </Container>

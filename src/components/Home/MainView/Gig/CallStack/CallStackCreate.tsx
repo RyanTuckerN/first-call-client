@@ -16,8 +16,13 @@ import {
   ListItemText,
   IconButton,
   Chip,
+  Avatar,
 } from "@mui/material";
-import { formControl, properizeNoTrim } from "../../../../_helpers/helpers";
+import {
+  formControl,
+  properize,
+  properizeNoTrim,
+} from "../../../../_helpers/helpers";
 import { Backspace } from "@mui/icons-material";
 import { Box } from "@mui/system";
 import * as _ from "lodash";
@@ -26,6 +31,7 @@ import API_URL from "../../../../_helpers/environment";
 import { UserCtx } from "../../../../Context/MainContext";
 import { AppState } from "../../../../../App";
 import { Gig } from "../../../../../types/API.types";
+import { instrumentOptions } from "../../../../../types/AutocompleteOptions";
 
 interface RouteParams {
   gigId: string;
@@ -33,9 +39,10 @@ interface RouteParams {
 
 interface CallStackCreateProps extends RouteComponentProps<RouteParams> {
   gigId: number | null;
-  setCallStackEmpty: (b:boolean) => void;
-  addGig: (gig:Gig)=>void
+  setCallStackEmpty: (b: boolean) => void;
+  addGig: (gig: Gig) => void;
 
+  followInfo: any[];
 }
 
 interface CallStackCreateState {
@@ -66,7 +73,8 @@ class CallStackCreate extends Component<
   handleRole = (e: any) =>
     this.setState({ roleVal: e.target.value.toLowerCase() });
 
-  handleEmail = (e: any) => this.setState({ emailVal: e.target.value.toLowerCase() });
+  handleEmail = (e: any) =>
+    this.setState({ emailVal: e.target.value.toLowerCase() });
 
   handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,7 +92,7 @@ class CallStackCreate extends Component<
     obj[this.state.roleVal] = [...new Set(arr)];
     console.log(obj);
     this.setState({ stackTable: obj, emailVal: "" });
-    this.props.setCallStackEmpty(false)
+    this.props.setCallStackEmpty(false);
   };
 
   handleDelete = (role: string, email: string): void => {
@@ -104,18 +112,18 @@ class CallStackCreate extends Component<
       const json = await fetchHandler({
         url: `${API_URL}/gig/${this.props.gigId}/callStack`,
         method: "post",
-        body: {stackTable: this.state.stackTable},
+        body: { stackTable: this.state.stackTable },
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log('callStack', json)
-      json.success && this.context.handleSnackBar('Success!', 'success');
-      json.success && this.props.setCallStackEmpty(true)
-      if(json.success){
-        const gig = {...json.gig, callStack: json.callStack }
-        this.props.addGig(gig)
+      console.log("callStack", json);
+      json.success && this.context.handleSnackBar("Success!", "success");
+      json.success && this.props.setCallStackEmpty(true);
+      if (json.success) {
+        const gig = { ...json.gig, callStack: json.callStack };
+        this.props.addGig(gig);
       }
     } catch (err) {
-      this.context.handleSnackBar(err, 'error');
+      this.context.handleSnackBar(err, "error");
     }
   };
 
@@ -124,10 +132,9 @@ class CallStackCreate extends Component<
     this.callstackEnd?.scrollIntoView({ behavior: "smooth" });
   };
 
-
   componentDidMount() {
     // this.scrollToBottom();
-    this.props.setCallStackEmpty(true)
+    this.props.setCallStackEmpty(true);
   }
 
   componentDidUpdate(
@@ -137,11 +144,14 @@ class CallStackCreate extends Component<
     if (prevState.stackTable !== this.state.stackTable) {
       this.scrollToBottom();
     }
-    if(prevState.stackTable !== this.state.stackTable){
-      this.props.setCallStackEmpty(_.isEmpty(this.state.stackTable))
+    if (prevState.stackTable !== this.state.stackTable) {
+      this.props.setCallStackEmpty(_.isEmpty(this.state.stackTable));
     }
-    if(prevProps.gigId !== this.props.gigId && typeof this.props.gigId==='number'){
-      this.saveCallStackToDB()
+    if (
+      prevProps.gigId !== this.props.gigId &&
+      typeof this.props.gigId === "number"
+    ) {
+      this.saveCallStackToDB();
       // this.props.fetchDetails()
     }
   }
@@ -189,22 +199,91 @@ class CallStackCreate extends Component<
               sx={{ marginTop: 1 }}
             >
               <Grid item xs={6}>
-                <TextField
-                  label="Instrument"
-                  value={properizeNoTrim(this.state.roleVal)}
-                  onChange={this.handleRole}
-                  fullWidth
+                <Autocomplete
+                  id="instrument-input"
+                  freeSolo
+                  onChange={(e: any, newVal: string | null) => {
+                    this.setState({ roleVal: newVal?.toLowerCase() ?? "" });
+                  }}
+                  value={
+                    this.state.roleVal ? properize(this.state.roleVal) : ""
+                  }
+                  options={[
+                    ...new Set([
+                      ...instrumentOptions.map((i) => i),
+                      ...roles.map((r) => properize(r)),
+                    ]),
+                  ].sort()}
+                  onInputChange={(e: any, newVal: string | null) => {
+                    this.setState({ roleVal: newVal?.toLowerCase() ?? "" });
+                  }}
+                  openOnFocus
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      fullWidth
+                      title="Instrument"
+                      label="Instrument"
+                      variant="outlined"
+                      id="instrument"
+                      name="instrument"
+                    />
+                  )}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Email"
-                  value={this.state.emailVal}
-                  onChange={this.handleEmail}
-                  fullWidth
-                  InputProps={{
-                    endAdornment: <Button type="submit">Add</Button>,
+              <Grid item xs={6} pl={1}>
+                <Autocomplete
+                  id="email-input"
+                  freeSolo
+                  openOnFocus
+                  value={this.state.emailVal?.toLowerCase() ?? ""}
+                  options={
+                    this.props.followInfo.filter(
+                      (user) =>
+                        user.role?.toLowerCase() ===
+                        this.state.roleVal?.toLowerCase()
+                    )
+                    // .map((user) => user.email)
+                  }
+                  onChange={(e: any, option: any) => {
+                    this.setState({
+                      emailVal: option?.email?.toLowerCase() ?? "",
+                    });
                   }}
+                  onInputChange={(e: any, option: any) => {
+                    this.setState({ emailVal: option?.toLowerCase() ?? "" });
+                  }}
+                  renderOption={(props, option) => {
+                    console.log(option);
+                    return (
+                      <Box component="li" {...props}>
+                        <Avatar src={option.photo} alt="" />
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <Typography variant="subtitle1">
+                          {option.name}
+                        </Typography>{" "}
+                        &nbsp;&nbsp;
+                        <Typography variant="body1">{option.role}</Typography>
+                      </Box>
+                    );
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Email"
+                      fullWidth
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <>
+                            <InputAdornment position="end">
+                              <Button type="submit" disabled={!this.state.emailVal || !this.state.roleVal}>Add</Button>
+                            </InputAdornment>
+                          </>
+                        ),
+                      }}
+                    />
+                  )}
                 />
                 <Typography variant="caption" color="red">
                   {this.state.message}
@@ -222,14 +301,18 @@ class CallStackCreate extends Component<
                 <List>
                   {stackTable[r].map((email, i) => (
                     <React.Fragment key={i}>
-                      <Box display="flex" alignItems='center'>
+                      <Box display="flex" alignItems="center">
                         <ListItemText key={i}>
                           <Typography variant="body2">
-                            <strong>{i + 1}{`.)`}</strong> &nbsp;&nbsp; {email}
+                            <strong>
+                              {i + 1}
+                              {`.)`}
+                            </strong>{" "}
+                            &nbsp;&nbsp; {email}
                           </Typography>
                         </ListItemText>
-                        <IconButton onClick={()=>this.handleDelete(r, email)}>
-                          <Backspace color='error' />
+                        <IconButton onClick={() => this.handleDelete(r, email)}>
+                          <Backspace color="error" />
                         </IconButton>
                       </Box>
                     </React.Fragment>

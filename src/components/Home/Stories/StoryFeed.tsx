@@ -1,18 +1,18 @@
 import {
-  Container,
-  Paper,
   Grid,
   List,
   ListItem,
-  ListSubheader,
-  IconButton,
+  Typography,
 } from "@mui/material";
-import { Language, Groups } from "@mui/icons-material";
 import React from "react";
 import { Story } from "../../../types/API.types";
 import API_URL from "../../_helpers/environment";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import StoryCard from "./StoryCard";
+import { Box, keyframes } from "@mui/system";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { LoadingFeed } from "../../Skeletons";
+
 
 interface StoryFeedProps {
   dashboard?: boolean;
@@ -20,20 +20,38 @@ interface StoryFeedProps {
 
 interface StoryFeedState {
   stories: Story[];
+  moreToLoad: boolean;
 }
 
 class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
   constructor(props: StoryFeedProps) {
     super(props);
-    this.state = { stories: [] };
+    this.state = { stories: [], moreToLoad: true };
   }
 
   handleFetch = async (): Promise<boolean> => {
     try {
+      console.log(
+        this.state.stories.length &&
+          (await new Promise((res) => {
+            setTimeout(() => {
+              res("test");
+            }, 3000);
+          }))
+      );
       const { stories, success, message } = await fetchHandler({
-        url: `${API_URL}/story`,
+        url: `${API_URL}/story/${
+          this.props.dashboard
+            ? "dashboard"
+            : this.state.stories.length
+            ? `?lt=${Math.min(...this.state.stories.map((s) => s.id))}`
+            : ""
+        }`,
+        auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      success && this.setState({ stories });
+      success && !stories.length && this.setState({ moreToLoad: false });
+      success &&
+        this.setState({ stories: [...this.state.stories, ...stories] });
       console.log(message);
       return success;
     } catch (error) {
@@ -47,44 +65,70 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
   }
 
   render() {
+
     return (
-      <Grid
-        container
-        sx={
-          !this.props.dashboard
-            ? {
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                maxHeight: "100%",
-              }
-            : {}
-        }
-      >
-        <List
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            p: 0,
-          }}
+      <>
+        <Grid
+          // container
+          sx={
+            !this.props.dashboard
+              ? {
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  maxHeight: "100%",
+                }
+              : {}
+          }
         >
-          {this.state.stories
-            .sort(
-              (a, b) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            )
-            .map((story) => (
-              <ListItem
-                key={story.id}
-                sx={this.props.dashboard ? { p: 0, pb: 2 } : {}}
-              >
-                <StoryCard {...story} dashboard={this.props.dashboard} />
-              </ListItem>
-            ))}
-        </List>
-      </Grid>
+          {!this.props.dashboard && (
+            <Box component="div" width="100%" maxWidth={720}>
+              <Typography variant="h5" fontWeight={100} sx={{ p: 2 }}>
+                <i>Discover</i>
+              </Typography>
+            </Box>
+          )}
+          <List
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              p: 0,
+            }}
+          >
+            <InfiniteScroll
+              dataLength={this.state.stories.length} //This is important field to render the next data
+              next={this.handleFetch}
+              hasMore={this.state.moreToLoad}
+              loader={
+                <LoadingFeed />
+              }
+              endMessage={
+                <Typography variant="overline" fontWeight={200} width={30}>
+                  <i>No more messages</i>
+                </Typography>
+              }
+            >
+              {this.state.stories
+                // .sort(
+                //   (a, b) =>
+                //     new Date(b.createdAt).getTime() -
+                //     new Date(a.createdAt).getTime()
+                // )
+                .map((story) => (
+                  <ListItem
+                    key={story.id}
+                    sx={
+                      this.props.dashboard ? { p: 0, pb: 2 } : { p: 0, pb: 2 }
+                    }
+                  >
+                    <StoryCard {...story} dashboard={this.props.dashboard} />
+                  </ListItem>
+                ))}
+            </InfiniteScroll>
+          </List>
+        </Grid>
+      </>
       // </Container>
     );
   }

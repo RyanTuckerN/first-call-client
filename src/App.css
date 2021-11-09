@@ -2,3 +2,19 @@
   height: 2000px;
   background-color: blueviolet;
 } */
+
+.MuiOutlinedInput-root{
+  background-color: rgba(136, 136, 136, 0.097);
+}
+
+.list-link:hover{
+  background-color: #449dbf60;
+}
+
+.list-link{
+  background-color: rgba(0, 0, 0, 0.535);
+}
+
+.MuiAvatar-root{
+  color: rgba(0, 0, 0, 0.755) !important;
+}

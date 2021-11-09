@@ -2,7 +2,7 @@ import React from "react";
 
 import { GigIndexState } from "../GigsIndex";
 import { Notification } from "../../../../../types/API.types";
-import { Grid, Paper, Typography, CardActionArea } from "@mui/material";
+import { Grid, Paper, Typography, CardActionArea, Divider } from "@mui/material";
 import { HashCode } from "../Gig.types";
 import BlockMapper from "./mappers/BlockMapper";
 import BarMapper from "./mappers/BarMapper";
@@ -86,22 +86,24 @@ class GigDashBoard extends React.Component<
           <BarMapper
             {...this.props}
             code={"100"}
-            color="#2374D2"
+            color="#000000"
             notifications={notificationsHash["100"] ?? []}
           />
+          <Divider orientation='vertical' />
           <BarMapper
             {...this.props}
             code={"200"}
-            color="#777755"
+            color="#000000"
             notifications={[
               ...(notificationsHash["200"] ?? []),
               ...(notificationsHash["201"] ?? []),
             ]}
           />
+          <Divider orientation='vertical' />
           <BarMapper
             {...this.props}
             code={"300"}
-            color="#4caf50"
+            color="#000000"
             notifications={[
               ...(notificationsHash["300"] ?? []),
               ...(notificationsHash["301"] ?? []),

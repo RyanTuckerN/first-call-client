@@ -164,17 +164,18 @@ const Notifications: React.FunctionComponent<NotificationsProps> = ({
                 </Typography>
               </ListItemText>
             </ListItem>
-            {i < notifications.length - 1 && <Divider />}
+            {/* {i < notifications.length - 1 && <Divider />} */}
+            <Divider />
           </React.Fragment>
         );
       });
 
   return (
-    <Paper sx={{ width: "100%", height: 'calc(100% - 67px)', overflowY: "scroll",}}>
+    <Paper sx={{ width: "100%",height:'calc(100% - 26px)', overflowY: "auto",}}>
       {/* <Grid item position="sticky">
         {children}
       </Grid> */}
-      <List sx={{  maxHeight:'100%' }}>{mapper(notifications)}</List>
+      <List sx={{  maxHeight:'100%', p: 0 }}>{mapper(notifications)}</List>
     </Paper>
   );
 };

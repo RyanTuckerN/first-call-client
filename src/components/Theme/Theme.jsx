@@ -73,6 +73,7 @@ export const dark = createTheme({
     // },
     background: {
       main: "#cfddccc9",
+      
     },
   },
   typography: {

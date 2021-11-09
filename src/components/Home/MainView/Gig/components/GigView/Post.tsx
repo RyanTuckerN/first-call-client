@@ -18,10 +18,15 @@ import {
   Reply,
   Close,
   Edit,
+  ArrowUpwardRounded,
+  FavoriteOutlined,
+  Favorite,
+  FavoriteBorder,
 } from "@mui/icons-material";
 import { returnTimeDifference } from "../../../../../_helpers/helpers";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import API_URL from "../../../../../_helpers/environment";
+import ReplyIcon from "./assets/replySmall.png";
 
 interface PostComponentProps {
   post: Post;
@@ -64,8 +69,10 @@ class PostComponent extends React.Component<
     this.setState({ showInput: true, editing: true });
   };
 
-  handleEditSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<boolean> => {
-    e.preventDefault()
+  handleEditSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<boolean> => {
+    e.preventDefault();
     if (!this.state.editingText) return false;
     const json = await fetchHandler({
       url: `${API_URL}/board/${this.state.post.gigId}/post/${this.state.post.id}/edit`,
@@ -95,8 +102,10 @@ class PostComponent extends React.Component<
     // }
   }
 
-  handleReply = async (e: React.FormEvent<HTMLFormElement>): Promise<boolean> => {
-    e.preventDefault()
+  handleReply = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<boolean> => {
+    e.preventDefault();
     if (!this.state.replyText) return false;
     const json = await fetchHandler({
       url: `${API_URL}/board/${this.state.post.gigId}/newPost/${this.state.post.id}`,
@@ -202,7 +211,10 @@ class PostComponent extends React.Component<
           ) : (
             <ArrowRight sx={{ padding: 0.5, color: "rgba(0,0,0,0)" }} />
           )}
-          <Typography variant={i === 1 ? "subtitle1" : 'subtitle2'} fontWeight={i === 1 ? 500 : 400}>
+          <Typography
+            variant={i === 1 ? "subtitle1" : "subtitle2"}
+            fontWeight={i === 1 ? 500 : 400}
+          >
             &nbsp;
             <Link to={`/main/profile/${this.props.post.author}`}>
               {post.user?.name}
@@ -235,7 +247,7 @@ class PostComponent extends React.Component<
           <Typography
             variant="body2"
             fontWeight={400}
-            sx={{pr: 5}}
+            sx={{ pr: 5 }}
             style={{ wordWrap: "break-word" }}
           >
             {post.text}
@@ -247,20 +259,23 @@ class PostComponent extends React.Component<
           xs={12}
           sx={{
             position: "relative",
-            left: 25,
+            left: -2,
             display: "flex",
             alignItems: "center",
             marginTop: -1.1,
           }}
         >
-          <Typography fontSize={15}>{post.upvotes}</Typography>
           <IconButton onClick={this.handleLike}>
-            <ArrowCircleUp
-              fontSize="inherit"
-              sx={{color: post.voters.includes(user.id) ? "orangered" : undefined}}
-            />
-            <Typography variant="caption">upvote</Typography>
+            {post.voters.includes(user.id) ? (
+              <Favorite sx={{height:16}} color="error" />
+            ) : (
+              <FavoriteBorder sx={{height:16}} fontSize="inherit" />
+            )}
           </IconButton>
+          <Typography fontSize={15}>{post.upvotes} </Typography>
+          <Typography variant="caption">
+            &nbsp;{post.upvotes === 1 ? "like" : "likes"}
+          </Typography>
           <IconButton
             onClick={() =>
               this.setState({
@@ -276,7 +291,16 @@ class PostComponent extends React.Component<
               </>
             ) : (
               <>
-                <Reply fontSize="inherit" />
+                <img
+                  src={ReplyIcon}
+                  alt="reply-icon"
+                  style={{
+                    height: 15,
+                    width: 20,
+                    filter: this.context.darkModeOn === 'true' ?
+                      "invert(100%) saturate(5%) hue-rotate(327deg) brightness(98%) contrast(81%)" : '',
+                  }}
+                />
                 <Typography variant="caption">reply</Typography>
               </>
             )}
@@ -300,15 +324,17 @@ class PostComponent extends React.Component<
             }}
           >
             <Box
-            action="submit"
-            id="reply-input"
-            onSubmit={this.state.editing ? this.handleEditSubmit : this.handleReply}
-            component="form"
-            noValidate
+              action="submit"
+              id="reply-input"
+              onSubmit={
+                this.state.editing ? this.handleEditSubmit : this.handleReply
+              }
+              component="form"
+              noValidate
             >
               <TextField
-              autoFocus
-              fullWidth
+                autoFocus
+                fullWidth
                 value={
                   this.state.editing
                     ? this.state.editingText
@@ -327,7 +353,7 @@ class PostComponent extends React.Component<
                 // onClick={
                 //   this.state.editing ? this.handleEditSubmit : this.handleReply
                 // }
-                type='submit'
+                type="submit"
                 color={this.state.editing ? "success" : "primary"}
               >
                 {this.state.editing ? "SAVE" : "REPLY"}

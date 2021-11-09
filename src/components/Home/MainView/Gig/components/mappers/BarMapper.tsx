@@ -1,7 +1,10 @@
+import { useContext } from 'react';
 import { Grid, Paper, Typography, CardActionArea } from "@mui/material";
 import { HashCode } from "../../Gig.types";
 import { Notification } from "../../../../../../types/API.types";
 import { GigIndexState } from "../../GigsIndex";
+import { UserCtx } from "../../../../../Context/MainContext";
+import { light } from '../../../../../Theme/Theme';
 
 interface BarMapperProps extends GigIndexState {
   code: HashCode;
@@ -15,6 +18,9 @@ const BarMapper: React.FunctionComponent<BarMapperProps> = ({
   messageCode,
   setGigState,
 }) => {
+
+  const context = useContext(UserCtx)
+
   const handleClick = () => setGigState("messageCode", parseInt(code));
 
   return (
@@ -31,7 +37,8 @@ const BarMapper: React.FunctionComponent<BarMapperProps> = ({
               justifyContent: "space-around",
               alignItems: "center",
               background: color + "",
-              color: parseInt(code) === messageCode ? "white" : "",
+              color: "white" ,
+              
             }}
             elevation={5}
           >
@@ -44,7 +51,7 @@ const BarMapper: React.FunctionComponent<BarMapperProps> = ({
           <div
             style={{
               height: 2,
-              backgroundColor: parseInt(code) === messageCode ? "white" : "",
+              backgroundColor: parseInt(code) === messageCode ? light.palette.primary.main : "",
             }}
           />
         </CardActionArea>

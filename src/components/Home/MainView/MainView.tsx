@@ -12,7 +12,7 @@ import Settings from "./Settings/Settings";
 import { RouteOption } from "./Gig/Gig.types";
 import Inbox from "./Inbox/Inbox";
 import { fetchHandler } from "../../_helpers/fetchHandler";
-import { Container } from "@mui/material";
+import { Container, Paper } from "@mui/material";
 import API_URL from "../../_helpers/environment";
 
 export interface MainViewProps extends RouteComponentProps {
@@ -46,7 +46,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
   fetchFollowsInfo = async (): Promise<boolean> => {
     try {
       const { success, users, message } = await fetchHandler({
-        url: `${API_URL}/user/follows`,
+        url: `${API_URL}/user/follows/${this.props.user.id}`,
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
       console.log("USERS --> ", users);
@@ -85,7 +85,9 @@ class MainView extends Component<MainViewProps, MainViewState> {
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
             <Container maxWidth="lg" sx={{ height: "100%" }}>
-              <Settings {...this.props} />
+              <Paper sx={{p:2, height: '100%'}}>
+                <Settings {...this.props} />
+              </Paper>
             </Container>
           </Route>
           <Route path={`${this.props.match.path}/inbox`}>

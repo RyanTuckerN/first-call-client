@@ -9,6 +9,7 @@ interface GigCreateProps extends User {
   addGig: (gig: Gig) => void;
   fetchDetails: () => Promise<void>;
   setMainState: (key: string, value: any) => void;
+  followInfo: any[]
 }
 
 interface GigCreateState {
@@ -45,6 +46,7 @@ class GigCreate extends Component<GigCreateProps, GigCreateState> {
             setCallStackEmpty={this.setCallStackEmpty}
             gigId={this.state.gigId}
             addGig={this.props.addGig}
+            followInfo={this.props.followInfo}
           />
         </Grid>
       </Grid>

@@ -1,17 +1,14 @@
 import { FunctionComponent } from "react";
 import { Gig, User } from "../../../../../../../types/API.types";
-import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
-import { CardActionArea } from "@mui/material";
-import CardContent from "@mui/material/CardContent";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { HashLink as Link } from "react-router-hash-link";
-import { Grid, ListItem } from "@mui/material";
+import { ListItem } from "@mui/material";
 import { returnTime } from "../../../../../../_helpers/helpers";
 import { stringAvatar } from "../../../../Settings/Header";
 import { DetailedGig } from "../../../Gig.types";
-import { LocationOn, AttachMoney } from "@mui/icons-material";
+import { AttachMoney } from "@mui/icons-material";
 import "../../../Gig.css";
 import { Box } from "@mui/system";
 
@@ -42,17 +39,16 @@ const GigCardAlt: FunctionComponent<GigProps> = ({
     sx: { height: avatarSize, width: avatarSize },
   };
 
-  const colors = ["00000000", "00000000", "00000000"];
   return bandLeader ? (
     <Link smooth to={`/main/gig/${id}#gig-anchor`}>
       <ListItem
         disablePadding
         sx={{ border: "solid 1px rgba(255, 255, 255, 0.06)" }}
+        className='list-link'
       >
         <CardHeader
           sx={{
             color: "white",
-            backgroundColor: colors[Math.floor(Math.random() * 3)],
             width: "100%",
           }}
           avatar={

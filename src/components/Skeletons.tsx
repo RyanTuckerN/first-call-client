@@ -37,7 +37,7 @@ export function Loading() {
       alignItems="center"
     >
       <Paper
-        elevation={12}
+        elevation={0}
         sx={{
           width: "100%",
           height: 360,
@@ -61,6 +61,35 @@ export function Loading() {
           </div>
         </Grid>
       </Paper>
+    </Grid>
+  );
+}
+
+
+export function LoadingFeed() {
+  return (
+    <Grid
+      container
+      item
+      xs={12}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Grid
+        item
+        xs={12}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <div className="lds-ellipsis">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </Grid>
     </Grid>
   );
 }

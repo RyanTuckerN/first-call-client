@@ -10,6 +10,7 @@ import { DetailedGig, NotificationsHash, RouteOption } from "./Gig.types";
 import GigWelcome from "./components/GigWelcome";
 import { AppState } from "../../../../App";
 import GigCreate from "./GigCreate";
+import { Container, Paper } from "@mui/material";
 
 interface GigIndexProps extends RouteComponentProps {
   user: User | null; //App State
@@ -155,12 +156,17 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
 
         <Route exact path="/main/add">
           {this.state.user ? (
-            <GigCreate
-              {...this.state.user}
-              addGig={this.addGig}
-              fetchDetails={this.fetchDetails}
-              setMainState={this.props.setMainState}
-            />
+            <Container maxWidth={'lg'} sx={{height:'100%'}}>
+              <Paper sx={{height:'100%'}}>
+                <GigCreate
+                  {...this.state.user}
+                  followInfo={this.props.followInfo}
+                  addGig={this.addGig}
+                  fetchDetails={this.fetchDetails}
+                  setMainState={this.props.setMainState}
+                />
+              </Paper>
+            </Container>
           ) : null}
         </Route>
       </>

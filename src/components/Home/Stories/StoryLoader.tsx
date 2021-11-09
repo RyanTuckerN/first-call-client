@@ -28,7 +28,7 @@ class StoryLoader extends React.Component<StoryLoaderProps, StoryLoaderState> {
   fetchStory = async (): Promise<boolean> => {
     try {
       const { story, success, message } = await fetchHandler({
-        url: `${API_URL}/story/${this.props.match.params.storyId}`,
+        url: `${API_URL}/story/id/${this.props.match.params.storyId}`,
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
       // alert(message);

@@ -1,7 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import { GigIndexState } from "../GigsIndex";
 import { Notification } from "../../../../../types/API.types";
-import { Button, Grid, Paper, Typography, Box } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Paper,
+  Typography,
+  Box,
+  Avatar,
+  Badge,
+} from "@mui/material";
 import { DetailedGig, HashCode, RouteOption, Routes } from "../Gig.types";
 import NotificationsDashBoard from "./GigDashboard";
 import Notifications from "../../../components/Notifications";
@@ -12,7 +20,7 @@ import "../Gig.css";
 import { fetchHandler } from "../../../../_helpers/fetchHandler";
 import API_URL from "../../../../_helpers/environment";
 import { UserCtx } from "../../../../Context/MainContext";
-import { dark } from "../../../../Theme/Theme";
+import { dark, light } from "../../../../Theme/Theme";
 import StoryFeed from "../../../Stories/StoryFeed";
 import Drawer from "@mui/material/Drawer";
 import AppBar from "@mui/material/AppBar";
@@ -23,11 +31,14 @@ import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+import { Notifications as NotificationsIcon } from "@mui/icons-material";
 import GigCreate from "../GigCreate";
 import { Redirect } from "react-router";
 import { Add } from "@mui/icons-material";
+import { Link } from "react-router-dom";
+import { smallImage } from "../../../../_helpers/helpers";
+import Swal from "sweetalert2";
 
 interface GigWelcomeProps extends GigIndexState {
   dashboardRoute: RouteOption; //Main state
@@ -116,13 +127,13 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       <Grid
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
-        <Typography variant="h5" paddingBottom={2} paddingTop={1}>
+        {/* <Typography variant="h5" paddingBottom={2} paddingTop={1}>
           {user && `Welcome back, ${user.name.split(" ")[0]}!`}
-        </Typography>
+        </Typography> */}
       </Grid>
       {routes[dashboardRoute]?.dash}
       <Grid container spacing={2} display="flex" justifyContent="center">
-        <Grid item xs={12}>
+        <Grid item xs={12} sm={10}>
           {routes[dashboardRoute]?.body}
           <Box display="flex" justifyContent="center" p={1}>
             {dashboardRoute === "notifications" && notifications.length ? (
@@ -175,12 +186,12 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
           [`& .MuiDrawer-paper`]: {
             width: drawerWidth,
             boxSizing: "border-box",
-            backgroundColor: dark.palette.background.default,
+            backgroundColor: light.palette.grey[900],
           },
           // height: '100%'
         }}
       >
-        <Toolbar />
+        <Toolbar sx={{ height: 100 }} />
         <Box sx={{}}>
           <Grid
             container
@@ -191,9 +202,44 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
             padding={2}
             wrap={"nowrap"}
             // pr={4}
-            // maxHeight={"100%"}
+            maxHeight={"100%"}
             // bgcolor={dark.palette.background.default}
           >
+            {!!props.offers.length && (
+              <>
+                <Box
+                  component="div"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <Typography
+                    pt={1}
+                    variant="subtitle1"
+                    fontWeight={600}
+                    color="white"
+                  >
+                    Offers
+                  </Typography>
+                  <Badge badgeContent="!" variant="standard" color="primary">
+                    <NotificationsIcon />
+                  </Badge>
+                </Box>
+                <Grid
+                  border={1}
+                  borderColor={"divider"}
+                  // style={{ overflowY: "auto" }}
+                >
+                  <GigsMapper
+                    {...props}
+                    gigsOrOffers="offers"
+                    user={props.user}
+                  />
+                </Grid>
+              </>
+            )}
             <Box
               component="div"
               sx={{ display: "flex", justifyContent: "space-between" }}
@@ -208,7 +254,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
             <Grid
               border={1}
               borderColor={"divider"}
-              style={{ maxHeight: "45%", overflowY: "scroll" }}
+              style={{ maxHeight: "100%", overflowY: "auto" }}
             >
               <GigsMapper {...props} gigsOrOffers="gigs" user={props.user} />
               {!props.gigs.length && (
@@ -219,31 +265,6 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                   color="#ffffff80"
                 >
                   <i>... NO GIGS!</i>
-                </Typography>
-              )}
-            </Grid>
-            <Typography
-              pt={1}
-              variant="subtitle1"
-              fontWeight={600}
-              color="white"
-            >
-              Offers
-            </Typography>
-            <Grid
-              border={1}
-              borderColor={"divider"}
-              style={{ maxHeight: "45%", overflowY: "scroll" }}
-            >
-              <GigsMapper {...props} gigsOrOffers="offers" user={props.user} />
-              {!props.offers.length && (
-                <Typography
-                  variant="overline"
-                  ml={2}
-                  fontWeight={300}
-                  color="#ffffff80"
-                >
-                  <i>... NO OFFERS!</i>
                 </Typography>
               )}
             </Grid>
@@ -258,15 +279,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       >
         {["notifications", "gigs", "offers"].includes(dashboardRoute) ? (
           <>
-            <Grid
-              item
-              md={12}
-              lg={8}
-              xl={9}
-              height="calc(100% + 26px)"
-              border={1}
-              borderColor={dark.palette.divider}
-            >
+            <Grid item md={12} lg={8} xl={9} height="calc(100% - 30px)">
               <Box
                 component="div"
                 sx={{ display: "flex", justifyContent: "space-between" }}
@@ -287,14 +300,41 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                   >
                     <Button
                       variant="text"
-                      color="error"
-                      onClick={async () => console.log(await handleDeleteAll())}
+                      // color="error"
+                      onClick={async () => {
+                        Swal.fire({
+                          title: 'Are you sure?',
+                          text: "Your notifications will be gone for good!",
+                          icon: 'warning',
+                          showCancelButton: true,
+                          confirmButtonColor: '#3085d6',
+                          cancelButtonColor: '#d33',
+                          confirmButtonText: 'Yes, delete them!',
+                          customClass: {
+                            container:
+                              context?.darkModeOn === "true" ? "dark-mode-swal" : "",
+                          }
+                        }).then(async (result) => {
+                          if (result.isConfirmed) {
+                            await handleDeleteAll() && Swal.fire(
+                              {title: 'Deleted!',
+                              text: 'Your notifications have been deleted.',
+                              icon: 'success',
+                              customClass: {
+                                container:
+                                  context?.darkModeOn === "true" ? "dark-mode-swal" : "",
+                              }}
+                            )
+                          }
+                        })
+                        
+                      }}
                     >
                       Clear
                     </Button>
                     <Button
                       variant="text"
-                      color="info"
+                      // color="info"
                       onClick={() => setGigState("messageCode", null)}
                     >
                       show all
@@ -311,13 +351,23 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                   </Box>
                 ) : null}
               </Box>
-              <NotificationsDashBoard {...props} width={599} />
-              <Notifications
-                notifications={filterNotifications(messageCode, notifications)}
-                setHomeState={props.setHomeState}
+              <Box
+                component="div"
+                border={1}
+                borderColor={dark.palette.divider}
+                height="100%"
               >
-                {/* <NotificationsDashBoard {...props} width={599} /> */}
-              </Notifications>
+                <NotificationsDashBoard {...props} width={599} />
+                <Notifications
+                  notifications={filterNotifications(
+                    messageCode,
+                    notifications
+                  )}
+                  setHomeState={props.setHomeState}
+                >
+                  {/* <NotificationsDashBoard {...props} width={599} /> */}
+                </Notifications>
+              </Box>
               <Box display="flex" justifyContent="center" p={2}></Box>
             </Grid>
             <Grid
@@ -329,15 +379,22 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
               flexDirection="column"
               wrap={"nowrap"}
               pl={1}
-              maxHeight={"95%"}
+              pt={0}
+              maxHeight={"100%"}
               sx={{ display: { xs: "none", lg: "flex" } }}
             >
-              <Grid item xs={12} sx={{ maxHeight: "45%", overflowY: "hidden" }}>
+              <Grid item xs={12} sx={{ maxHeight: "50%", overflowY: "hidden" }}>
                 <Box
                   component="div"
-                  sx={{ display: "flex", justifyContent: "space-between" }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-end",
+                    position: "relative",
+                    bottom: -3,
+                  }}
                 >
-                  <Typography pt={1} variant="subtitle1" fontWeight={600}>
+                  <Typography pt={1} variant="h6" fontWeight={200}>
                     Stories
                   </Typography>
                   <Button
@@ -345,6 +402,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                       setMainState("profileModalOpen", true);
                       setRoute("addStory");
                     }}
+                    sx={{ position: "relative", bottom: -3 }}
                   >
                     <Add fontSize="small" /> new Story?
                   </Button>
@@ -353,18 +411,24 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                   border={1}
                   borderColor={"divider"}
                   component="div"
-                  sx={{ maxHeight: "100%", width: "100%", overflowY: "scroll" }}
+                  sx={{ maxHeight: "100%", width: "100%", overflowY: "auto" }}
                 >
                   <StoryFeed dashboard={true} />
+                  <div style={{ height: 20, width: "100%" }} />
                 </Box>
               </Grid>
 
-              <Grid item xs={12} sx={{ maxHeight: "45%" }}>
+              <Grid item xs={12} sx={{ maxHeight: "50%" }}>
                 {/* <Box
                   component="div"
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 > */}
-                <Typography pt={1} variant="subtitle1" fontWeight={600}>
+                <Typography
+                  pt={1}
+                  variant="h6"
+                  fontWeight={200}
+                  sx={{ position: "relative", bottom: -15 }}
+                >
                   People You Follow:
                 </Typography>
 
@@ -373,17 +437,63 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                   borderColor={"divider"}
                   component="ul"
                   sx={{
-                    maxHeight: "100%",
+                    maxHeight: "calc(100% - 46px)",
                     width: "100%",
-                    // overflowY: "scroll",
+                    overflowY: "auto",
+                    ml: 0,
+                    pl: 0,
+                    bgcolor: dark.palette.background.default,
+                    color: 'white'
                   }}
                 >
-                  {user?.following.map((userId) => (
-                    <Box key={userId} component="li">
-                      {!!followInfo?.length &&
-                        followInfo?.filter((u: any) => u.id === userId)[0].name}
-                    </Box>
-                  ))}
+                  {!!followInfo &&
+                    user?.following?.map((userId, i) => {
+                      const u =
+                        !!followInfo?.length &&
+                        followInfo?.filter((u: any) => u.id === userId)[0];
+                      if (!u) return <React.Fragment />;
+                      return (
+                        <Link to={`/main/profile/${u.id}`} key={u.id}>
+                          <Box
+                            component="li"
+                            display="flex"
+                            alignItems="center"
+                            pl={2}
+                            justifyContent="space-between"
+                            className="list-link"
+                          >
+                            <Box
+                              component="div"
+                              display="flex"
+                              alignItems="center"
+                              justifyContent="space-between"
+                            >
+                              <Avatar
+                                src={smallImage(u.photo ?? '')}
+                                alt=""
+                                sx={{ height: 20, width: 20 }}
+                              />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <Typography variant="subtitle1">
+                                {u.name}
+                              </Typography>{" "}
+                            </Box>
+                            {/* &nbsp;&nbsp; */}
+                            <Typography variant="body2" pr={1} fontWeight={300}>
+                              {u.role}
+                            </Typography>
+                          </Box>
+                        </Link>
+                        //   <Box component="li"  {...props}>
+                        //   <Avatar
+                        //     src={option.photo}
+                        //     alt=""
+                        //   />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        //   <Typography variant='subtitle1'>{option.name}</Typography> &nbsp;&nbsp;
+                        //   <Typography variant='body1'>{option.role}</Typography>
+                        // </Box>
+                      );
+                    })}
                 </Box>
               </Grid>
             </Grid>

@@ -1,4 +1,4 @@
-import { Component } from "react";
+import React, { Component } from "react";
 import {
   Avatar,
   Grid,
@@ -34,26 +34,30 @@ import BasicModal from "../../components/BasicModal";
 import "./Profile.css";
 import StoryComponent from "../../Stories/Story";
 import Swal from "sweetalert2";
+import { dark } from "../../../Theme/Theme";
 
 interface RouteParams {
   userId: string;
 }
 
 interface ProfileProps extends RouteComponentProps<RouteParams> {
-  modalOpen?: boolean
-  setMainState: (key: string, value: any) => void
+  modalOpen?: boolean;
+  setMainState: (key: string, value: any) => void;
 }
 
 interface ProfileState {
   user: User | null;
   anchorEl: HTMLButtonElement | null;
+  followAnchor: any | null;
   modalOpen: boolean;
+  followInfo: any[];
   storyImage: string;
   storyText: string;
   storyError: string;
   stories: Story[];
   storyModalOpen: boolean;
   storyModalId: number;
+  followModalOpen: "followers" | "following" | null;
 }
 
 class Profile extends Component<ProfileProps, ProfileState> {
@@ -65,12 +69,15 @@ class Profile extends Component<ProfileProps, ProfileState> {
       user: null,
       anchorEl: null,
       modalOpen: this.props.modalOpen ?? false,
+      followInfo: [],
       storyImage: "",
       storyText: "",
       storyError: "",
       stories: [],
       storyModalOpen: false,
       storyModalId: 0,
+      followModalOpen: null,
+      followAnchor: null,
     };
   }
 
@@ -82,7 +89,13 @@ class Profile extends Component<ProfileProps, ProfileState> {
       });
       json.success &&
         this.setState({ user: json.user, stories: json.user.stories });
-      return json.success;
+      const { success, users, message } = await fetchHandler({
+        url: `${API_URL}/user/follows/${json.user.id}`,
+        auth: this.context.token ?? localStorage.getItem("token") ?? "",
+      });
+      console.log("USERS --> ", users);
+      success && this.setState({ followInfo: users });
+      return json.success && success;
     } catch (error) {
       alert(error);
       return false;
@@ -116,7 +129,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
   };
   componentDidMount() {
     this.fetchUser();
-    this.props.setMainState('profileModalOpen', false)
+    this.props.setMainState("profileModalOpen", false);
   }
 
   uploadImage = async (
@@ -146,6 +159,9 @@ class Profile extends Component<ProfileProps, ProfileState> {
       return false;
     }
   };
+
+  setFollowModalOpen = (open: "followers" | "following" | null): void =>
+    this.setState({ followModalOpen: open });
 
   setModalOpen = (b: boolean): void => this.setState({ modalOpen: b });
   setStoryModalOpen = (b: boolean): void =>
@@ -184,7 +200,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
             container:
               this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
           },
-          returnFocus: false
+          returnFocus: false,
         });
       // success && this.setState({})
       success &&
@@ -202,9 +218,27 @@ class Profile extends Component<ProfileProps, ProfileState> {
     }
     // return true;
   };
+
+  // fetchFollowsInfo = async (): Promise<boolean> => {
+  //   try {
+  //     const { success, users, message } = await fetchHandler({
+  //       url: `${API_URL}/user/follows/${this.state.user.id}`,
+  //       auth: this.context.token ?? localStorage.getItem("token") ?? "",
+  //     });
+  //     console.log("USERS --> ", users);
+  //     success && this.setState({ followInfo: users });
+  //     return success;
+  //   } catch (error) {
+  //     console.log(error);
+  //     return false;
+  //   }
+  // };
+
   componentDidUpdate(prevProps: ProfileProps, prevState: ProfileState) {
-    prevProps.match.params.userId !== this.props.match.params.userId &&
+    if (prevProps.match.params.userId !== this.props.match.params.userId) {
+      this.setState({ followAnchor: null, followModalOpen: null });
       this.fetchUser();
+    }
     prevState.storyModalOpen &&
       !this.state.storyModalOpen &&
       this.setState({ storyModalId: 0 });
@@ -213,7 +247,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
   render() {
     const { user } = this.state;
     // const {token} = this.context
-    const avatarSize = 175;
+    const avatarSize = 320;
     const open = Boolean(this.state.anchorEl);
     const id = open ? "simple-popover" : undefined;
 
@@ -235,7 +269,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
               justifyContent="center"
               alignItems="flex-end"
             >
-              {user.photo ? (
+              {/* {user.photo ? (
                 <Avatar
                   src={user.photo}
                   sx={{
@@ -245,10 +279,20 @@ class Profile extends Component<ProfileProps, ProfileState> {
                     borderColor: "white",
                   }}
                   alt={user.name}
-                />
+                />800
               ) : (
                 <Avatar {...stringAvatar(user.name, avatarSize)} />
-              )}
+              )} */}
+              <Avatar
+                src={user.photo}
+                sx={{
+                  height: avatarSize,
+                  width: avatarSize,
+                  border: 3,
+                  borderColor: "white",
+                }}
+                alt={user.name}
+              />
             </Grid>
             <Grid
               item
@@ -261,7 +305,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 <IconButton
                   onClick={() => this.setModalOpen(true)}
                   sx={{ position: "relative", right: 45, bottom: 20 }}
-                  title='Add a Gig Story'
+                  title="Add a Gig Story"
                 >
                   <Add />
                 </IconButton>
@@ -278,7 +322,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 // </Link>
               )}
               {this.context.user.id === user.id ? (
-                <Link to="/main/settings" title='Edit Profile'>
+                <Link to="/main/settings" title="Edit Profile">
                   <Edit sx={{ position: "relative", left: 45, bottom: 20 }} />
                 </Link>
               ) : (
@@ -286,12 +330,16 @@ class Profile extends Component<ProfileProps, ProfileState> {
                   <IconButton
                     sx={{ position: "relative", left: 45, bottom: 20 }}
                     onClick={() => this.handleFollow(user.id)}
-                    title={this.context.user?.following?.includes(user.id) ? `Unfollow ${user.name.split(' ')[0]}` : `Follow ${user.name.split(' ')[0]}`}
+                    title={
+                      this.context.user?.following?.includes(user.id)
+                        ? `Unfollow ${user.name.split(" ")[0]}`
+                        : `Follow ${user.name.split(" ")[0]}`
+                    }
                   >
                     {this.context.user.following.includes(user.id) ? (
                       <PersonRemove />
                     ) : (
-                      <PersonAdd sx={{transform: 'scaleX(-1)'}} />
+                      <PersonAdd sx={{ transform: "scaleX(-1)" }} />
                     )}
                   </IconButton>
                 </>
@@ -359,25 +407,156 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 {user.location && user.role ? <>&#183;</> : null}&nbsp;&nbsp;
                 {user.location ? user.location : null}
               </Typography>
-              <Typography sx={{ p: 0.3333, fontSize: 16 }} variant="caption">
+              <Box
+                component="div"
+                sx={{ p: 0.3333, fontSize: 16 }}
+                display="flex"
+              >
                 {!!user.stories.length && (
                   <>
-                    <strong style={{ fontWeight: 900 }}>
+                    <Typography style={{ fontWeight: 900 }}>
                       {user.stories.length}
-                    </strong>
+                    </Typography>
                     &nbsp; stories &nbsp;
                   </>
                 )}
                 {!!user.stories.length && <>&#183;&nbsp;&nbsp;</>}
-                <strong style={{ fontWeight: 900 }}>
+                <Typography
+                  style={{ fontWeight: 900 }}
+                  sx={{ cursor: user.followers.length ? "pointer" : '' }}
+                  aria-owns={
+                    this.state.followModalOpen
+                      ? "mouse-over-popover"
+                      : undefined
+                  }
+                  aria-haspopup="true"
+                  onClick={(e: any) => {
+                    console.log(e.target);
+                    !!user.followers.length && this.setState({
+                      followModalOpen: "followers",
+                      followAnchor: e.target,
+                    });
+                  }}
+                >
                   {user.followers.length}
-                </strong>
+                </Typography>
                 &nbsp; followers &nbsp; &#183;&nbsp;&nbsp;
-                <strong style={{ fontWeight: 900 }}>
+                <Typography
+                  style={{ fontWeight: 900 }}
+                  sx={{ cursor: user.following.length ? "pointer" : '' }}
+                  aria-owns={
+                    this.state.followModalOpen
+                      ? "mouse-over-popover"
+                      : undefined
+                  }
+                  aria-haspopup="true"
+                  onClick={(e: any) => {
+                    console.log(e.target);
+                    !!user.following.length && this.setState({
+                      followModalOpen: "following",
+                      followAnchor: e.target,
+                    });
+                  }}
+                >
                   {user.following.length}
-                </strong>
+                </Typography>
                 &nbsp; following
-              </Typography>
+              </Box>
+              <Popover
+                open={this.state.followModalOpen !== null}
+                anchorEl={this.state.followAnchor}
+                disableRestoreFocus
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+                onClose={() =>
+                  this.setState({ followModalOpen: null, anchorEl: null })
+                }
+                PaperProps={{
+                  sx: {
+                    bgcolor: dark.palette.background.default,
+                    color: "white",
+                    width: 300,
+                    p: 1,
+                  },
+                }}
+              >
+                {!!this.state.followInfo &&
+                  !!this.state.followModalOpen &&
+                  user?.[this.state.followModalOpen]?.map((userId, i) => {
+                    const u =
+                      !!this.state.followInfo?.length &&
+                      this.state.followInfo
+                        ?.slice(0, 10)
+                        .filter((u: any) => u.id === userId)[0];
+                    if (!u) return <React.Fragment />;
+                    return (
+                      <Link to={`/main/profile/${u.id}`} key={u.id}>
+                        <Box
+                          component="li"
+                          display="flex"
+                          alignItems="center"
+                          pl={2}
+                          justifyContent="space-between"
+                          className="list-link"
+                        >
+                          <Box
+                            component="div"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="space-between"
+                          >
+                            <Avatar
+                              src={u.photo}
+                              alt=""
+                              sx={{ height: 20, width: 20 }}
+                            />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <Typography variant="subtitle1">
+                              {u.name}
+                            </Typography>{" "}
+                          </Box>
+                          {/* &nbsp;&nbsp; */}
+                          <Typography variant="body2" pr={1} fontWeight={300}>
+                            {u.role}
+                          </Typography>
+                        </Box>
+                      </Link>
+                      //   <Box component="li"  {...props}>
+                      //   <Avatar
+                      //     src={option.photo}
+                      //     alt=""
+                      //   />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      //   <Typography variant='subtitle1'>{option.name}</Typography> &nbsp;&nbsp;
+                      //   <Typography variant='body1'>{option.role}</Typography>
+                      // </Box>
+                    );
+                  })}
+                {!!this.state.followModalOpen &&
+                  user?.[this.state.followModalOpen]?.length > 10 && (
+                    <Link to="/feed">
+                      <Box
+                        component="li"
+                        display="flex"
+                        alignItems="center"
+                        pl={2}
+                        justifyContent="space-between"
+                        className="list-link"
+                      >
+                        <Typography variant="caption" fontWeight={300}>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...and{" "}
+                          {user?.[this.state.followModalOpen]?.length - 10}{" "}
+                          others.
+                        </Typography>
+                      </Box>
+                    </Link>
+                  )}
+              </Popover>
               {/* <Grid sx={{ maxWidth: 200 }} textAlign="justify">
                 <Typography variant="caption">
                   {user.description ? user.description : null}
@@ -475,9 +654,10 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 </Typography>
                 {this.state.user?.id === this.context.user.id && (
                   <Typography variant="subtitle1" fontWeight={100}>
-                    <IconButton onClick={() => this.setModalOpen(true)}
-                  title='Add a Gig Story'
-                  >
+                    <IconButton
+                      onClick={() => this.setModalOpen(true)}
+                      title="Add a Gig Story"
+                    >
                       <Add />
                     </IconButton>
                     <i>Add one?</i>{" "}
@@ -561,7 +741,14 @@ class Profile extends Component<ProfileProps, ProfileState> {
           setOpen={this.setStoryModalOpen}
           open={this.state.storyModalOpen}
         >
-          <StoryComponent storyId={this.state.storyModalId} story={this.state.stories.find(story=>story.id === this.state.storyModalId)!} />
+          <StoryComponent
+            storyId={this.state.storyModalId}
+            story={
+              this.state.stories.find(
+                (story) => story.id === this.state.storyModalId
+              )!
+            }
+          />
         </BasicModal>
       </>
     );
