@@ -133,7 +133,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       </Grid>
       {routes[dashboardRoute]?.dash}
       <Grid container spacing={2} display="flex" justifyContent="center">
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} sm={10} height={"100%"}>
           {routes[dashboardRoute]?.body}
           <Box display="flex" justifyContent="center" p={1}>
             {dashboardRoute === "notifications" && notifications.length ? (
@@ -141,16 +141,48 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                 <Button
                   variant="outlined"
                   color="error"
-                  onClick={async () => console.log(await handleDeleteAll())}
+                  onClick={async () => {
+                    Swal.fire({
+                      title: "Are you sure?",
+                      text: "Your notifications will be gone for good!",
+                      icon: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#3085d6",
+                      cancelButtonColor: "#d33",
+                      confirmButtonText: "Yes, delete them!",
+                      customClass: {
+                        container:
+                          context?.darkModeOn === "true"
+                            ? "dark-mode-swal"
+                            : "",
+                      },
+                    }).then(async (result) => {
+                      if (result.isConfirmed) {
+                        (await handleDeleteAll()) &&
+                          Swal.fire({
+                            title: "Deleted!",
+                            text: "Your notifications have been deleted.",
+                            icon: "success",
+                            customClass: {
+                              container:
+                                context?.darkModeOn === "true"
+                                  ? "dark-mode-swal"
+                                  : "",
+                            },
+                          });
+                      }
+                    });
+                  }}
                 >
-                  Delete all notifications
+                  clear
                 </Button>
                 <Button
                   variant="outlined"
                   color="info"
                   onClick={() => setGigState("messageCode", null)}
+                  sx={{ display: messageCode ? "block" : "none" }}
                 >
-                  show all notifications
+                  show all
                 </Button>
               </>
             ) : dashboardRoute === "notifications" ? (
@@ -279,7 +311,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       >
         {["notifications", "gigs", "offers"].includes(dashboardRoute) ? (
           <>
-            <Grid item md={12} lg={8} xl={9} height="calc(100% - 30px)">
+            <Grid item md={12} lg={12} xl={9} height="calc(100% - 30px)">
               <Box
                 component="div"
                 sx={{ display: "flex", justifyContent: "space-between" }}
@@ -303,39 +335,43 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                       // color="error"
                       onClick={async () => {
                         Swal.fire({
-                          title: 'Are you sure?',
+                          title: "Are you sure?",
                           text: "Your notifications will be gone for good!",
-                          icon: 'warning',
+                          icon: "warning",
                           showCancelButton: true,
-                          confirmButtonColor: '#3085d6',
-                          cancelButtonColor: '#d33',
-                          confirmButtonText: 'Yes, delete them!',
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Yes, delete them!",
                           customClass: {
                             container:
-                              context?.darkModeOn === "true" ? "dark-mode-swal" : "",
-                          }
+                              context?.darkModeOn === "true"
+                                ? "dark-mode-swal"
+                                : "",
+                          },
                         }).then(async (result) => {
                           if (result.isConfirmed) {
-                            await handleDeleteAll() && Swal.fire(
-                              {title: 'Deleted!',
-                              text: 'Your notifications have been deleted.',
-                              icon: 'success',
-                              customClass: {
-                                container:
-                                  context?.darkModeOn === "true" ? "dark-mode-swal" : "",
-                              }}
-                            )
+                            (await handleDeleteAll()) &&
+                              Swal.fire({
+                                title: "Deleted!",
+                                text: "Your notifications have been deleted.",
+                                icon: "success",
+                                customClass: {
+                                  container:
+                                    context?.darkModeOn === "true"
+                                      ? "dark-mode-swal"
+                                      : "",
+                                },
+                              });
                           }
-                        })
-                        
+                        });
                       }}
                     >
                       Clear
                     </Button>
                     <Button
                       variant="text"
-                      // color="info"
                       onClick={() => setGigState("messageCode", null)}
+                      sx={{ display: messageCode ? "block" : "none" }}
                     >
                       show all
                     </Button>
@@ -371,11 +407,12 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
               <Box display="flex" justifyContent="center" p={2}></Box>
             </Grid>
             <Grid
-              container
+            className='dashboard-right-side'
+              // container
               item
               lg={4}
               xl={3}
-              display="flex"
+              // display="flex"
               flexDirection="column"
               wrap={"nowrap"}
               pl={1}
@@ -443,7 +480,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                     ml: 0,
                     pl: 0,
                     bgcolor: dark.palette.background.default,
-                    color: 'white'
+                    color: "white",
                   }}
                 >
                   {!!followInfo &&
@@ -469,7 +506,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                               justifyContent="space-between"
                             >
                               <Avatar
-                                src={smallImage(u.photo ?? '')}
+                                src={smallImage(u.photo ?? "")}
                                 alt=""
                                 sx={{ height: 20, width: 20 }}
                               />

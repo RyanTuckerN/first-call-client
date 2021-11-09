@@ -20,7 +20,7 @@ import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, ListItemIcon } from "@mui/material";
+import { Avatar, Grid, ListItemIcon } from "@mui/material";
 import {
   Settings,
   Person,
@@ -47,6 +47,7 @@ import StoryFeed from "./Stories/StoryFeed";
 import Logo from "../assets/Logo";
 import StoryLoader from "./Stories/StoryLoader";
 import { dark, light } from "../Theme/Theme";
+import SearchBar from "./components/SearchBar";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;
@@ -162,7 +163,7 @@ class Home extends Component<HomeProps, HomeState> {
   handleClose = () => this.setState({ open: false });
 
   render() {
-    const logoColor = light.palette.primary.main
+    const logoColor = light.palette.primary.main;
     const { auth } = this.context;
     const routePaperSX = {
       padding: 2,
@@ -170,6 +171,7 @@ class Home extends Component<HomeProps, HomeState> {
       minHeight: this.state.windowDimensions.height - this.appBarHeight - 50,
       zIndex: 1,
     };
+    console.log(dark)
 
     return (
       <>
@@ -178,14 +180,21 @@ class Home extends Component<HomeProps, HomeState> {
             position="fixed"
             sx={{
               backgroundColor: "#000000",
-              zIndex: (theme) => theme.zIndex.drawer + 1
+              zIndex: (theme) => theme.zIndex.drawer + 1,
             }}
             style={{ height: this.appBarHeight }}
           >
-            <Toolbar>
+            <Toolbar
+              variant="dense"
+              sx={{
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+              }}
+            >
               <Box
                 component="div"
-                sx={{ flexGrow: 1, zIndex: 9999, position: "relative", top: 8 }}
+                sx={{ flexGrow: 1, zIndex: 9999, position: "relative", top: 8, display:'flex' }}
               >
                 <Link to="/welcome">
                   <Logo
@@ -195,9 +204,21 @@ class Home extends Component<HomeProps, HomeState> {
                   />
                 </Link>
               </Box>
+              <div style={{ width: 10 }} />
+              {auth && (
+                  <Box component='div' id='search-bar-wrapper' sx={{display: {xs: 'none', scroll: 'block'}}}> 
+                    <SearchBar />
+                  </Box>
+              )}
               {auth ? (
                 <>
-                  <Box sx={{ display: { xs: "flex" } }}>
+                  <Box
+                    sx={{
+                      display: { xs: "flex" },
+                      position: "relative",
+                      top: 10,
+                    }}
+                  >
                     <Link to="/main/add" title="Create a Gig">
                       <IconButton
                         size="small"
@@ -257,6 +278,7 @@ class Home extends Component<HomeProps, HomeState> {
                       )}
                     </IconButton>
                   </Box>
+
                   <Menu
                     anchorEl={this.state.anchorEl}
                     id={this.menuId}
@@ -349,17 +371,17 @@ class Home extends Component<HomeProps, HomeState> {
             </Route>
             <Route path="/main">
               {this.props.user ? (
-                  // <Paper sx={routePaperSX}>
-                    <MainView
-                      {...this.props}
-                      {...this.state}
-                      fetchNotifications={this.fetchNotifications}
-                      notifications={this.state.notifications}
-                      setHomeState={this.setHomeState}
-                      user={this.props.user}
-                    />
-                  // </Paper>
-              ) : null}
+                // <Paper sx={routePaperSX}>
+                <MainView
+                  {...this.props}
+                  {...this.state}
+                  fetchNotifications={this.fetchNotifications}
+                  notifications={this.state.notifications}
+                  setHomeState={this.setHomeState}
+                  user={this.props.user}
+                />
+              ) : // </Paper>
+              null}
             </Route>
 
             <Route path="/auth">
@@ -375,8 +397,11 @@ class Home extends Component<HomeProps, HomeState> {
             <StoryLoader />
           </Route>
           <Route path="/feed">
-            <Container maxWidth={'lg'} sx={{height: 'calc(100vh - 130px)'}} >
-              <Paper elevation={1} sx={{ display: 'flex', flexDirection: 'column'}}>
+            <Container maxWidth={"lg"} sx={{ height: "calc(100vh - 130px)" }}>
+              <Paper
+                elevation={1}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
                 <StoryFeed />
               </Paper>
             </Container>

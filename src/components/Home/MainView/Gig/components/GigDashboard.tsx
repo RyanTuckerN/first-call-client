@@ -76,7 +76,7 @@ class GigDashBoard extends React.Component<
           item
           xs={12}
           width={'100%'}
-          spacing={0}
+          // spacing={0}
           padding={0}
           display="flex"
           justifyContent="space-around"
