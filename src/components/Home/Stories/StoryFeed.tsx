@@ -31,14 +31,14 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
 
   handleFetch = async (): Promise<boolean> => {
     try {
-      console.log(
-        this.state.stories.length &&
-          (await new Promise((res) => {
-            setTimeout(() => {
-              res("test");
-            }, 3000);
-          }))
-      );
+      // console.log(
+      //   this.state.stories.length &&
+      //     (await new Promise((res) => {
+      //       setTimeout(() => {
+      //         res("test");
+      //       }, 3000);
+      //     }))
+      // );
       const { stories, success, message } = await fetchHandler({
         url: `${API_URL}/story/${
           this.props.dashboard
@@ -104,9 +104,11 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
                 <LoadingFeed />
               }
               endMessage={
-                <Typography variant="overline" fontWeight={200} width={30}>
-                  <i>No more messages</i>
-                </Typography>
+                <Box component='div' sx={{display:'flex', justifyContent:'center', width: '100%', mt: !this.props.dashboard ? 3 : 0}}>
+                  <Typography variant="overline" textAlign='center' fontWeight={200}>
+                    <i>No more messages</i>
+                  </Typography>
+                </Box>
               }
             >
               {this.state.stories
@@ -127,6 +129,7 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
                 ))}
             </InfiniteScroll>
           </List>
+          {!this.props.dashboard && <div style={{width: '100%', height: 50}}/>}
         </Grid>
       </>
       // </Container>

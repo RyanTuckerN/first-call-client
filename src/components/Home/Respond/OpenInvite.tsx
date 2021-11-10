@@ -79,7 +79,7 @@ class OpenInvite extends Component<OpenInviteProps, OpenInviteState> {
             <div style={{ height: 55 }} />
             <Grid item xs={12} display="flex" justifyContent="center">
               <Typography variant="subtitle2">
-                Do you want to play {this.props.role} on this gig?
+                Do you want to play {decodeURI(this.props.role)} on this gig?
               </Typography>
             </Grid>
             <div style={{ height: 90 }} />

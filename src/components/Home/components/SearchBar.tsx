@@ -16,8 +16,7 @@ import { AppState } from "../../../App";
 import "../Home.css";
 import { smallImage } from "../../_helpers/helpers";
 
-interface SearchBarProps extends RouteComponentProps {
-}
+interface SearchBarProps extends RouteComponentProps {}
 
 interface SearchBarState {
   searchResults: any[];
@@ -49,67 +48,94 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
     }
   };
 
+  //when option is selected
+  onChange = (e: any, option: any) => {
+    this.handleSearch(option?.url);
+    this.setState({ searchResults: [] });
+    this.setQuery("");
+  };
+
+  //as user types
+  inputChange = (e: any, query: string) => {
+    this.setQuery(query);
+  };
+
+  renderOption = (props: any, option: any) => (
+    <Box
+      {...props}
+      component="li"
+      key={option.id}
+      display="flex"
+      pl={2}
+      justifyContent="space-between"
+    >
+      <Box
+        component="div"
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Avatar
+          src={smallImage(option.photo ?? "", 20)}
+          variant="square"
+          alt=""
+          sx={{ height: 20, width: 20 }}
+        />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <Typography variant="subtitle1">{option.name}</Typography>{" "}
+      </Box>
+      {/* &nbsp;&nbsp; */}
+      <Typography ml={"auto"} variant="body2" fontWeight={300}>
+        {option.role}
+      </Typography>
+    </Box>
+  );
+
   componentDidUpdate(prevProps: SearchBarProps, prevState: SearchBarState) {
     //fetch as user types
     prevState.query !== this.state.query &&
       !!this.state.query &&
       this.searchFetch();
 
-      //clear the search suggestions when search empty
-    prevState.query && !this.state.query && this.setState({searchResults: []})
+    //clear the search suggestions when search empty
+    prevState.query &&
+      !this.state.query &&
+      this.setState({ searchResults: [] });
   }
 
   render() {
     return (
       <Autocomplete
         freeSolo
-        // clearOnBlur
+        clearOnBlur
         className="search-bar"
         id="search-bar"
         isOptionEqualToValue={() => true}
-        sx={{ width: {xs: 200, sm: 300} }}
+        fullWidth
         noOptionsText="No results!"
         openOnFocus
         value={this.state.query}
-        getOptionLabel={(o) => this.state.query}
+        getOptionLabel={() => this.state.query}
         options={this.state.searchResults}
-        //when option is selected
-        onChange={(e: any, option: any) => {
-          this.handleSearch(option?.url);
-          this.setState({ searchResults: [] });
-          this.setQuery("");
-        }}
-        //as user types
-        onInputChange={(e: any, query: string) => {
-          this.setQuery(query);
-        }}
+        onChange={this.onChange}
+        onInputChange={this.inputChange}
         //include entire array
         filterOptions={(x) => x}
-        renderOption={(props, option) => (
-          <Box component="li" {...props} key={option.id} sx={{}}>
-              <Avatar src={smallImage(option.photo, 40)} alt="" />
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <Typography variant="subtitle1">{option.name}</Typography>{" "}
-            <Typography variant="body1">{option.role}</Typography>
-          </Box>
-        )}
+        renderOption={this.renderOption}
         renderInput={(params) => (
           <TextField
             {...params}
-            variant='outlined'
+            variant="outlined"
+            //clear query on focusout
+            onBlur={() => this.setState({ query: "" })}
             InputProps={{
               ...params.InputProps,
               endAdornment: (
-                <InputAdornment
-                  position="end"
-                >
-                  <Search 
-                  className='mag-glass'
-                  />
+                <InputAdornment position="end">
+                  <Search className="mag-glass" />
                 </InputAdornment>
               ),
             }}
-            
             label="Search"
           />
         )}

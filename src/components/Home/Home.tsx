@@ -218,6 +218,7 @@ class Home extends Component<HomeProps, HomeState> {
                 <Box
                   component="div"
                   id="search-bar-wrapper"
+                  sx={{width: 375, pl: 2}}
                 >
                   <SearchBar />
                 </Box>
@@ -356,7 +357,7 @@ class Home extends Component<HomeProps, HomeState> {
               )}
             </Toolbar>
           </AppBar>
-          <div style={{ minHeight: 90 }} />
+          <div style={{ minHeight: 50 }} />
         </Box>
         <div style={{ marginTop: 10 }} />
         <>
@@ -397,7 +398,7 @@ class Home extends Component<HomeProps, HomeState> {
             </Route>
 
             <Route path="/auth">
-              <Container maxWidth="lg" sx={{ height: "100%" }}>
+              <Container maxWidth="lg" sx={{ height: "calc(100% - 130px)" }}>
                 <Auth {...this.props} />
               </Container>
             </Route>

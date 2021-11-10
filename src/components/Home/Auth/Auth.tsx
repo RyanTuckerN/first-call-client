@@ -111,7 +111,7 @@ class Auth extends Component<AuthProps, AuthState> {
     const context = this.context;
     console.log(context);
     const { email, first, last } = returnParams()
-    this.setState({ ...this.state, email, first: decodeURI(first), last: decodeURI(last) });
+    this.setState({ ...this.state, email, first: decodeURI(first ?? ''), last: decodeURI(last ?? '') });
   }
 
   render() {

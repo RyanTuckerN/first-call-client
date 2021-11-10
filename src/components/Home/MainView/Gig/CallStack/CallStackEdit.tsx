@@ -200,7 +200,7 @@ class CallStackEdit extends React.Component<
                 xs={12}
                 sx={{ marginTop: 1 }}
               >
-                <Grid item xs={12} sm={6} md={12}>
+                <Grid item xs={12} sm={5} >
                   <Autocomplete
                     id="instrument-input"
                     freeSolo
@@ -233,7 +233,7 @@ class CallStackEdit extends React.Component<
                     )}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} md={12} pl={1}>
+                <Grid item xs={12} sm={7}  pl={1}>
                   <Autocomplete
                     id="email-input"
                     freeSolo
@@ -279,7 +279,7 @@ class CallStackEdit extends React.Component<
                           endAdornment: (
                             <>
                               <InputAdornment position="end">
-                              <Button type="submit" disabled={!this.state.emailVal || !this.state.roleVal}>Add</Button>
+                              <Button type="submit" sx={{position: 'relative', left: 50}} disabled={!this.state.emailVal || !this.state.roleVal}>Add</Button>
                               </InputAdornment>
                             </>
                           ),

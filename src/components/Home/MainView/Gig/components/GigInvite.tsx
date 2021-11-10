@@ -28,7 +28,9 @@ interface GigInviteProps extends RouteComponentProps {
   createdAt?: string;
   updatedAt?: string;
   posts?: Post[];
-  callStack?: CallStack
+  callStack?: CallStack;
+  addGig: (gig: Gig)=>void
+
 }
 
 interface GigInviteState {
@@ -60,7 +62,7 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
       auth: this.context.token ?? localStorage.getItem("token") ?? "",
     });
     console.log(json);
-    // json.success && alert(json.message)
+    json.success && this.props.addGig(json.gig)
     json.success && this.props.setGig(json.gig);
     json.success &&
         Swal.fire(

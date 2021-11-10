@@ -194,6 +194,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                       >
                         <GigInvite
                           {...this.state.gig}
+                          addGig={this.props.addGig}
                           user={this.props.user ?? this.context.user}
                           details={this.state.details}
                           setGig={this.setGig}

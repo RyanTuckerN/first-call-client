@@ -79,8 +79,10 @@ class MainView extends Component<MainViewProps, MainViewState> {
       <>
         <Switch>
           <Route path={`${this.props.match.path}/profile/:userId`}>
-            <Container maxWidth="lg" sx={{ height: "100%" }}>
-              <Profile modalOpen={this.state.profileModalOpen} setMainState={this.setMainState} />
+            <Container maxWidth="lg" sx={{ height: "calc(100% - 60px)" }}>
+              <Paper sx={{minHeight: '100%'}}>
+                <Profile modalOpen={this.state.profileModalOpen} setMainState={this.setMainState} />
+              </Paper>
             </Container>
           </Route>
           <Route path={`${this.props.match.path}/settings`}>

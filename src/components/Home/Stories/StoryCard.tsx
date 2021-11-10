@@ -20,7 +20,7 @@ import { fetchHandler } from "../../_helpers/fetchHandler";
 import API_URL from "../../_helpers/environment";
 import { UserCtx } from "../../Context/MainContext";
 import { Box } from "@mui/system";
-import { returnTimeDifference } from "../../_helpers/helpers";
+import { returnTimeDifference, smallImage } from "../../_helpers/helpers";
 import Picker from "emoji-picker-react";
 import "./emojiPicker.css";
 
@@ -194,7 +194,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
               <Link to={`/main/profile/${author.id}`}>
                 <Grid display="flex" alignItems="center">
                   <Avatar
-                    src={author?.photo}
+                    src={smallImage(author?.photo, 40)}
                     sx={{ ml: 1, height: 30, width: 30 }}
                   />
                   <Typography sx={{ ml: 1 }} variant="caption">

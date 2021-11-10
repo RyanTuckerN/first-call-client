@@ -27,7 +27,7 @@ class GigsMapper extends Component<GigsMapperProps, GigsMapperState> {
   render() {
     return (
       <Grid container maxHeight={'100%'}>
-        {this.props[this.props.gigsOrOffers].map((gig) => (
+        {this.props[this.props.gigsOrOffers].sort((a,b)=>new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()).map((gig) => (
           <Grid item xs={12} key={gig.id}>
             {this.props.detailsHash && this.props.user ? (
               <GigCardAlt

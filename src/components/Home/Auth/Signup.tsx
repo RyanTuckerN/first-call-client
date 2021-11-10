@@ -37,18 +37,6 @@ const Signup = (props: SignupProps) => {
   } = props.functions;
 
   const {first, last, email, password} = props.authState
-  // const [firstState, setFirst] = useState('');
-  // const [lastState, setLast] = useState('');
-  // const [emailState, setEmail] = useState('');
-
-  // const handleLoad = ():void => {
-  //   const {first, last, email} = returnParams()
-  //   setFirst(first ?? '')
-  //   setLast(last ?? '')
-  //   setEmail(email ?? '')
-  // } 
-
-  // useEffect(handleLoad, [])
 
   return (
     <Container component="main" maxWidth="xs">

@@ -9,6 +9,7 @@ import {
   Box,
   Avatar,
   Badge,
+  IconButton,
 } from "@mui/material";
 import { DetailedGig, HashCode, RouteOption, Routes } from "../Gig.types";
 import NotificationsDashBoard from "./GigDashboard";
@@ -255,9 +256,11 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                   >
                     Offers
                   </Typography>
-                  <Badge badgeContent="!" variant="standard" color="primary">
-                    <NotificationsIcon />
-                  </Badge>
+                  <IconButton onClick={()=>props.setGigState('messageCode', 100)}>
+                    <Badge badgeContent="!" variant="standard" color="primary">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
                 </Box>
                 <Grid
                   border={1}
@@ -407,20 +410,20 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
               <Box display="flex" justifyContent="center" p={2}></Box>
             </Grid>
             <Grid
-            className='dashboard-right-side'
+              className="dashboard-right-side"
               // container
               item
               lg={4}
-              xl={3}
+              xl={4}
               // display="flex"
               flexDirection="column"
               wrap={"nowrap"}
               pl={1}
               pt={0}
               maxHeight={"100%"}
-              sx={{ display: { xs: "none", xl: "flex" } }}
+              sx={{ display: { xs: "none", lg: "flex" } }}
             >
-              <Grid item xs={12} sx={{ maxHeight: "50%", overflowY: "hidden" }}>
+              <Grid item xs={12} sx={{ maxHeight: !!user?.following.length ? "50%" : '100%', overflowY: "hidden" }}>
                 <Box
                   component="div"
                   sx={{
@@ -455,7 +458,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                 </Box>
               </Grid>
 
-              <Grid item xs={12} sx={{ maxHeight: "50%" }}>
+              {!!user?.following.length && <Grid item xs={12} sx={{ maxHeight: "50%" }}>
                 {/* <Box
                   component="div"
                   sx={{ display: "flex", justifyContent: "space-between" }}
@@ -479,8 +482,8 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                     overflowY: "auto",
                     ml: 0,
                     pl: 0,
-                    bgcolor: dark.palette.background.default,
-                    color: "white",
+                    bgcolor: 'background.paper',
+                    color: "typography.default",
                   }}
                 >
                   {!!followInfo &&
@@ -506,7 +509,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                               justifyContent="space-between"
                             >
                               <Avatar
-                                src={smallImage(u.photo ?? "")}
+                                src={smallImage(u.photo ?? "", 40)}
                                 alt=""
                                 sx={{ height: 20, width: 20 }}
                               />
@@ -532,7 +535,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                       );
                     })}
                 </Box>
-              </Grid>
+              </Grid>}
             </Grid>
           </>
         ) : (

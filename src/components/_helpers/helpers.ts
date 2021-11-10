@@ -84,6 +84,7 @@ export const returnParams = () => {
 
 
 export const smallImage = (url: string, height: number = 80): string => {
+  
   if (
     url.substring(0, 49) !== "https://res.cloudinary.com/dpd08wa9g/image/upload"
   ) {
