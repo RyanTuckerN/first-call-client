@@ -1,17 +1,17 @@
 import * as React from "react";
 import { Component } from "react";
 import { Gig } from "../../../types/API.types";
-import API_URL from "../../_helpers/environment";
 import { fetchHandler } from "../../_helpers/fetchHandler";
 import { DetailedGig } from "../MainView/Gig/Gig.types";
 import { Grid } from "@mui/material";
-import OpenGigInfo from "./OpenGigInfo";
-import OpenInvite from "./OpenInvite";
-import { properizeName } from "../../_helpers/helpers";
-import Swal from "sweetalert2";
+import { properizeName, returnParams } from "../../_helpers/helpers";
 import { UserCtx } from "../../Context/MainContext";
 import { AppState } from "../../../App";
 import { RouteComponentProps, withRouter } from "react-router";
+import API_URL from "../../_helpers/environment";
+import OpenGigInfo from "./OpenGigInfo";
+import OpenInvite from "./OpenInvite";
+import Swal from "sweetalert2";
 
 interface RespondProps extends RouteComponentProps {}
 
@@ -41,18 +41,6 @@ class Respond extends Component<RespondProps, RespondState> {
     };
   }
 
-  returnParams = () => {
-    return window.location.search
-      .slice(1)
-      .split("&")
-      .reduce((a: any, b: string) => {
-        const arr = b.split("=");
-        const [key, val] = [arr[0], arr[1]];
-        a[key] = val;
-        return a;
-      }, {});
-  };
-
   fetchGig = async (): Promise<boolean> => {
     const json = await fetchHandler({
       url: `${API_URL}/open/${this.state.queryParams.gigId}/${this.state.queryParams.token}`,
@@ -70,13 +58,10 @@ class Respond extends Component<RespondProps, RespondState> {
         method: "post",
         body: { name: properizeName(name) },
       });
-      console.log(properizeName(name));
       this.context.handleSnackBar(
         json.message,
         json.success ? "success" : "error"
       );
-      console.log("SUCCESS: ", json.success);
-      console.log("ACCEPT OR DECLINE JSON: ", json);
       json.success &&
         Swal.fire(
           res === "accept"
@@ -107,7 +92,6 @@ class Respond extends Component<RespondProps, RespondState> {
       );
       return json.success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -122,8 +106,7 @@ class Respond extends Component<RespondProps, RespondState> {
   }
 
   componentDidMount() {
-    console.log(this.returnParams());
-    this.setState({ queryParams: this.returnParams() });
+    this.setState({ queryParams: returnParams() });
   }
 
   render() {

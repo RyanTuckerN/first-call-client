@@ -13,9 +13,9 @@ import GigCreate from "./GigCreate";
 import { Container, Paper } from "@mui/material";
 
 interface GigIndexProps extends RouteComponentProps {
-  user: User | null; //App State
-  notifications: Notification[]; //Home State
-  dashboardRoute: RouteOption; //Main state
+  user: User | null;
+  notifications: Notification[];
+  dashboardRoute: RouteOption;
   followInfo: any[];
   setAppState: (key: string, value: any) => void;
   setHomeState: (key: string, value: any) => void;
@@ -57,7 +57,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       auth: localStorage.getItem("token") ?? this.context?.token ?? "",
     });
     const { offers, message, success } = json;
-    success ? this.setState({ offers }) : console.log(message);
+    success && this.setState({ offers });
     return success;
   };
 
@@ -69,7 +69,6 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
       auth: localStorage.getItem("token") ?? this.context?.token ?? "",
       body,
     });
-    console.log(success, hash);
     success && this.setState({ detailsHash: hash });
   };
 
@@ -97,11 +96,6 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
         notifications: this.props.notifications,
       });
     }
-    //MIGHT NEED TO PUT THESE BACK IN!!
-    // if (prevState.notificationsHash !== this.state.notificationsHash) {
-    // this.fetchOffers();
-    // this.fetchDetails();
-    // }
     if (!prevProps.user && this.props.user) {
       this.setState({
         user: this.props.user,
@@ -117,12 +111,10 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
     if (prevState.offers !== this.state.offers) {
       this.fetchDetails();
     }
-    // console.log(Object.entries(this.state.notificationsHash));
   }
 
   async componentDidMount() {
     await this.fetchOffers();
-    // await this.fetchDetails();
   }
 
   componentWillUnmount() {
@@ -144,15 +136,13 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
 
         <Route exact path="/main/gig/:gigId">
           {this.state.detailsHash && this.state.user ? (
-           
-                <GigPage
-                  {...this.props}
-                  {...this.state}
-                  user={this.state.user}
-                  detailsHash={this.state.detailsHash}
-                  addGig={this.addGig}
-                />
-              
+            <GigPage
+              {...this.props}
+              {...this.state}
+              user={this.state.user}
+              detailsHash={this.state.detailsHash}
+              addGig={this.addGig}
+            />
           ) : null}
         </Route>
 

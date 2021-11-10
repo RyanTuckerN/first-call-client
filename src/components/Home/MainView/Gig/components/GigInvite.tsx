@@ -1,6 +1,4 @@
 import { Grid, Button, Typography, Paper, Container } from "@mui/material";
-import { Box } from "@mui/system";
-import * as React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import { Component } from "react";
 import { AppState } from "../../../../../App";
@@ -9,19 +7,18 @@ import { UserCtx } from "../../../../Context/MainContext";
 import API_URL from "../../../../_helpers/environment";
 import { fetchHandler } from "../../../../_helpers/fetchHandler";
 import { DetailedGig } from "../Gig.types";
-import Swal from 'sweetalert2'
+import Swal from "sweetalert2";
 
 interface GigInviteProps extends RouteComponentProps {
   user: User;
   details: DetailedGig;
-  setGig: (gig: Gig) => void;
   id: number;
   ownerId: number;
   description: string;
   gigLocation: string;
-  date: string; //date format
+  date: string;
   payment: number;
-  token: string; //uuid
+  token: string;
   openCalls: string[];
   photo?: string;
   optionalInfo?: { [key: string]: string };
@@ -29,8 +26,8 @@ interface GigInviteProps extends RouteComponentProps {
   updatedAt?: string;
   posts?: Post[];
   callStack?: CallStack;
-  addGig: (gig: Gig)=>void
-
+  addGig: (gig: Gig) => void;
+  setGig: (gig: Gig) => void;
 }
 
 interface GigInviteState {
@@ -61,22 +58,16 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
       method: "post",
       auth: this.context.token ?? localStorage.getItem("token") ?? "",
     });
-    console.log(json);
-    json.success && this.props.addGig(json.gig)
+    json.success && this.props.addGig(json.gig);
     json.success && this.props.setGig(json.gig);
     json.success &&
-        Swal.fire(
-            {
-                title: "Gig Accepted!",
-                // text: "Thanks! Consider signing up for FirstCall!",
-                icon: "success",
-                customClass: {
-                  container:
-                    this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
-                },
-              }
-            
-        );
+      Swal.fire({
+        title: "Gig Accepted!",
+        icon: "success",
+        customClass: {
+          container: this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+        },
+      });
     this.context.authenticate(
       this.context.token ?? localStorage.getItem("token") ?? ""
     );
@@ -88,22 +79,19 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
       method: "post",
       auth: this.context.token ?? localStorage.getItem("token") ?? "",
     });
-    console.log(json);
-    // json.success && alert(json.message)
     json.success && this.props.setGig(json.gig);
-    json.success && Swal.fire({
-      title: "Gig Declined",
-      text: "Maybe next time!",
-      customClass: {
-        container:
-          this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
-      },
-    })
+    json.success &&
+      Swal.fire({
+        title: "Gig Declined",
+        text: "Maybe next time!",
+        customClass: {
+          container: this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+        },
+      });
     this.context.authenticate(
       this.context.token ?? localStorage.getItem("token") ?? ""
     );
-    json.success && this.props.history.push("/")
-
+    json.success && this.props.history.push("/");
   };
 
   componentDidMount() {
@@ -111,7 +99,6 @@ class GigInvite extends Component<GigInviteProps, GigInviteState> {
   }
 
   render() {
-    
     return (
       <Container
         sx={{ display: "flex", justifyContent: "center", marginTop: 10 }}

@@ -1,26 +1,7 @@
 import * as React from "react";
 import { Component } from "react";
-import {
-  FormControl,
-  FormHelperText,
-  Input,
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  Box,
-  Autocomplete,
-  Snackbar,
-  Alert,
-} from "@mui/material";
-import {
-  NavLink,
-  Link,
-  Route,
-  RouteComponentProps,
-  withRouter,
-  Switch as RouteSwitch,
-} from "react-router-dom";
+import { Button, Grid, TextField, Typography } from "@mui/material";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { fetchHandler } from "../../../_helpers/fetchHandler";
 import API_URL from "../../../_helpers/environment";
 import { UserCtx } from "../../../Context/MainContext";
@@ -40,7 +21,7 @@ interface ChangePassState {
 
 class ChangePass extends Component<ChangePassProps, ChangePassState> {
   static contextType = UserCtx;
-  timeout:any = null
+  timeout: any = null;
 
   constructor(props: ChangePassProps, context: AppState) {
     super(props, context);
@@ -75,7 +56,6 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
           newPassword: this.state.new1,
         },
       });
-      // console.log(json);
       this.setState({
         success: json.success,
         snackBarOpen: true,
@@ -83,13 +63,12 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
         new1: "",
         new2: "",
       });
-      json.success && this.context.handleSnackBar('Success.', 'success')
-      !json.success && this.context.handleSnackBar('Incorrect Password.', 'warning')
+      json.success && this.context.handleSnackBar("Success.", "success");
+      !json.success &&
+        this.context.handleSnackBar("Incorrect Password.", "warning");
       return json.success;
     } catch (err) {
-      console.log(err);
-      // this.setState({ success: false, snackBarOpen: true });
-      this.context.handleSnackBar('Something went wrong.', 'error')
+      this.context.handleSnackBar("Something went wrong.", "error");
       return false;
     }
   };
@@ -101,14 +80,12 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
     this.setState({ snackBarOpen: false, success: null });
   };
 
-
-
   componentDidUpdate(prevProps: ChangePassProps, prevState: ChangePassState) {
-    // console.log(this.state);
-    if(this.state.success) {
+    if (this.state.success) {
       this.timeout = setTimeout(() => {
         this.props.history.push("/main/settings");
-      }, 2500)}
+      }, 2500);
+    }
     if (
       prevState.new1 !== this.state.new1 ||
       prevState.new2 !== this.state.new2
@@ -122,8 +99,8 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
     }
   }
 
-  componentWillUnmount(){
-    clearTimeout(this.timeout)
+  componentWillUnmount() {
+    clearTimeout(this.timeout);
   }
 
   render() {
@@ -155,7 +132,10 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
           </Grid>
           <Grid item xs={1} />
           <Grid item xs={4} sx={{ paddingTop: 3 }}>
-            <Typography variant="caption" color={this.state.passwordsMatch === false ? 'red' : 'inherit'} >
+            <Typography
+              variant="caption"
+              color={this.state.passwordsMatch === false ? "red" : "inherit"}
+            >
               {this.state.passwordsMatch === false
                 ? "Passwords must match*"
                 : "Repeat password*"}
@@ -192,19 +172,6 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
             </Grid>
           </Grid>
         </Grid>
-        {/* <Snackbar
-          open={this.state.snackBarOpen}
-          autoHideDuration={4000}
-          onClose={this.handleClose}
-        >
-          {this.state.success ? (
-            <Alert severity="success" variant='outlined'>Success! Password updated.</Alert>
-          ) : this.state.success === false ? (
-            <Alert severity="error" variant='outlined'>Something went wrong.</Alert>
-          ) : (
-            <Alert severity="warning" variant='outlined'>Passwords don&#39;t match.</Alert>
-          )}
-        </Snackbar> */}
       </Grid>
     );
   }

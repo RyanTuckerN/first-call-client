@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Component } from "react";
 import {
   Button,
@@ -8,13 +7,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import {
-  AttachMoney,
-  Add,
-  Backspace,
-  AddAPhoto,
-  // Circle
-} from "@mui/icons-material";
+import { AttachMoney, Add, Backspace, AddAPhoto } from "@mui/icons-material";
 import { withRouter } from "react-router-dom";
 import { properizeNoTrim, addHours } from "../../../../../_helpers/helpers";
 import "../../Gig.css";
@@ -26,9 +19,6 @@ import DateAdapter from "@mui/lab/AdapterMoment";
 import DateTimePicker from "@mui/lab/DateTimePicker";
 import { Fade } from "react-reveal";
 import Swal from "sweetalert2";
-
-
-
 
 class GigEdit extends Component {
   static contextType = UserCtx;
@@ -100,7 +90,6 @@ class GigEdit extends Component {
         }
       );
       const File = await res.json();
-      console.log(File);
 
       this.setState({ photo: File.secure_url });
       if (this.state.gigCreate) {
@@ -113,8 +102,6 @@ class GigEdit extends Component {
         auth: localStorage.getItem("token" ?? this.context.token ?? ""),
         body: { photo: File.secure_url },
       });
-      // alert(json.message);
-      console.log(json);
       json.success && this.props.setGig(json.gig);
       json.success && this.context.handleSnackBar(json.message, "success");
       return true;
@@ -129,20 +116,10 @@ class GigEdit extends Component {
     const { description, date, payment, gigLocation, optionalInfo, gigId } =
       this.state;
     const { callStackEmpty, gigCreate } = this.props;
-    if (
-      !description ||
-      !payment ||
-      !gigLocation ||
-      !optionalInfo
-      // !gigId
-    ) {
+    if (!description || !payment || !gigLocation || !optionalInfo) {
       this.context.handleSnackBar("Empty field(s)!", "warning");
       return;
     }
-    // if (!date._isValid) {
-    //   this.context.handleSnackBar("Invalid Date!", "warning");
-    //   // return;
-    // }
 
     if (callStackEmpty && gigCreate) {
       this.context.handleSnackBar(
@@ -166,21 +143,23 @@ class GigEdit extends Component {
       body,
       auth: localStorage.getItem("token") ?? this.context.token ?? "",
     });
-    console.log(json);
     json.success
       ? this.state.gigCreate
         ? this.props.setGigId(json.newGig.id)
         : this.props.setGig(json.gig)
       : null;
-    json.success && !this.state.gigCreate && this.context.handleSnackBar(json.message, "success");
-    json.success && this.state.gigCreate && Swal.fire({
-      title: "Gig Created!",
-      icon: "success",
-      customClass: {
-        container:
-          this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
-      },
-    })
+    json.success &&
+      !this.state.gigCreate &&
+      this.context.handleSnackBar(json.message, "success");
+    json.success &&
+      this.state.gigCreate &&
+      Swal.fire({
+        title: "Gig Created!",
+        icon: "success",
+        customClass: {
+          container: this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+        },
+      });
 
     json.success &&
       this.setState({
@@ -210,10 +189,6 @@ class GigEdit extends Component {
         md={this.props.gigCreate ? 12 : 7}
         lg={this.props.gigCreate ? 12 : 6}
       >
-        {/* {width<900 && <Link href='#band'>Band</Link>} */}
-        {/* {this.state.photo && <Grid display='flex' item xs={6} justifyContent='center'>
-          <Avatar src={this.state.photo} variant='square' sx={{width: '100%', height:'auto'}} />
-        </Grid>} */}
         <Grid
           container
           item
@@ -232,23 +207,24 @@ class GigEdit extends Component {
             justifyContent="space-between"
           >
             <Typography variant="h4">Details</Typography>
-            {/* {!this.state.gigCreate ? ( */}
-            {!!this.state.date && !!this.state.description && !!this.state.gigLocation && !!this.state.payment && <Button
-              color="success"
-              variant="contained"
-              onClick={this.handleSave}
-            >
-              {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
-            </Button>}
-            {/* ) : null} */}
+            {!!this.state.date &&
+              !!this.state.description &&
+              !!this.state.gigLocation &&
+              !!this.state.payment && (
+                <Button
+                  color="success"
+                  variant="contained"
+                  onClick={this.handleSave}
+                >
+                  {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
+                </Button>
+              )}
           </Grid>
           <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>
             <Typography variant="body2">Give us the goods.</Typography>
           </Grid>
 
           <Grid item xs={12} sm={9} lg={12}>
-            {/* <Typography variant="h6">Title</Typography> */}
-
             <TextField
               fullWidth
               label="Title"
@@ -258,8 +234,6 @@ class GigEdit extends Component {
             />
           </Grid>
           <Grid item xs={12} sm={3}>
-            {/* <Typography variant="h6">Pay</Typography> */}
-            {/* <AttachMoney /> */}
             <TextField
               type="number"
               fullWidth
@@ -276,7 +250,6 @@ class GigEdit extends Component {
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            {/* <Typography variant="h6">Date and Time</Typography> */}
             <LocalizationProvider dateAdapter={DateAdapter}>
               <DateTimePicker
                 label="Date and Time"
@@ -285,20 +258,15 @@ class GigEdit extends Component {
                 ampmInClock={true}
                 value={this.state.date}
                 onChange={this.handleDate}
-                // onOpen
-                // minDate={new Date()}
                 renderInput={(params) => <TextField fullWidth {...params} />}
               />
             </LocalizationProvider>
           </Grid>
           <Grid item xs={12} sm={6} lg={3}>
-            {/* <Typography variant="h6">Pay</Typography> */}
-            {/* <AttachMoney /> */}
             <TextField
               fullWidth
               type="number"
               label="Length(hrs)"
-              // placeholder="2"
               onChange={this.handleLength}
               value={this.state.length}
               InputProps={{
@@ -308,8 +276,6 @@ class GigEdit extends Component {
           </Grid>
 
           <Grid item xs={12}>
-            {/* <Typography variant="h6">gigLocation</Typography> */}
-            {/* <gigLocationOn /> */}
             <TextField
               fullWidth
               label="Location"
@@ -339,22 +305,7 @@ class GigEdit extends Component {
           <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>
             <Typography variant="body2">{`This is where you can tell us about the rehearsal, souncheck, box-lunch, etc. Be as detailed as you'd like!`}</Typography>
           </Grid>
-          <Grid
-            container
-            // justifyContent="space-between"
-            display="flex"
-            flexDirection="column"
-            item
-            xs={12}
-          >
-            {/* <Grid
-              item
-              container
-              xs={12}
-              // display="flex"
-              flexDirection="row"
-              // justifyContent="space-between"
-            > */}
+          <Grid container display="flex" flexDirection="column" item xs={12}>
             {keys.map((cat, i) => (
               <Fade key={i}>
                 <Grid item container xs={12}>
@@ -398,10 +349,9 @@ class GigEdit extends Component {
                     value={this.state.optionalKey}
                     placeholder="Any category"
                     fullWidth
-                    sx={{pr: 1}}
+                    sx={{ pr: 1 }}
                   />
                 </Grid>
-                {/* <Typography variant="h4">:</Typography> */}
                 <Grid item xs={12} sm={7}>
                   <TextField
                     label="Info"
@@ -421,19 +371,20 @@ class GigEdit extends Component {
               </Grid>
             </form>
           </Grid>
-          {/* </Grid> */}
-          {/* <div id="band">
-            CALLSTACK MANIPULATION GO HERE, DIFFERENT FOR CREATING AND EDITING.
-          </div> */}
         </Grid>
         <Grid display="flex" justifyContent="flex-end" padding={2}>
-        {!!this.state.date && !!this.state.description && !!this.state.gigLocation && !!this.state.payment && <Button
-              color="success"
-              variant="contained"
-              onClick={this.handleSave}
-            >
-              {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
-            </Button>}
+          {!!this.state.date &&
+            !!this.state.description &&
+            !!this.state.gigLocation &&
+            !!this.state.payment && (
+              <Button
+                color="success"
+                variant="contained"
+                onClick={this.handleSave}
+              >
+                {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
+              </Button>
+            )}
         </Grid>
       </Grid>
     );

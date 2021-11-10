@@ -49,11 +49,9 @@ class MainView extends Component<MainViewProps, MainViewState> {
         url: `${API_URL}/user/follows/${this.props.user.id}`,
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log("USERS --> ", users);
       success && this.setState({ followInfo: users });
       return success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -70,24 +68,23 @@ class MainView extends Component<MainViewProps, MainViewState> {
     this.fetchFollowsInfo();
   }
 
-  // componentDidUpdate(prevProps: MainViewProps, prevState: MainViewState) {
-  //   this.props.
-  // }
-
   render() {
     return this.props.auth ? (
       <>
         <Switch>
           <Route path={`${this.props.match.path}/profile/:userId`}>
             <Container maxWidth="lg" sx={{ height: "calc(100% - 60px)" }}>
-              <Paper sx={{minHeight: '100%'}}>
-                <Profile modalOpen={this.state.profileModalOpen} setMainState={this.setMainState} />
+              <Paper sx={{ minHeight: "100%" }}>
+                <Profile
+                  modalOpen={this.state.profileModalOpen}
+                  setMainState={this.setMainState}
+                />
               </Paper>
             </Container>
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
             <Container maxWidth="lg" sx={{ height: "100%" }}>
-              <Paper sx={{p:2, height: '100%'}}>
+              <Paper sx={{ p: 2, height: "100%" }}>
                 <Settings {...this.props} />
               </Paper>
             </Container>

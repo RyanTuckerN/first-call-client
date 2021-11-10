@@ -36,7 +36,7 @@ const Signup = (props: SignupProps) => {
     clearState,
   } = props.functions;
 
-  const {first, last, email, password} = props.authState
+  const { first, last, email, password } = props.authState;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -68,7 +68,7 @@ const Signup = (props: SignupProps) => {
                 id="firstName"
                 label="First Name"
                 autoFocus={!first ? true : false}
-                InputProps={{required: true}}
+                InputProps={{ required: true }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -82,7 +82,7 @@ const Signup = (props: SignupProps) => {
                 name="lastName"
                 autoComplete="family-name"
                 aria-required
-                InputProps={{required: true}}
+                InputProps={{ required: true }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -95,13 +95,13 @@ const Signup = (props: SignupProps) => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                InputProps={{required: true}}
+                InputProps={{ required: true }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
-                autoFocus={first && last && email ? true: false}
+                autoFocus={first && last && email ? true : false}
                 fullWidth
                 value={password}
                 onChange={handlePassword}
@@ -110,7 +110,7 @@ const Signup = (props: SignupProps) => {
                 type="password"
                 id="password"
                 autoComplete="new-password"
-                InputProps={{required: true}}
+                InputProps={{ required: true }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -125,7 +125,7 @@ const Signup = (props: SignupProps) => {
             fullWidth
             variant="contained"
             color="secondary"
-            sx={{ mt: 3, mb: 2, color: 'white' }}
+            sx={{ mt: 3, mb: 2, color: "white" }}
           >
             Sign Up
           </Button>
@@ -138,17 +138,8 @@ const Signup = (props: SignupProps) => {
           </Grid>
         </Box>
       </Box>
-      {/* <Copyright sx={{ mt: 5 }} /> */}
     </Container>
   );
-  // return (
-  // <div>
-  //   Hello from Signup!
-  //   <Link to='/auth/login'>
-  //     <div>Already have an account?</div>
-  //   </Link>
-  // </div>
-  // );
 };
 
 export default Signup;

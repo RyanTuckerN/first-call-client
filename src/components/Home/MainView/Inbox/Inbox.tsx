@@ -7,7 +7,6 @@ import MuiAccordionSummary, {
 } from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import { Grid } from "@mui/material";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -56,8 +55,6 @@ class Inbox extends React.Component<InboxProps, InboxState> {
     super(props);
     this.state = { expanded: false };
   }
-
-  // const [expanded, setExpanded] = React.useState<string | false>('panel1');
 
   handleChange =
     (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -121,11 +118,6 @@ class Inbox extends React.Component<InboxProps, InboxState> {
           </AccordionDetails>
         </Accordion>
 
-        {/* <Grid container>
-          <Grid item xs={6} md={3} sx={{backgroundColor: 'red', height: 200}}></Grid>
-          <Grid item xs={9} md={3} sx={{backgroundColor: 'blue', height: 200}}></Grid>
-          <Grid item xs={9} sx={{backgroundColor: 'yellow', height: 200}}></Grid>
-        </Grid> */}
       </div>
     );
   }

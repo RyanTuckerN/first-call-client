@@ -15,11 +15,7 @@ import {
 import { instrumentOptions } from "../../../../../types/AutocompleteOptions";
 import { Backspace } from "@mui/icons-material";
 import { CallStack, Gig } from "../../../../../types/API.types";
-import {
-  formControl,
-  properize,
-  properizeNoTrim,
-} from "../../../../_helpers/helpers";
+import { formControl, properize } from "../../../../_helpers/helpers";
 import { fetchHandler } from "../../../../_helpers/fetchHandler";
 import API_URL from "../../../../_helpers/environment";
 import { UserCtx } from "../../../../Context/MainContext";
@@ -61,7 +57,6 @@ class CallStackEdit extends React.Component<
   ): Promise<boolean> => {
     e.preventDefault();
     try {
-      console.log(this.state);
       const { roleVal, emailVal } = this.state;
       if (!emailVal || !roleVal) {
         // this.setState({ message: "Please fill out both fields" });
@@ -78,7 +73,6 @@ class CallStackEdit extends React.Component<
           method: "post",
           auth: this.context.token ?? localStorage.getItem("token") ?? "",
         });
-        // console.log(callStack, success);
         success && this.setState({ stackTable: callStack });
         success &&
           this.props.setGig({
@@ -93,7 +87,6 @@ class CallStackEdit extends React.Component<
           body: { calls: emailVal },
           auth: this.context.token ?? localStorage.getItem("token") ?? "",
         });
-        // console.log(roleStack, message);
         success &&
           this.setState({
             stackTable: { ...this.state.stackTable, [roleVal]: roleStack },
@@ -109,7 +102,6 @@ class CallStackEdit extends React.Component<
         return success;
       }
     } catch (err) {
-      console.log(err);
       return false;
     }
   };
@@ -121,7 +113,6 @@ class CallStackEdit extends React.Component<
         method: "delete",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log(stack, message);
       success &&
         this.setState({
           stackTable: { ...this.state.stackTable, [role]: stack },
@@ -134,7 +125,6 @@ class CallStackEdit extends React.Component<
 
       return success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -146,12 +136,10 @@ class CallStackEdit extends React.Component<
         method: "post",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log(json);
       json.success && this.setState({ ...this.state, ...json.callStack });
       json.success && this.props.setGig(json.gig);
       return json.success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -171,12 +159,10 @@ class CallStackEdit extends React.Component<
           md={5}
           lg={6}
           display="flex"
-          // justifyContent="space-between"
         >
           <Grid>
             <Grid container item xs={12} sx={{ marginTop: 1 }}>
               <Typography variant="h4">Band</Typography>
-              {/* <Button onClick={this.saveCallStackToDB}>save</Button> */}
             </Grid>
             <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>
               <Typography variant="body2">
@@ -191,7 +177,6 @@ class CallStackEdit extends React.Component<
               onSubmit={this.handleSubmit}
               style={{ width: "100%" }}
             >
-              {/* <FormControl > */}
               <Grid
                 item
                 container
@@ -200,7 +185,7 @@ class CallStackEdit extends React.Component<
                 xs={12}
                 sx={{ marginTop: 1 }}
               >
-                <Grid item xs={12} sm={5} >
+                <Grid item xs={12} sm={5}>
                   <Autocomplete
                     id="instrument-input"
                     freeSolo
@@ -233,20 +218,17 @@ class CallStackEdit extends React.Component<
                     )}
                   />
                 </Grid>
-                <Grid item xs={12} sm={7}  pl={1}>
+                <Grid item xs={12} sm={7} pl={1}>
                   <Autocomplete
                     id="email-input"
                     freeSolo
                     openOnFocus
                     value={this.state.emailVal?.toLowerCase() ?? ""}
-                    options={
-                      this.props.followInfo.filter(
-                        (user) =>
-                          user.role?.toLowerCase() ===
-                          this.state.roleVal?.toLowerCase()
-                      )
-                      // .map((user) => user.email)
-                    }
+                    options={this.props.followInfo.filter(
+                      (user) =>
+                        user.role?.toLowerCase() ===
+                        this.state.roleVal?.toLowerCase()
+                    )}
                     onChange={(e: any, option: any) => {
                       this.setState({
                         emailVal: option?.email?.toLowerCase() ?? "",
@@ -256,7 +238,6 @@ class CallStackEdit extends React.Component<
                       this.setState({ emailVal: option?.toLowerCase() ?? "" });
                     }}
                     renderOption={(props, option) => {
-                      console.log(option);
                       return (
                         <Box component="li" {...props}>
                           <Avatar src={option.photo} alt="" />
@@ -279,7 +260,15 @@ class CallStackEdit extends React.Component<
                           endAdornment: (
                             <>
                               <InputAdornment position="end">
-                              <Button type="submit" sx={{position: 'relative', left: 50}} disabled={!this.state.emailVal || !this.state.roleVal}>Add</Button>
+                                <Button
+                                  type="submit"
+                                  sx={{ position: "relative", left: 50 }}
+                                  disabled={
+                                    !this.state.emailVal || !this.state.roleVal
+                                  }
+                                >
+                                  Add
+                                </Button>
                               </InputAdornment>
                             </>
                           ),
@@ -289,7 +278,6 @@ class CallStackEdit extends React.Component<
                   />
                 </Grid>
               </Grid>
-              {/* </FormControl> */}
             </form>
             <Grid item container xs={12}>
               {roles.length ? (

@@ -15,16 +15,14 @@ import {
   CalendarToday,
   CheckCircleOutline,
 } from "@mui/icons-material";
-import { Link } from "react-router-dom";
 import * as _ from "lodash";
 import { Gig } from "../../../types/API.types";
 import { stringAvatar } from "../MainView/Settings/Header";
 import { DetailedGig } from "../MainView/Gig/Gig.types";
-import { GigPageState } from "../MainView/Gig/components/GigView/GigPage";
 
 const avatarSize: number = 35;
 
-interface OpenGigInfoProps  {
+interface OpenGigInfoProps {
   details: DetailedGig;
   gig: Gig;
 }
@@ -35,7 +33,6 @@ const OpenGigInfo: React.FunctionComponent<OpenGigInfoProps> = ({
 }) => {
   const { date, callStack, optionalInfo, payment, gigLocation } = gig;
   const { bandLeader, bandMembers } = details;
-
   const d = new Date(date);
   const entries = Object.entries(optionalInfo ?? {});
   const roles = Object.keys(callStack?.stackTable ?? {});
@@ -51,26 +48,23 @@ const OpenGigInfo: React.FunctionComponent<OpenGigInfoProps> = ({
       spacing={1}
       sx={{ padding: 1 }}
     >
- 
       <Grid item xs={12} sm={7} md={4}>
         <Paper elevation={10} sx={{ paddingLeft: 2, minHeight: "100%" }}>
           <Typography {...typoSx} variant="h6">
             Details
           </Typography>
           <ListItem>
-              <ListItemAvatar>
-                {bandLeader.photo ? (
-                  <Avatar
-                    src={bandLeader.photo}
-                    alt={bandLeader.name}
-                    sx={{ height: avatarSize, width: avatarSize }}
-                  />
-                ) : (
-                  <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
-                )}
-              </ListItemAvatar>
-            {/* <ListItemText  primary={bandLeader.name} /> */}
-
+            <ListItemAvatar>
+              {bandLeader.photo ? (
+                <Avatar
+                  src={bandLeader.photo}
+                  alt={bandLeader.name}
+                  sx={{ height: avatarSize, width: avatarSize }}
+                />
+              ) : (
+                <Avatar {...stringAvatar(bandLeader.name, avatarSize)} />
+              )}
+            </ListItemAvatar>
             <Typography variant="subtitle1">
               Gig hosted by <strong>{bandLeader.name}</strong>
             </Typography>
@@ -103,11 +97,8 @@ const OpenGigInfo: React.FunctionComponent<OpenGigInfoProps> = ({
           </ListItem>
           {!_.isEmpty(entries) && (
             <>
-              {/* <Grid item xs={12} sm={6} md={3}> */}
-              {/* <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}> */}
               {entries.length ? (
                 <Grid item xs={12}>
-                  {/* <Divider sx={{ paddingY: 1 }} /> */}
                   <Typography {...typoSx} variant="h6">
                     Additional Info
                   </Typography>
@@ -117,7 +108,6 @@ const OpenGigInfo: React.FunctionComponent<OpenGigInfoProps> = ({
                 {entries.map((entry, i) => {
                   return (
                     <ListItem key={i}>
-                      {/* <ListItemIcon sx={{  }}></ListItemIcon> */}
                       <Typography sx={{}}>
                         <strong>{properize(entry[0])}: &nbsp; </strong>
                         {`${entry[1]}`}
@@ -126,14 +116,11 @@ const OpenGigInfo: React.FunctionComponent<OpenGigInfoProps> = ({
                   );
                 })}
               </Grid>
-              {/* </Paper> */}
-              {/* </Grid> */}
             </>
           )}
           <div id="gig-padding" style={{ height: 20 }} />
         </Paper>
       </Grid>
-      {/* <Divider sx={{ paddingY: 1 }} /> */}
       <Grid
         container
         item
@@ -142,8 +129,6 @@ const OpenGigInfo: React.FunctionComponent<OpenGigInfoProps> = ({
         md={4}
         display="flex"
         flexDirection="column"
-        // justifyContent="space-between"
-        // {...typoSx}
       >
         <Paper elevation={10} sx={{ padding: 1, minHeight: "100%" }}>
           <Grid item xs={12} container>
@@ -185,7 +170,6 @@ const OpenGigInfo: React.FunctionComponent<OpenGigInfoProps> = ({
                   </ListItem>
                 ))
               : null}
-            {/* </List> */}
           </Grid>
           <div id="gig-padding" style={{ height: 20 }} />
         </Paper>
@@ -195,11 +179,3 @@ const OpenGigInfo: React.FunctionComponent<OpenGigInfoProps> = ({
 };
 
 export default OpenGigInfo;
-
-/**
- *   {/* //*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */
-//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
-//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
-//*** **** **** *** *** *** *** ** ** * * * *///*** **** **** *** *** *** *** ** ** * * * */ //*** **** **** *** *** *** *** ** ** * * * */
-//CHANGE THIS IN THE SERVER TO ADD NAME AND EMAIL AS AN OBJECT
-//REQUIRE USER TO GIVE NAME WHEN ACCEPTING THE OFFER */}

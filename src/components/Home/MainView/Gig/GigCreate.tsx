@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Component } from "react";
 import CallStackCreate from "./CallStack/CallStackCreate";
 import { Grid } from "@mui/material";
@@ -9,7 +8,7 @@ interface GigCreateProps extends User {
   addGig: (gig: Gig) => void;
   fetchDetails: () => Promise<void>;
   setMainState: (key: string, value: any) => void;
-  followInfo: any[]
+  followInfo: any[];
 }
 
 interface GigCreateState {
@@ -24,9 +23,9 @@ class GigCreate extends Component<GigCreateProps, GigCreateState> {
   }
 
   componentDidMount() {
-    this.props.setMainState('dashboardRoute', 'notifications')
+    this.props.setMainState("dashboardRoute", "notifications");
   }
-  
+
   setCallStackEmpty = (b: boolean) => this.setState({ callStackEmpty: b });
   setGigId = (n: number) => this.setState({ gigId: n });
 

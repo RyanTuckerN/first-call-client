@@ -1,32 +1,26 @@
 import React from "react";
 
 import { GigIndexState } from "../GigsIndex";
-import { Notification } from "../../../../../types/API.types";
-import { Grid, Paper, Typography, CardActionArea, Divider } from "@mui/material";
-import { HashCode } from "../Gig.types";
+import { Grid, Divider } from "@mui/material";
 import BlockMapper from "./mappers/BlockMapper";
 import BarMapper from "./mappers/BarMapper";
 
 interface GigDashBoardProps extends GigIndexState {
-  width: number
+  width: number;
 }
-interface GigDashBoardState {
-}
+interface GigDashBoardState {}
 class GigDashBoard extends React.Component<
   GigDashBoardProps,
   GigDashBoardState
 > {
   constructor(props: GigDashBoardProps) {
     super(props);
-
   }
-
-
 
   render() {
     const { notificationsHash, notifications } = this.props;
     const { width } = this.props;
-    return width >= 900 && notifications.length? (
+    return width >= 900 && notifications.length ? (
       <>
         <Grid
           container
@@ -34,14 +28,12 @@ class GigDashBoard extends React.Component<
           padding={1}
           display="flex"
           justifyContent="space-around"
-          
         >
           <BlockMapper
             {...this.props}
             code={"100"}
             color="#2374D2"
             notifications={notificationsHash["100"] ?? []}
-
           />
           <BlockMapper
             {...this.props}
@@ -61,27 +53,18 @@ class GigDashBoard extends React.Component<
               ...(notificationsHash["301"] ?? []),
             ]}
           />
-          {/* <BlockMapper
-            {...this.props}
-            code={"400"}
-            color="#ba68c8"
-            notifications={notificationsHash["400"] ?? []}
-          /> */}
         </Grid>
       </>
     ) : (
       <>
         <Grid
-          // container
           item
           xs={12}
-          width={'100%'}
-          // spacing={0}
+          width={"100%"}
           padding={0}
           display="flex"
           justifyContent="space-around"
-          height={'26px'}
-          // marginBottom={1}
+          height={"26px"}
         >
           <BarMapper
             {...this.props}
@@ -89,7 +72,7 @@ class GigDashBoard extends React.Component<
             color="#000000"
             notifications={notificationsHash["100"] ?? []}
           />
-          <Divider orientation='vertical' />
+          <Divider orientation="vertical" />
           <BarMapper
             {...this.props}
             code={"200"}
@@ -99,7 +82,7 @@ class GigDashBoard extends React.Component<
               ...(notificationsHash["201"] ?? []),
             ]}
           />
-          <Divider orientation='vertical' />
+          <Divider orientation="vertical" />
           <BarMapper
             {...this.props}
             code={"300"}
@@ -109,12 +92,6 @@ class GigDashBoard extends React.Component<
               ...(notificationsHash["301"] ?? []),
             ]}
           />
-          {/* <BarMapper
-            {...this.props}
-            code={"400"}
-            color="#ba68c8"
-            notifications={notificationsHash["400"] ?? []}
-          /> */}
         </Grid>
       </>
     );

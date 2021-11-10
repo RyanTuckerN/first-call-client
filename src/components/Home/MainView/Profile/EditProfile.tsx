@@ -24,13 +24,6 @@ import {
 import * as _ from "lodash";
 import { Add, DragHandle, Cancel, Reply } from "@mui/icons-material";
 
-// const payment = {
-//   venmo: "nick-tucker-12",
-//   zelle: "3175138076",
-//   cashApp: "$nicktuckerbass",
-// };
-// const keys = Object.entries(payment)
-
 interface EditProfileProps {
   updateProfile: (prop: any) => Promise<boolean>;
   user: User;
@@ -42,16 +35,10 @@ interface EditProfileState extends User {
   snackBarOpen: boolean;
   success: boolean | null;
   paymentEditTarget: string;
-  // stateChanged: boolean
-  // user: User
 }
-
-//state-agnostic flag
-// let stateChanged: boolean = false;
 
 class EditProfile extends Component<EditProfileProps, EditProfileState> {
   static contextType = UserCtx;
-  // instrumentOptions = ['Bass', 'Guitar', 'Drums', 'Voice'];
   stateChanged: boolean = false;
 
   constructor(props: EditProfileProps, context: any) {
@@ -64,8 +51,6 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
       snackBarOpen: false,
       success: null,
       paymentEditTarget: "",
-      // stateChanged: false
-      // user: this.
     };
   }
 
@@ -77,13 +62,10 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
     this.setState({ role: e.target.value });
   handleLocation = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ location: e.target.value });
-  // handleBio = (e: React.ChangeEvent<HTMLInputElement>): void =>
-  //   this.setState({ description: e.target.value });
   handlePlatform = (e: any): void =>
     this.setState({ platform: e.target.value });
   handleHandle = (e: React.ChangeEvent<HTMLInputElement>): void =>
     this.setState({ handle: e.target.value });
-  // addPayment = ()
 
   handleAddPayment = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -100,14 +82,11 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
 
   handleSave = async (): Promise<void> => {
     if (!this.stateChanged) return;
-    // const user: EditProfileState = {...this.state};
-    const { name, email, location, paymentPreference, role } =
-      this.state;
+    const { name, email, location, paymentPreference, role } = this.state;
     const body = {
       name,
       email,
       location,
-      // description,
       paymentPreference,
       role,
     };
@@ -126,12 +105,6 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
     }
   }
 
-  // componentWillUnmount() {
-  //   stateChanged &&
-  //     Swal.fire({ text: "You have unsaved changed!", icon: "question" });
-  // }
-  // shou
-
   handleSuccess = () => this.setState({ success: true, snackBarOpen: true });
   handleFailure = () => this.setState({ success: false, snackBarOpen: true });
   handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -143,9 +116,6 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
   };
 
   render() {
-    // console.log("STATE HERE HERE HEARE!!", this.state);
-    console.log(this.stateChanged);
-    // const { user } = this.context;
     return (
       <Grid container spacing={2}>
         <Grid container justifyContent="flex-end" sx={{ padding: 3 }}>
@@ -166,7 +136,6 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             id="name"
             name="name"
             value={this.state.name}
-            // label="Name"
           />
         </Grid>
         <Grid item xs={12} sm={5}>
@@ -215,27 +184,8 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             value={
               this.state.location ? properizeNoTrim(this.state.location) : ""
             }
-            // label="Name"
           />
         </Grid>
-        {/* <Grid item xs={12}>
-          <Typography variant="h6">Bio</Typography>
-          <Typography variant="subtitle2">
-            Briefly describe yourself!
-          </Typography>
-          <TextField
-            onChange={this.handleBio}
-            multiline
-            placeholder="I like long walks on the beach..."
-            minRows={3}
-            fullWidth
-            variant="outlined"
-            id="bio"
-            name="bio"
-            value={this.state.description ?? ""}
-            // label="Name"
-          />
-        </Grid> */}
         <Grid item xs={12}>
           <Typography variant="h6">Payment Preferences</Typography>
           <Typography variant="caption">
@@ -243,7 +193,6 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             on your profile and sent to bandleaders after gigs.`}
           </Typography>
         </Grid>
-        {/* {this.state.paymentPreference && Object.entries(this.state.paymentPreference) */}
         <Grid item xs={12} sm={6}>
           <Typography variant="caption">platform</Typography>
           <Autocomplete
@@ -293,7 +242,6 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
                   </IconButton>
                 ),
               }}
-              // label="Name"
             />
           </Box>
         </Grid>
@@ -341,7 +289,6 @@ class EditProfile extends Component<EditProfileProps, EditProfileState> {
             Save Changes
           </Button>
         </Grid>
-        {/* </> */}
         <Snackbar
           open={this.state.snackBarOpen}
           autoHideDuration={6000}

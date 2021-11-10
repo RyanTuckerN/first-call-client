@@ -1,18 +1,10 @@
-import {
-  // Route,
-  Link,
-  // Switch,
-  // RouteComponentProps,
-  // withRouter,
-} from "react-router-dom";
-// import * as React from "react";
+import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-// import MuiLink from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -21,23 +13,12 @@ import Container from "@mui/material/Container";
 
 interface LoginProps {
   functions: any;
-  authState: any
+  authState: any;
 }
 
 const Login = (props: LoginProps) => {
-  const { handleEmail, handlePassword, handleLogin, clearState } = props.functions;
-
-  // return (
-  //   <div>
-  //     <label htmlFor="email">Email address</label>
-  //     <input type="email" id="email" name="email" onChange={handleEmail}/>
-  //     <label htmlFor="password">Password</label>
-  //     <input type="password" id="password" name="password" onChange={handlePassword} />
-  //     <Link to="/auth/signup">
-  //       <div onClick={clearState}>Need to sign up?</div>
-  //     </Link>
-  //   </div>
-  // );
+  const { handleEmail, handlePassword, handleLogin, clearState } =
+    props.functions;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -56,12 +37,7 @@ const Login = (props: LoginProps) => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <Box
-          component="form"
-          onSubmit={handleLogin}
-          noValidate
-          sx={{ mt: 1 }}
-        >
+        <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
@@ -92,20 +68,16 @@ const Login = (props: LoginProps) => {
             type="submit"
             fullWidth
             variant="contained"
-            color='secondary'
-            sx={{ mt: 3, mb: 2, color: 'white' }}
+            color="secondary"
+            sx={{ mt: 3, mb: 2, color: "white" }}
           >
             Sign In
           </Button>
           <Grid container>
-            <Grid item xs>
-              {/* <MuiLink href="#" variant="body2">
-                Forgot password?
-              </MuiLink> */}
-            </Grid>
+            <Grid item xs></Grid>
             <Grid item>
               <Link to="/auth/signup">
-                <div onClick={clearState} >
+                <div onClick={clearState}>
                   {"Don't have an account? Sign Up"}
                 </div>
               </Link>
@@ -113,7 +85,6 @@ const Login = (props: LoginProps) => {
           </Grid>
         </Box>
       </Box>
-      {/* <Copyright sx={{ mt: 8, mb: 4 }} /> */}
     </Container>
   );
 };

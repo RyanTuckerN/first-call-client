@@ -41,12 +41,7 @@ const GigCard: FunctionComponent<GigProps> = ({
     sx: { height: avatarSize, width: avatarSize },
   };
 
-
-  const colors = [
-    "secondary.light",
-    "secondary.dark",
-    "secondary.main"
-  ];
+  const colors = ["secondary.light", "secondary.dark", "secondary.main"];
   return bandLeader ? (
     <Card elevation={5} sx={{ margin: 1, borderRadius: 3 }}>
       <Link smooth to={`/main/gig/${id}#gig-anchor`}>
@@ -84,13 +79,14 @@ const GigCard: FunctionComponent<GigProps> = ({
                 </Typography>
               </div>
             }
-            subheader={(<Typography>{gigDate.toLocaleDateString()} {returnTime(
-              gigDate
-            )}</Typography>)}
+            subheader={
+              <Typography>
+                {gigDate.toLocaleDateString()} {returnTime(gigDate)}
+              </Typography>
+            }
           />
         </CardActionArea>
       </Link>
-      {/* AUTHORIZE GIG OWNER */}
       {userId === bandLeader.id ? (
         <>
           <CardContent
@@ -137,4 +133,3 @@ const GigCard: FunctionComponent<GigProps> = ({
 };
 
 export default GigCard;
-

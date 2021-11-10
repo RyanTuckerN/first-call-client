@@ -1,32 +1,23 @@
 import * as React from "react";
-import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import "./Welcome.css";
-// import CssBaseline from "@mui/material/CssBaseline";
-// import Container from "@mui/material/Container";
-// import Box from "@mui/material/Box";
 import {
-  Box,
   Grid,
   Paper,
   Container,
   Typography,
-  CssBaseline,
   Divider,
   Button,
 } from "@mui/material";
 import { ArrowDownward } from "@mui/icons-material";
-import wave from "./assets/wavesNegative.svg";
 import band from "./assets/band.png";
-import gigEdit from "./assets/gigEdit.png";
 import gigPage from "./assets/gigPage.png";
 import gigsMapped from "./assets/gigsMapped.png";
 import invitation from "./assets/invitation.png";
 import profile from "./assets/profile.png";
 import board from "./assets/board.png";
 import { UserCtx } from "../../Context/MainContext";
-import { Transition } from "react-transition-group";
 import { Zoom, Fade } from "react-reveal";
 import { AppState } from "../../../App";
 import Logo from "../../assets/Logo";
@@ -37,13 +28,6 @@ const duration = 300;
 const defaultStyle = {
   transition: `opacity ${duration}ms ease-in-out`,
   opacity: 0,
-};
-
-const transitionStyles: any = {
-  entering: { opacity: 1 },
-  entered: { opacity: 1 },
-  exiting: { opacity: 0 },
-  exited: { opacity: 0 },
 };
 
 interface WelcomeProps {}
@@ -84,7 +68,6 @@ class Welcome extends React.Component {
                       <Typography
                         variant="body2"
                         fontWeight={600}
-                        // color={'#00000080'}
                         textAlign="justify"
                         sx={{ pt: 2, maxWidth: 280 }}
                       >
@@ -119,7 +102,6 @@ class Welcome extends React.Component {
                     alt="sihloutte of a band"
                     style={{
                       maxHeight: 350,
-                      // opacity: .5,
                       filter:
                         this.context.darkModeOn === "true"
                           ? "invert(100%) sepia(7%) saturate(7%) hue-rotate(70deg) brightness(107%) contrast(100%)"
@@ -127,14 +109,11 @@ class Welcome extends React.Component {
                     }}
                   />
                 </Grid>
-
-                {/* <Divider sx={{width: '100%', p: 3}} /> */}
               </Grid>
             </Zoom>
             <div style={{ height: 40, width: "100%" }} />
-            {/* </Container> */}
             <div id="text-anchor" style={{ height: 1, width: "100%" }} />
-            <div style={{ height: 100 }} /> {/* <Container maxWidth={"lg"}> */}
+            <div style={{ height: 100 }} />
             <Grid container p={2}>
               <Grid
                 item
@@ -144,8 +123,6 @@ class Welcome extends React.Component {
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
-                // border={1}
-                // sx={{ borderColor: "divider" }}
               >
                 <Fade left duration={500}>
                   <Typography variant="overline">Mission</Typography>
@@ -222,12 +199,7 @@ class Welcome extends React.Component {
                     </Fade>
                   </Grid>
                 </Grid>
-                <Grid
-                  item
-                  xs={12}
-                  md={5}
-                  textAlign="justify"
-                >
+                <Grid item xs={12} md={5} textAlign="justify">
                   <Fade right duration={500}>
                     <Typography variant="overline">Core features</Typography>
                   </Fade>
@@ -348,8 +320,6 @@ class Welcome extends React.Component {
           </Paper>
         </Container>
         <div style={{ height: 40, width: "100%" }} />
-
-        {/* <div style={{backgroundImage: `url(${wave})`, height: 111, backgroundColor: 'white'}} /> */}
       </>
     );
   }

@@ -1,6 +1,4 @@
-
-.justify{
+.justify {
   display: flex;
   justify-content: flex-end;
 }
-

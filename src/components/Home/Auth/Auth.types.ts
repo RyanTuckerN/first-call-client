@@ -1,4 +1,4 @@
-import { User } from '../../../types/API.types'
+import { User } from "../../../types/API.types";
 
 export declare type ChangeHandler = (
   e: React.ChangeEvent<HTMLInputElement>

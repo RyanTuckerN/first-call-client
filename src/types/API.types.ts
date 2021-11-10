@@ -1,16 +1,14 @@
-import {DetailedGig} from '../components/Home/MainView/Gig/Gig.types'
+import { DetailedGig } from "../components/Home/MainView/Gig/Gig.types";
 
 export interface User {
   id: number;
   email: string;
   name: string;
   role?: string;
-  // description?: string;
   location?: string;
   paymentPreference?: { [key: string]: string } | null;
-  // specialties?: string[];
-  followers: number[],
-  following: number[],
+  followers: number[];
+  following: number[];
   createdAt?: string;
   updatedAt?: string;
   emails?: boolean;
@@ -25,16 +23,16 @@ export interface Gig {
   ownerId: number;
   description: string;
   gigLocation: string;
-  date: string; //date format
+  date: string;
   payment: number;
-  token: string; //uuid
+  token: string;
   openCalls: string[];
   photo?: string;
   optionalInfo?: { [key: string]: string };
   createdAt?: string;
   updatedAt?: string;
   posts?: Post[];
-  callStack?: CallStack
+  callStack?: CallStack;
 }
 export interface CallStack {
   gigId: number;
@@ -103,9 +101,9 @@ export interface Story {
   createdAt: string;
   updatedAt?: string;
   userId: number;
-  user: {name: string, photo: string, id: number};
-  posts: Post[]
+  user: { name: string; photo: string; id: number };
+  posts: Post[];
 }
-export interface DetailsHash{
-  [key: string|number]: DetailedGig
+export interface DetailsHash {
+  [key: string | number]: DetailedGig;
 }

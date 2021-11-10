@@ -14,12 +14,8 @@ import {
 import {
   ArrowDropDown,
   ArrowRight,
-  ArrowCircleUp,
-  Reply,
   Close,
   Edit,
-  ArrowUpwardRounded,
-  FavoriteOutlined,
   Favorite,
   FavoriteBorder,
 } from "@mui/icons-material";
@@ -47,7 +43,6 @@ class PostComponent extends React.Component<
   PostComponentState
 > {
   static contextType = UserCtx;
-  // context!: React.ContextType<typeof UserCtx>;
 
   constructor(props: PostComponentProps, context: AppState) {
     super(props);
@@ -80,7 +75,6 @@ class PostComponent extends React.Component<
       auth: this.context.token ?? localStorage.getItem("token") ?? "",
       body: { text: this.state.editingText },
     });
-    // console.log(json);
     json.success &&
       this.setState({
         post: {
@@ -93,15 +87,6 @@ class PostComponent extends React.Component<
     return json.success;
   };
 
-  componentDidUpdate(
-    prevProps: PostComponentProps,
-    prevState: PostComponentState
-  ) {
-    // if (prevProps.post !== this.state.post) {
-    //   this.setState({ editingText: this.props.post.text });
-    // }
-  }
-
   handleReply = async (
     e: React.FormEvent<HTMLFormElement>
   ): Promise<boolean> => {
@@ -113,12 +98,6 @@ class PostComponent extends React.Component<
       auth: this.context.token ?? localStorage.getItem("token") ?? "",
       body: { text: this.state.replyText },
     });
-    console.log(json);
-    // if(json.success){
-    //   const arr = this.state.post.children ? [...this.state.post.children, json.post] : [json.post]
-    //   const post = {...this.state.post, children: arr}
-    //   this.setState({post})
-    // }
     this.setState({
       post: {
         ...this.state.post,
@@ -145,12 +124,10 @@ class PostComponent extends React.Component<
         method: "post",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log(json);
       json.success &&
         this.setState({
           post: { ...json.post, children: this.state.post.children },
         });
-      // json.success && this.props.fetchPosts()
       return json.success;
     }
 
@@ -159,12 +136,10 @@ class PostComponent extends React.Component<
       method: "post",
       auth: this.context.token ?? localStorage.getItem("token") ?? "",
     });
-    console.log(json);
     json.success &&
       this.setState({
         post: { ...json.post, children: this.state.post.children },
       });
-    // json.success && this.props.fetchPosts()
     return json.success;
   };
 
@@ -175,7 +150,6 @@ class PostComponent extends React.Component<
     const defaultLineProps = {
       fontSize: "small",
       display: "flex",
-      // marginTop:
     };
 
     return (
@@ -193,8 +167,6 @@ class PostComponent extends React.Component<
         }}
         xs={12}
       >
-        {/* FIRST LINE */}
-        {/* <Paper elevation={7} sx={{width: '100%'}}> */}
         <Grid item xs={12} sx={defaultLineProps} marginBottom={1}>
           {this.state.post.children?.length ? (
             this.state.isOpen ? (
@@ -231,7 +203,6 @@ class PostComponent extends React.Component<
             </Typography>
           )}
         </Grid>
-        {/* SECOND LINE */}
         <Grid
           item
           xs={12}
@@ -239,10 +210,8 @@ class PostComponent extends React.Component<
             position: "relative",
             left: 25,
             marginTop: -1,
-            // backgroundColor: "yellow",
             maxWidth: `calc(100% - (${(i - 1) * 22}px))`,
           }}
-          // style={{ wordWrap: "break-word",  }}
         >
           <Typography
             variant="body2"
@@ -253,7 +222,6 @@ class PostComponent extends React.Component<
             {post.text}
           </Typography>
         </Grid>
-        {/* THIRD LINE */}
         <Grid
           item
           xs={12}
@@ -267,9 +235,9 @@ class PostComponent extends React.Component<
         >
           <IconButton onClick={this.handleLike}>
             {post.voters.includes(user.id) ? (
-              <Favorite sx={{height:16}} color="error" />
+              <Favorite sx={{ height: 16 }} color="error" />
             ) : (
-              <FavoriteBorder sx={{height:16}} fontSize="inherit" />
+              <FavoriteBorder sx={{ height: 16 }} fontSize="inherit" />
             )}
           </IconButton>
           <Typography fontSize={15}>{post.upvotes} </Typography>
@@ -297,8 +265,10 @@ class PostComponent extends React.Component<
                   style={{
                     height: 15,
                     width: 20,
-                    filter: this.context.darkModeOn === 'true' ?
-                      "invert(100%) saturate(5%) hue-rotate(327deg) brightness(98%) contrast(81%)" : '',
+                    filter:
+                      this.context.darkModeOn === "true"
+                        ? "invert(100%) saturate(5%) hue-rotate(327deg) brightness(98%) contrast(81%)"
+                        : "",
                   }}
                 />
                 <Typography variant="caption">reply</Typography>
@@ -319,7 +289,6 @@ class PostComponent extends React.Component<
               position: "relative",
               left: 25,
               marginTop: -1,
-              // backgroundColor: "yellow",
               maxWidth: `calc(100% - (${(i - 1) * 22}px))`,
             }}
           >
@@ -343,16 +312,9 @@ class PostComponent extends React.Component<
                 onChange={this.handleText}
                 style={{
                   zIndex: 9999,
-                  // position: "absolute",
-                  // bottom: 25,
-                  // left: this.props.i > 1 ? -22 * i : 0,
-                  // width:'75%'
                 }}
               />
               <Button
-                // onClick={
-                //   this.state.editing ? this.handleEditSubmit : this.handleReply
-                // }
                 type="submit"
                 color={this.state.editing ? "success" : "primary"}
               >
@@ -361,23 +323,17 @@ class PostComponent extends React.Component<
             </Box>
           </Grid>
         ) : null}
-        <Grid
-          item
-          xs={12}
-          // style={{ maxWidth: `calc(100% - (${i * 22}px))` }}
-        >
+        <Grid item xs={12}>
           {this.state.isOpen && (
             <>
               {post.children?.length
                 ? post.children.map((p) => (
-                    // <Grid key={p.id} item xs={12}>
                     <PostComponent post={p} key={p.id} i={i + 1} />
                   ))
                 : null}
             </>
           )}
         </Grid>
-        {/* </Paper> */}
       </Grid>
     );
   }

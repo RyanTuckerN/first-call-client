@@ -2,17 +2,14 @@ import * as React from "react";
 import { User } from "../../../../types/API.types";
 import {
   Avatar,
-  Divider,
   Box,
   Typography,
   Button,
-  IconButton,
-  Container,
 } from "@mui/material";
-import { AddAPhoto, Edit } from "@mui/icons-material";
+import { AddAPhoto } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import "./Settings.css";
 import { StringSetter } from "../../../../App.types";
+import "./Settings.css";
 
 const avatarSize: number = 100;
 
@@ -77,11 +74,9 @@ const Header: React.FunctionComponent<HeaderProps> = ({
                 id="raised-button-file"
                 type="file"
               />
-              {/* <IconButton {...addOrEditProps}> */}
               <label htmlFor="raised-button-file" id="image-edit-button">
                 <AddAPhoto style={{ color: "white" }} />
               </label>
-              {/* </IconButton> */}
             </>
           ) : (
             <>

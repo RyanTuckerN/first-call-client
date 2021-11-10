@@ -22,12 +22,9 @@ import { UserCtx } from "../../Context/MainContext";
 import { Box } from "@mui/system";
 import { returnTimeDifference, smallImage } from "../../_helpers/helpers";
 import Picker from "emoji-picker-react";
-import "./emojiPicker.css";
 
 interface StoryCardProps extends Story {
   dashboard?: boolean;
-  // handleLike: (id: number) => Promise<boolean>;
-  // author: { name: string; photo: string };
 }
 
 interface StoryCardState extends Story {
@@ -68,10 +65,8 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
       success && this.setState({ ...this.state, ...story });
-      console.log(message);
       return success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -101,7 +96,6 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
         });
       return success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -113,8 +107,6 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
         method: "post",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log(post);
-      // alert(message)
       if (success) {
         const newPosts = [...this.state.posts!];
         newPosts[newPosts.map((p) => p.id).indexOf(post.id)] = post;
@@ -286,66 +278,61 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
                 )
               : null}
             {posts
-              ? posts
-                  // .sort((a, b) => b.voters.length - a.voters.length)
-                  .slice(0, 1)
-                  .map((post) => (
-                    <Grid
-                      item
-                      container
-                      key={post.id}
-                      xs={12}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="space-between"
-                      ml={0.2667}
-                    >
-                      <Grid>
-                        <Link to={`/main/profile/${post.user?.id}`}>
-                          <Typography display="inline" variant="subtitle2">
-                            {post.user?.name}
-                          </Typography>
-                        </Link>
-                        <Typography
-                          display="inline"
-                          variant="body2"
-                          fontWeight={300}
-                          sx={{ ml: 1 }}
-                        >
-                          {post.text.length > 250
-                            ? post.text.slice(0, 200)
-                            : post.text}
-                          <Link to={`/story/${id}`}>
-                            <strong> &nbsp;...</strong>
-                          </Link>
+              ? posts.slice(0, 1).map((post) => (
+                  <Grid
+                    item
+                    container
+                    key={post.id}
+                    xs={12}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    ml={0.2667}
+                  >
+                    <Grid>
+                      <Link to={`/main/profile/${post.user?.id}`}>
+                        <Typography display="inline" variant="subtitle2">
+                          {post.user?.name}
                         </Typography>
-                      </Grid>
-                      <Grid>
-                        <IconButton
-                          onClick={() => this.handlePostLike(post.id)}
-                        >
-                          {post.voters.includes(this.context.user.id) ? (
-                            <FavoriteIcon
-                              sx={{
-                                height: 13,
-                                width: 13,
-                                color: "error.light",
-                              }}
-                              color="error"
-                            />
-                          ) : (
-                            <FavoriteBorderIcon
-                              sx={
-                                this.props.dashboard
-                                  ? { height: 13, width: 13, color: "white" }
-                                  : { height: 13, width: 13 }
-                              }
-                            />
-                          )}
-                        </IconButton>
-                      </Grid>
+                      </Link>
+                      <Typography
+                        display="inline"
+                        variant="body2"
+                        fontWeight={300}
+                        sx={{ ml: 1 }}
+                      >
+                        {post.text.length > 250
+                          ? post.text.slice(0, 200)
+                          : post.text}
+                        <Link to={`/story/${id}`}>
+                          <strong> &nbsp;...</strong>
+                        </Link>
+                      </Typography>
                     </Grid>
-                  ))
+                    <Grid>
+                      <IconButton onClick={() => this.handlePostLike(post.id)}>
+                        {post.voters.includes(this.context.user.id) ? (
+                          <FavoriteIcon
+                            sx={{
+                              height: 13,
+                              width: 13,
+                              color: "error.light",
+                            }}
+                            color="error"
+                          />
+                        ) : (
+                          <FavoriteBorderIcon
+                            sx={
+                              this.props.dashboard
+                                ? { height: 13, width: 13, color: "white" }
+                                : { height: 13, width: 13 }
+                            }
+                          />
+                        )}
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ))
               : null}
             <Divider sx={{ width: "100%", mt: 1 }} />
             <Grid

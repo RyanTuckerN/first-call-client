@@ -11,7 +11,7 @@ import {
   Popover,
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
-import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import {
   CancelOutlined,
@@ -22,14 +22,10 @@ import {
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
-import {
-  returnTime,
-  returnTimeDifference,
-  smallImage,
-} from "../../_helpers/helpers";
+import { returnTimeDifference, smallImage } from "../../_helpers/helpers";
 import { Box } from "@mui/system";
 
-import React, { Component } from "react";
+import React from "react";
 import { RouteComponentProps, withRouter, Link } from "react-router-dom";
 import { AppState } from "../../../App";
 import { Story } from "../../../types/API.types";
@@ -40,10 +36,6 @@ import Picker from "emoji-picker-react";
 import "./Stories.css";
 import "./Dark.css";
 import Swal from "sweetalert2";
-
-// interface Params {
-//   storyId: string;
-// }
 
 interface StoryComponentProps extends RouteComponentProps {
   storyId: number;
@@ -96,7 +88,6 @@ class StoryComponent extends React.Component<
         method: "delete",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log(result);
       success &&
         Swal.fire({
           title: "Story Deleted",
@@ -112,26 +103,9 @@ class StoryComponent extends React.Component<
         );
       return success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
-  // fetchStory = async (): Promise<boolean> => {
-  //   try {
-  //     const { story, success, message } = await fetchHandler({
-  //       url: `${API_URL}/story/${
-  //         this.props.match.params.storyId ?? this.props.storyId
-  //       }`,
-  //       auth: this.context.token ?? localStorage.getItem("token") ?? "",
-  //     });
-  //     // alert(message);
-  //     success && this.setState({ ...story });
-  //     return success;
-  //   } catch (error) {
-  //     alert(error);
-  //     return false;
-  //   }
-  // };
 
   handleLike = async (): Promise<boolean> => {
     try {
@@ -141,10 +115,8 @@ class StoryComponent extends React.Component<
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
       success && this.setState({ ...this.state, ...story });
-      console.log(message);
       return success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -165,7 +137,6 @@ class StoryComponent extends React.Component<
         method: "post",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      // console.log(post, message, respons, response);
       success &&
         this.setState({
           posts: [
@@ -176,7 +147,6 @@ class StoryComponent extends React.Component<
         });
       return success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -188,8 +158,6 @@ class StoryComponent extends React.Component<
         method: "post",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log(post);
-      // alert(message)
       if (success) {
         const newPosts = [...this.state.posts!];
         newPosts[newPosts.map((p) => p.id).indexOf(post.id)] = post;
@@ -203,10 +171,6 @@ class StoryComponent extends React.Component<
   };
 
   togglePhoto = (): void => this.setState({ showImage: !this.state.showImage });
-
-  componentDidMount() {
-    // this.fetchStory();
-  }
 
   componentDidUpdate(
     prevProps: StoryComponentProps,
@@ -274,8 +238,6 @@ class StoryComponent extends React.Component<
                   height: "100",
                   width: "100%",
                   maxHeight: "75vh",
-                  // minHeight: "75vh",
-                  // maxHeight: "75vh",
                 }}
               />
               <Dialog
@@ -332,7 +294,6 @@ class StoryComponent extends React.Component<
                     width: "100%",
                     maxHeight: "71vh",
                     overflowY: "scroll",
-                    // overflowX: "hidden",
                     mb: 7,
                     pt: 0,
                     p: 0,
@@ -414,7 +375,6 @@ class StoryComponent extends React.Component<
                   <Box sx={{ mb: 4 }} />
                   {posts.length ? (
                     posts
-                      // .sort((a, b) => b.voters.length - a.voters.length)
                       .slice(
                         0,
                         showImage

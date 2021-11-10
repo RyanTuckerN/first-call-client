@@ -6,8 +6,6 @@
   position: relative;
   top: 18px;
   right: 6px;
-  /* padding: 0px;
-  margin: 0px; */
 }
 
 .lds-ellipsis {
@@ -66,7 +64,6 @@
   }
 }
 
-/* SWAL STYLING */
 .dark-mode-swal .swal2-popup {
   background-image: linear-gradient(
     rgba(255, 255, 255, 0.09),
@@ -74,12 +71,6 @@
   );
   background-color: #121212;
 }
-
-
-/* .dark-mode-swal .swal2-icon.swal2-success .swal2-success-fix{
-  background-image: linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09));
-  background-color: #121212;
-} */
 
 .dark-mode-swal .swal2-icon.swal2-success {
   background-color: #12121200 !important ;
@@ -117,14 +108,13 @@
   font-family: Lato;
 }
 
-
-#search-bar-wrapper{
+#search-bar-wrapper {
   position: relative;
   top: -6px;
   right: 8px;
 }
 
-#search-bar-wrapper .MuiOutlinedInput-root{
+#search-bar-wrapper .MuiOutlinedInput-root {
   padding: 0px;
 }
 
@@ -134,15 +124,14 @@
 
 #search-bar-wrapper .MuiInputAdornment-root {
   color: rgba(255, 255, 255, 0.8);
-  
 }
 
 #search-bar-wrapper .css-1d3z3hw-MuiOutlinedInput-notchedOutline {
-  border-color:rgba(132, 132, 132, 0.432);
+  border-color: rgba(132, 132, 132, 0.432);
 }
 
-#search-bar{
-  color:rgba(255, 255, 255, 0.8)
+#search-bar {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 #search-bar-wrapper .MuiInputLabel-root {
@@ -150,14 +139,14 @@
   top: 13px;
 }
 
-.mag-glass{
+.mag-glass {
   position: relative;
-  right: 5px
+  right: 5px;
 }
 
-#search-bar-wrapper .MuiInputLabel-shrink{
+#search-bar-wrapper .MuiInputLabel-shrink {
   position: relative;
-  top: 21px !important
+  top: 21px !important;
 }
 
 @media only screen and (max-width: 500px) {

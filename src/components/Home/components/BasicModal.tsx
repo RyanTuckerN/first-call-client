@@ -1,10 +1,6 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { Container, IconButton } from "@mui/material";
-import { Cancel, CancelOutlined } from "@mui/icons-material";
+import { Container } from "@mui/material";
 
 const style = {
   position: "absolute" as "absolute",
@@ -32,7 +28,6 @@ export default function BasicModal({
   open,
   setOpen,
 }: BasicModalProps) {
-  // const [open, setOpen] = React.useState(open);
   const handleClose = () => setOpen(false);
 
   return (
@@ -42,14 +37,8 @@ export default function BasicModal({
         onClose={handleClose}
         aria-labelledby={`modal-${modalTitle}-title`}
         aria-describedby={`modal-${modalTitle}-description`}
-        
       >
-        {/* <> */}
-          {/* <IconButton sx={{position: 'absolute', top: 30, right: 100, zIndex: 9999}}>
-            <CancelOutlined  />
-          </IconButton> */}
-          <Box sx={style}>{children}</Box>
-        {/* </> */}
+        <Box sx={style}>{children}</Box>
       </Modal>
     </Container>
   );

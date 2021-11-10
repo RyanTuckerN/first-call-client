@@ -92,12 +92,10 @@ class Auth extends Component<AuthProps, AuthState> {
           name: `${properize(first)} ${properize(last)}`,
         },
       });
-      console.log(json);
       if (!json.user || !json.sessionToken) {
         this.context.handleSnackBar(json.message, "error");
         return;
       }
-      console.log(json);
       setToken(json.sessionToken);
       setAppState("user", json.user);
       this.props.history.push("/main");
@@ -109,17 +107,26 @@ class Auth extends Component<AuthProps, AuthState> {
 
   componentDidMount() {
     const context = this.context;
-    console.log(context);
-    const { email, first, last } = returnParams()
-    this.setState({ ...this.state, email, first: decodeURI(first ?? ''), last: decodeURI(last ?? '') });
+    const { email, first, last } = returnParams();
+    this.setState({
+      ...this.state,
+      email,
+      first: decodeURI(first ?? ""),
+      last: decodeURI(last ?? ""),
+    });
   }
 
   render() {
-    return ( <Container maxWidth={"sm"} sx={{height: '100%'}}>
-          <Grid height={'100%'}>
-          {/* <div style={{height: '10vh'}}/> */}
+    return (
+      <Container maxWidth={"sm"} sx={{ height: "100%" }}>
+        <Grid height={"100%"}>
           <Paper
-            sx={{ mt: 3, pt: .0012, pb: 6, borderRadius: light.shape.borderRadius }}
+            sx={{
+              mt: 3,
+              pt: 0.0012,
+              pb: 6,
+              borderRadius: light.shape.borderRadius,
+            }}
           >
             <Switch>
               <Route path={`${this.props.match.path}/signup`}>
@@ -130,8 +137,8 @@ class Auth extends Component<AuthProps, AuthState> {
               </Route>
             </Switch>
           </Paper>
-      </Grid>
-        </Container>
+        </Grid>
+      </Container>
     );
   }
 }

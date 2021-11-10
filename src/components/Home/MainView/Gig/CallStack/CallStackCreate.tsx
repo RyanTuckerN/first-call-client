@@ -2,20 +2,15 @@ import * as React from "react";
 import { Component } from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import {
-  FormControl,
-  FormHelperText,
-  Input,
   Button,
   Grid,
   TextField,
   Typography,
   Autocomplete,
   List,
-  Link,
   InputAdornment,
   ListItemText,
   IconButton,
-  Chip,
   Avatar,
 } from "@mui/material";
 import {
@@ -88,9 +83,7 @@ class CallStackCreate extends Component<
     const arr = obj[this.state.roleVal]
       ? [...obj[this.state.roleVal], this.state.emailVal]
       : [this.state.emailVal];
-    // console.log(arr)
     obj[this.state.roleVal] = [...new Set(arr)];
-    console.log(obj);
     this.setState({ stackTable: obj, emailVal: "" });
     this.props.setCallStackEmpty(false);
   };
@@ -115,7 +108,6 @@ class CallStackCreate extends Component<
         body: { stackTable: this.state.stackTable },
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log("callStack", json);
       json.success && this.context.handleSnackBar("Success!", "success");
       json.success && this.props.setCallStackEmpty(true);
       if (json.success) {
@@ -127,13 +119,7 @@ class CallStackCreate extends Component<
     }
   };
 
-  //NOT WORKING COME BACK TO
-  scrollToBottom = () => {
-    this.callstackEnd?.scrollIntoView({ behavior: "smooth" });
-  };
-
   componentDidMount() {
-    // this.scrollToBottom();
     this.props.setCallStackEmpty(true);
   }
 
@@ -142,9 +128,6 @@ class CallStackCreate extends Component<
     prevState: CallStackCreateState
   ) {
     if (prevState.stackTable !== this.state.stackTable) {
-      this.scrollToBottom();
-    }
-    if (prevState.stackTable !== this.state.stackTable) {
       this.props.setCallStackEmpty(_.isEmpty(this.state.stackTable));
     }
     if (
@@ -152,7 +135,6 @@ class CallStackCreate extends Component<
       typeof this.props.gigId === "number"
     ) {
       this.saveCallStackToDB();
-      // this.props.fetchDetails()
     }
   }
 
@@ -171,7 +153,6 @@ class CallStackCreate extends Component<
         >
           <Grid container item xs={12} sx={{ marginTop: 1 }}>
             <Typography variant="h4">Band</Typography>
-            {/* <Button onClick={this.saveCallStackToDB}>save</Button> */}
           </Grid>
           <Grid container item xs={12} sx={{ marginTop: 1, marginLeft: 1 }}>
             <Typography variant="body2">
@@ -189,7 +170,6 @@ class CallStackCreate extends Component<
             onSubmit={this.handleSubmit}
             style={{ width: "100%" }}
           >
-            {/* <FormControl > */}
             <Grid
               item
               container
@@ -237,14 +217,11 @@ class CallStackCreate extends Component<
                   freeSolo
                   openOnFocus
                   value={this.state.emailVal?.toLowerCase() ?? ""}
-                  options={
-                    this.props.followInfo.filter(
-                      (user) =>
-                        user.role?.toLowerCase() ===
-                        this.state.roleVal?.toLowerCase()
-                    )
-                    // .map((user) => user.email)
-                  }
+                  options={this.props.followInfo.filter(
+                    (user) =>
+                      user.role?.toLowerCase() ===
+                      this.state.roleVal?.toLowerCase()
+                  )}
                   onChange={(e: any, option: any) => {
                     this.setState({
                       emailVal: option?.email?.toLowerCase() ?? "",
@@ -254,7 +231,6 @@ class CallStackCreate extends Component<
                     this.setState({ emailVal: option?.toLowerCase() ?? "" });
                   }}
                   renderOption={(props, option) => {
-                    console.log(option);
                     return (
                       <Box component="li" {...props}>
                         <Avatar src={option.photo} alt="" />
@@ -277,7 +253,14 @@ class CallStackCreate extends Component<
                         endAdornment: (
                           <>
                             <InputAdornment position="end">
-                              <Button type="submit" disabled={!this.state.emailVal || !this.state.roleVal}>Add</Button>
+                              <Button
+                                type="submit"
+                                disabled={
+                                  !this.state.emailVal || !this.state.roleVal
+                                }
+                              >
+                                Add
+                              </Button>
                             </InputAdornment>
                           </>
                         ),
@@ -290,7 +273,6 @@ class CallStackCreate extends Component<
                 </Typography>
               </Grid>
             </Grid>
-            {/* </FormControl> */}
           </form>
           {roles.length ? (
             roles.map((r, i) => (

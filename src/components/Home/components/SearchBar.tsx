@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { RouteComponentProps, withRouter } from "react-router";
 import {
   TextField,
@@ -84,7 +84,6 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <Typography variant="subtitle1">{option.name}</Typography>{" "}
       </Box>
-      {/* &nbsp;&nbsp; */}
       <Typography ml={"auto"} variant="body2" fontWeight={300}>
         {option.role}
       </Typography>

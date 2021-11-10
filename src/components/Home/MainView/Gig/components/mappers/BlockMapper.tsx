@@ -21,7 +21,6 @@ const BlockMapper: React.FunctionComponent<BlockMapperProps> = ({
 
   return (
     <Grid item xs={6} sm={4} display="flex" justifyContent="space-around">
-      {/* <CardActionArea sx={{padding:1}} > */}
       <Button
         variant="text"
         onClick={handleClick}
@@ -30,13 +29,11 @@ const BlockMapper: React.FunctionComponent<BlockMapperProps> = ({
         sx={{
           display: "flex",
           flexDirection: "column",
-          // justifyContent: "space-around",
           color: "white",
           borderRadius: 10,
           width: "100%",
           maxWidth: 220,
           height: 80,
-          // padding: 1,
         }}
       >
         <Paper
@@ -48,7 +45,6 @@ const BlockMapper: React.FunctionComponent<BlockMapperProps> = ({
             padding: 1,
             display: "flex",
             flexDirection: "column",
-            // justifyContent: "space-around",
             alignItems: "center",
             background:
               parseInt(code) === messageCode || !messageCode
@@ -60,20 +56,12 @@ const BlockMapper: React.FunctionComponent<BlockMapperProps> = ({
           elevation={5}
           onClick={handleClick}
         >
-          {/* <Typography>You have</Typography> */}
           <Typography variant="h4">{notifications?.length ?? 0}</Typography>
           <Typography noWrap variant="body2">
             {returnCategory(parseInt(code)).toUpperCase()}
           </Typography>
         </Paper>
       </Button>
-      {/* <div
-            style={{
-              height: 2,
-              backgroundColor: ,
-            }}
-          /> */}
-      {/* </CardActionArea> */}
     </Grid>
   );
 };

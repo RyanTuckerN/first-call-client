@@ -1,4 +1,3 @@
-// import * as React from "react";
 import { Component } from "react";
 import ChangePass from "./ChangePass";
 import {
@@ -13,20 +12,19 @@ import {
   IconButton,
   List,
   ListItem,
-  Divider,
   ListItemButton,
   Grid,
 } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import { UserCtx } from "../../../Context/MainContext";
 import { User } from "../../../../types/API.types";
-import API_URL from "../../../_helpers/environment";
+import { AppState } from "../../../../App";
 import { fetchHandler } from "../../../_helpers/fetchHandler";
+import API_URL from "../../../_helpers/environment";
 import Header from "./Header";
 import Swal from "sweetalert2";
-import "./Settings.css";
 import EditProfile from "../Profile/EditProfile";
-import { AppState } from "../../../../App";
+import "./Settings.css";
 
 interface SettingsProps extends RouteComponentProps {
   setAppState: any;
@@ -63,7 +61,6 @@ class Settings extends Component<SettingsProps, SettingsState> {
       auth: localStorage.getItem("token") ?? this.context.token ?? "",
       body: user,
     });
-    // console.log(json)
     json.user && this.props.setAppState("user", json.user);
     return json.success ? true : false;
   };
@@ -85,12 +82,9 @@ class Settings extends Component<SettingsProps, SettingsState> {
         }
       );
       const File = await res.json();
-      console.log(File);
-      // await this.setState({photo: File.secure_url});
       await this.updateProfile({ photo: File.secure_url });
       return true;
     } catch (err) {
-      console.error(err);
       alert("There was an error! Please try again");
       return false;
     }
@@ -101,15 +95,10 @@ class Settings extends Component<SettingsProps, SettingsState> {
       icon: "question",
       text: "FirstCall will never send promotional materials, but email is a great way to stay informed about any changes to your gigs. Opt out anytime!",
       customClass: {
-        container:
-          this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
+        container: this.context.darkModeOn === "true" ? "dark-mode-swal" : "",
       },
     });
-  // handleEmail = ():void =>
 
-  componentDidMount() {
-    // console.log(this.context);
-  }
   render() {
     return (
       <Grid container>
@@ -135,13 +124,11 @@ class Settings extends Component<SettingsProps, SettingsState> {
               </NavLink>
             </Grid>
             <div id="spacer" />
-            {/* <Divider /> */}
             <List>
               <Grid>
                 <ListItem>
                   <Typography variant="h5">Preferences</Typography>
                 </ListItem>
-                {/* Hello from Settings.tsx! */}
                 <ListItem>
                   <div className="toggle">
                     <Typography variant="body1">Dark Mode</Typography>
@@ -158,7 +145,6 @@ class Settings extends Component<SettingsProps, SettingsState> {
                     </div>
                   </div>
                 </ListItem>
-                {/* <Divider /> */}
                 <ListItem>
                   <div className="toggle">
                     <div>
@@ -172,7 +158,6 @@ class Settings extends Component<SettingsProps, SettingsState> {
                         <HelpOutlineIcon fontSize="small" />
                       </IconButton>
                     </div>
-                    {/* <Typography variant='body1'>First call will send emails by default to keep you in the loop about any changes in the status of your gigs, but you can opt out if you wish!</Typography> */}
                     <div>
                       <Switch
                         onChange={this.toggleEmail}
@@ -185,20 +170,15 @@ class Settings extends Component<SettingsProps, SettingsState> {
                   </div>
                 </ListItem>
               </Grid>
-              {/* <Divider /> */}
-              {/* <ChangePass /> */}
             </List>
           </Grid>
           <Grid item xs={12} sm={7} md={9}>
-              <Route exact path={`${this.props.match.path}/`}>
-                <EditProfile
-                  {...this.props}
-                  updateProfile={this.updateProfile}
-                />
-              </Route>
-              <Route exact path={`${this.props.match.path}/change-password`}>
-                <ChangePass />
-              </Route>
+            <Route exact path={`${this.props.match.path}/`}>
+              <EditProfile {...this.props} updateProfile={this.updateProfile} />
+            </Route>
+            <Route exact path={`${this.props.match.path}/change-password`}>
+              <ChangePass />
+            </Route>
           </Grid>
         </Grid>
       </Grid>

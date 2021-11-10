@@ -3,10 +3,10 @@ export const instrumentOptions: string[] = [
   "Acoustic guitar",
   "Bagpipe",
   "Banjo",
-  "Bass guitar",
+  "Bass",
   "Cello",
   "Clarinet",
-  "Double bass",
+  "Double",
   "Drums",
   "Flute",
   "French horn",
@@ -27,7 +27,7 @@ export const instrumentOptions: string[] = [
   "Ukulele",
   "Vibraphone",
   "Violin",
-]
+];
 
 export const paymentPlatforms: string[] = [
   "Venmo",
@@ -35,5 +35,5 @@ export const paymentPlatforms: string[] = [
   "PayPal",
   "Zelle",
   "Apple Pay",
-  "Google Pay"
+  "Google Pay",
 ];

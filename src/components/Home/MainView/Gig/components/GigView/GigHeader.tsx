@@ -1,16 +1,8 @@
 import * as React from "react";
 import { GigPageState } from "./GigPage";
-import {
-  Grid,
-  Paper,
-  Container,
-  Box,
-  Typography,
-  Avatar,
-  IconButton,
-} from "@mui/material";
+import { Grid, Typography, IconButton } from "@mui/material";
 import { returnTime } from "../../../../../_helpers/helpers";
-import { Edit, HighlightOff, Save, Settings } from "@mui/icons-material";
+import { Edit, HighlightOff } from "@mui/icons-material";
 import { Gig } from "../../../../../../types/API.types";
 
 interface GigHeaderProps extends GigPageState {
@@ -33,13 +25,13 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
         <Grid
           style={{
             width: "100%",
-            height: 600
+            height: 600,
           }}
         >
           <img
             src={photo}
             alt={gig.description}
-            style={{ width: "100%", objectFit: 'cover', height: 600 }}
+            style={{ width: "100%", objectFit: "cover", height: 600 }}
           />
         </Grid>
       )}
@@ -49,7 +41,7 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
         xs={12}
         letterSpacing={1.5}
         id="gig-header"
-        sx={{  padding: 1.5, paddingBottom: 2 }}
+        sx={{ padding: 1.5, paddingBottom: 2 }}
       >
         <Grid item xs={11} sx={{ zIndex: 5 }}>
           <Typography
@@ -67,7 +59,6 @@ const GigHeader: React.FunctionComponent<GigHeaderProps> = ({
             justifyContent={"flex-end"}
             alignItems="flex-start"
           >
-            
             <IconButton onClick={toggleEditMode}>
               {editMode ? <HighlightOff /> : <Edit />}
             </IconButton>

@@ -3,21 +3,12 @@ import { Component } from "react";
 import { Post } from "../../../../../../types/API.types";
 import { postOrganizer } from "../../../../../_helpers/postOrganizer";
 import * as _ from "lodash";
-import {
-  Button,
-  Grid,
-  TextField,
-  Paper,
-  Typography,
-  Box,
-} from "@mui/material";
+import { Button, Grid, TextField, Paper, Typography, Box } from "@mui/material";
 import { Email } from "@mui/icons-material";
 import PostComponent from "./Post";
 import API_URL from "../../../../../_helpers/environment";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import { Loading } from "../../../../../Skeletons";
-
-
 
 interface BoardProps {
   posts: Post[];
@@ -68,26 +59,12 @@ class Board extends Component<BoardProps, BoardState> {
       auth: this.context.token ?? localStorage.getItem("token") ?? "",
       body: { text: this.state.text },
     });
-    console.log(json);
     this.setState({
       posts: [...this.state.posts, { ...json.post, user: json.user }],
       text: "",
     });
     return json.success;
   };
-
-  // handleEventListener = (): void => {
-  //   window.addEventListener("keydown", this.logEvent);
-  // };
-  // removeEL = (): void => window.removeEventListener("keydown", this.logEvent);
-
-  // logEvent = (e: any): void => console.log(e.key);
-
-  // timeOut: any = null;
-  // timer = () =>
-  //   (this.timeOut = setTimeout(() => {
-  //     this.setState({ showBoard: true });
-  //   }, 400));
 
   componentDidUpdate(prevProps: BoardProps, prevState: BoardState) {
     if (prevProps.posts !== this.props.posts) {
@@ -96,14 +73,6 @@ class Board extends Component<BoardProps, BoardState> {
     if (prevState.posts !== this.state.posts) {
       this.setState({ organizedPosts: postOrganizer(this.state.posts) });
     }
-  }
-
-  componentDidMount() {
-    // this.timer();
-  }
-
-  componentWillUnmount() {
-    // clearTimeout(this.timeOut);
   }
 
   render() {
@@ -121,7 +90,6 @@ class Board extends Component<BoardProps, BoardState> {
           elevation={12}
           sx={{ padding: 0.5, width: "100%", maxWidth: "100%" }}
         >
-          {/* <Box border={1}  sx={{borderColor: '#3f3f3f50', padding: 3}}> */}
           <Grid item xs={12}>
             <Box
               action="submit"
@@ -129,10 +97,7 @@ class Board extends Component<BoardProps, BoardState> {
               onSubmit={this.handleNewPost}
               component="form"
               noValidate
-              // onFocus={this.handleEventListener}
-              // onBlur={this.removeEL}
             >
-              {/* <Paper elevation={7}> */}
               <Grid item xs={12} paddingX={3} paddingTop={3}>
                 <TextField
                   value={this.state.text}
@@ -142,15 +107,19 @@ class Board extends Component<BoardProps, BoardState> {
                   multiline
                 />
               </Grid>
-              {/* </Paper> */}
-              <Grid item container xs={12} display='flex' flexDirection='row-reverse'>
+              <Grid
+                item
+                container
+                xs={12}
+                display="flex"
+                flexDirection="row-reverse"
+              >
                 <Grid
                   item
                   xs={6}
                   display="flex"
                   justifyContent="flex-end"
-                  // marginBottom={-6}
-                  sx={{pr: 2.2}}
+                  sx={{ pr: 2.2 }}
                 >
                   <Button
                     type="submit"
@@ -162,18 +131,14 @@ class Board extends Component<BoardProps, BoardState> {
                   </Button>
                 </Grid>
                 <Grid item xs={6} display="flex" alignItems="flex-end">
-                  {/* <Typography variant="button">sort by:</Typography> */}
-
                   <Button
                     variant="text"
-                    // sx={{ margin: 1 }}
                     onClick={() => this.handleSort("upvotes")}
                   >
                     top<sup>&#9660;</sup>
                   </Button>
                   <Button
                     variant="text"
-                    // sx={{ margin: 1 }}
                     onClick={() => this.handleSort("createdAt")}
                   >
                     new<sup>&#9660;</sup>
@@ -182,8 +147,6 @@ class Board extends Component<BoardProps, BoardState> {
               </Grid>
             </Box>
           </Grid>
-          {/* <Divider /> */}
-          {/* <div style={{height: 15}} /> */}
           {this.state.organizedPosts.length ? (
             <>
               <Grid
@@ -194,11 +157,9 @@ class Board extends Component<BoardProps, BoardState> {
                 flexDirection="column"
                 sx={{
                   padding: -10,
-                  // position: "relative", left: -8,
                 }}
               >
                 {this.state.organizedPosts.map((p, i) => (
-                  // <React.Fragment key={p.id}>
                   <PostComponent post={p} key={p.id} i={1} />
                 ))}
               </Grid>
@@ -218,7 +179,6 @@ class Board extends Component<BoardProps, BoardState> {
               <div style={{ height: 200 }} />
             </Grid>
           )}
-          {/* </Box> */}
         </Paper>
       </Grid>
     ) : (
@@ -232,8 +192,9 @@ class Board extends Component<BoardProps, BoardState> {
         sx={{ borderColor: "#3f3f3f50" }}
       >
         <Paper
-         elevation={12}
-         sx={{ padding: 0.5, width: "100%", maxWidth: "100%" }}>
+          elevation={12}
+          sx={{ padding: 0.5, width: "100%", maxWidth: "100%" }}
+        >
           <Loading />
         </Paper>
       </Grid>

@@ -19,7 +19,6 @@ import {
 import { dark } from "../../../../Theme/Theme";
 import { RouteOption } from "../Gig.types";
 
-// *** *** SIDEBAR *** ***
 interface GigSidebarProps extends GigIndexState {
   setRoute: any;
   route: string;
@@ -69,7 +68,6 @@ export const GigSidebar: React.FunctionComponent<GigSidebarProps> = ({
   );
 };
 
-/// *** *** BOTTOM NAV *** *** ///
 interface BottomNavProps extends GigIndexState {
   setRoute: any;
   route: RouteOption;
@@ -101,7 +99,6 @@ export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
       >
         <BottomNavigationAction
           sx={{ color: "#ffffff" }}
-          // sx={{ backgroundColor: route === "notifications" ? activeColor : "" }}
           label="Add Gig"
           icon={<Add />}
           onClick={() => setRoute("addGig")}
@@ -120,7 +117,6 @@ export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
             backgroundColor: route === "gigs" ? activeColor : "",
             color: "#ffffff",
           }}
-          // sx={{ backgroundColor: route === "gigs" ? activeColor : "" }}
           label="Gigs"
           icon={<DeviceHub />}
           onClick={() => setRoute("gigs")}
@@ -130,7 +126,6 @@ export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
             backgroundColor: route === "notifications" ? activeColor : "",
             color: "#ffffff",
           }}
-          // sx={{ backgroundColor: route === "notifications" ? activeColor : "" }}
           label="Alerts"
           icon={<Notifications />}
           onClick={() => setRoute("notifications")}
@@ -141,13 +136,11 @@ export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
             color: "#ffffff",
             display: { xs: "none", sm: "flex" },
           }}
-          // sx={{ backgroundColor: route === "notifications" ? activeColor : "" }}
           label="Add Story"
           icon={<AddPhotoAlternate />}
           onClick={() => {
-            setMainState('profileModalOpen', true)
-            setRoute("addStory")
-            
+            setMainState("profileModalOpen", true);
+            setRoute("addStory");
           }}
         />
       </BottomNavigation>

@@ -16,7 +16,6 @@ import { Story, User } from "../../../../types/API.types";
 import { withRouter, RouteComponentProps, Link } from "react-router-dom";
 import { fetchHandler } from "../../../_helpers/fetchHandler";
 import API_URL from "../../../_helpers/environment";
-import { stringAvatar } from "../Settings/Header";
 import { UserCtx } from "../../../Context/MainContext";
 import { AppState } from "../../../../App";
 import {
@@ -93,7 +92,6 @@ class Profile extends Component<ProfileProps, ProfileState> {
         url: `${API_URL}/user/follows/${json.user.id}`,
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      console.log("USERS --> ", users);
       success && this.setState({ followInfo: users });
       return json.success && success;
     } catch (error) {
@@ -118,12 +116,10 @@ class Profile extends Component<ProfileProps, ProfileState> {
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
       const { success, message, followers, following } = json;
-      console.log(message, json);
       this.setState({ user: { ...this.state.user!, followers } });
       this.context.setAppState("user", { ...this.context.user, following });
       return success;
     } catch (error) {
-      console.log(error);
       return false;
     }
   };
@@ -150,7 +146,6 @@ class Profile extends Component<ProfileProps, ProfileState> {
         }
       );
       const File = await res.json();
-      console.log(File);
       this.setState({ storyImage: File.secure_url });
       return true;
     } catch (err) {
@@ -202,7 +197,6 @@ class Profile extends Component<ProfileProps, ProfileState> {
           },
           returnFocus: false,
         });
-      // success && this.setState({})
       success &&
         this.setState({
           stories: [...this.state.stories, story],
@@ -213,26 +207,9 @@ class Profile extends Component<ProfileProps, ProfileState> {
         });
       return success;
     } catch (err) {
-      console.log(err);
       return false;
     }
-    // return true;
   };
-
-  // fetchFollowsInfo = async (): Promise<boolean> => {
-  //   try {
-  //     const { success, users, message } = await fetchHandler({
-  //       url: `${API_URL}/user/follows/${this.state.user.id}`,
-  //       auth: this.context.token ?? localStorage.getItem("token") ?? "",
-  //     });
-  //     console.log("USERS --> ", users);
-  //     success && this.setState({ followInfo: users });
-  //     return success;
-  //   } catch (error) {
-  //     console.log(error);
-  //     return false;
-  //   }
-  // };
 
   componentDidUpdate(prevProps: ProfileProps, prevState: ProfileState) {
     if (prevProps.match.params.userId !== this.props.match.params.userId) {
@@ -246,7 +223,6 @@ class Profile extends Component<ProfileProps, ProfileState> {
 
   render() {
     const { user } = this.state;
-    // const {token} = this.context
     const avatarSize = 280;
     const open = Boolean(this.state.anchorEl);
     const id = open ? "simple-popover" : undefined;
@@ -269,20 +245,6 @@ class Profile extends Component<ProfileProps, ProfileState> {
               justifyContent="center"
               alignItems="flex-end"
             >
-              {/* {user.photo ? (
-                <Avatar
-                  src={user.photo}
-                  sx={{
-                    height: avatarSize,
-                    width: avatarSize,
-                    border: 3,
-                    borderColor: "white",
-                  }}
-                  alt={user.name}
-                />800
-              ) : (
-                <Avatar {...stringAvatar(user.name, avatarSize)} />
-              )} */}
               <Avatar
                 src={user.photo}
                 sx={{
@@ -310,7 +272,6 @@ class Profile extends Component<ProfileProps, ProfileState> {
                   <Add />
                 </IconButton>
               ) : (
-                // <Link to="#">
                 <MailOutline
                   sx={{
                     position: "relative",
@@ -319,7 +280,6 @@ class Profile extends Component<ProfileProps, ProfileState> {
                     color: "#00000000",
                   }}
                 />
-                // </Link>
               )}
               {this.context.user.id === user.id ? (
                 <Link to="/main/settings" title="Edit Profile">
@@ -359,7 +319,6 @@ class Profile extends Component<ProfileProps, ProfileState> {
               this.context.user.id === user.id ? (
                 <Link to="/main/settings">
                   <Typography variant="caption">
-                    {/* <Settings sx={{fontSize: 'small'}} />&nbsp; */}
                     <i>Finish setting up your profile?</i>
                   </Typography>
                 </Link>
@@ -370,9 +329,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 {user.paymentPreference ? (
                   <>
                     <IconButton
-                      // sx={{ position: "relative", left: 53, bottom: 20 }}
                       aria-describedby={id}
-                      // variant="contained"
                       onClick={this.handleClick}
                     >
                       <AttachMoney fontSize="small" color="success" />
@@ -423,7 +380,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 {!!user.stories.length && <>&#183;&nbsp;&nbsp;</>}
                 <Typography
                   style={{ fontWeight: 900 }}
-                  sx={{ cursor: user.followers.length ? "pointer" : '' }}
+                  sx={{ cursor: user.followers.length ? "pointer" : "" }}
                   aria-owns={
                     this.state.followModalOpen
                       ? "mouse-over-popover"
@@ -431,11 +388,11 @@ class Profile extends Component<ProfileProps, ProfileState> {
                   }
                   aria-haspopup="true"
                   onClick={(e: any) => {
-                    console.log(e.target);
-                    !!user.followers.length && this.setState({
-                      followModalOpen: "followers",
-                      followAnchor: e.target,
-                    });
+                    !!user.followers.length &&
+                      this.setState({
+                        followModalOpen: "followers",
+                        followAnchor: e.target,
+                      });
                   }}
                 >
                   {user.followers.length}
@@ -443,7 +400,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 &nbsp; followers &nbsp; &#183;&nbsp;&nbsp;
                 <Typography
                   style={{ fontWeight: 900 }}
-                  sx={{ cursor: user.following.length ? "pointer" : '' }}
+                  sx={{ cursor: user.following.length ? "pointer" : "" }}
                   aria-owns={
                     this.state.followModalOpen
                       ? "mouse-over-popover"
@@ -451,11 +408,11 @@ class Profile extends Component<ProfileProps, ProfileState> {
                   }
                   aria-haspopup="true"
                   onClick={(e: any) => {
-                    console.log(e.target);
-                    !!user.following.length && this.setState({
-                      followModalOpen: "following",
-                      followAnchor: e.target,
-                    });
+                    !!user.following.length &&
+                      this.setState({
+                        followModalOpen: "following",
+                        followAnchor: e.target,
+                      });
                   }}
                 >
                   {user.following.length}
@@ -521,20 +478,11 @@ class Profile extends Component<ProfileProps, ProfileState> {
                               {u.name}
                             </Typography>{" "}
                           </Box>
-                          {/* &nbsp;&nbsp; */}
                           <Typography variant="body2" pr={1} fontWeight={300}>
                             {u.role}
                           </Typography>
                         </Box>
                       </Link>
-                      //   <Box component="li"  {...props}>
-                      //   <Avatar
-                      //     src={option.photo}
-                      //     alt=""
-                      //   />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      //   <Typography variant='subtitle1'>{option.name}</Typography> &nbsp;&nbsp;
-                      //   <Typography variant='body1'>{option.role}</Typography>
-                      // </Box>
                     );
                   })}
                 {!!this.state.followModalOpen &&
@@ -557,16 +505,10 @@ class Profile extends Component<ProfileProps, ProfileState> {
                     </Link>
                   )}
               </Popover>
-              {/* <Grid sx={{ maxWidth: 200 }} textAlign="justify">
-                <Typography variant="caption">
-                  {user.description ? user.description : null}
-                </Typography>
-              </Grid> */}
             </Grid>
             <Grid item xs={4}></Grid>
           </Grid>
         )}
-        {/* <div style={{ height: 40, width: "100%" }} /> */}
 
         <Grid container display="flex" justifyContent="center">
           <Divider sx={{ width: 150, my: 3, alignSelf: "center" }} />
@@ -591,9 +533,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                   flexDirection="column"
                   alignItems="center"
                 >
-                  {/* <Paper elevation={0}> */}
                   <Link
-                    // to={`/story/${story.id}`}
                     to={`/story/${story.id}`}
                     style={{
                       display: "flex",
@@ -640,12 +580,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                       </Typography>
                     </div>
                   </Link>
-                  {/* </Paper> */}
                 </Grid>
-                // <StoryCard
-                //   key={story.id}
-                //   {...story}
-                // />
               ))
             ) : (
               <Grid display="flex" flexDirection="column" alignItems="center">

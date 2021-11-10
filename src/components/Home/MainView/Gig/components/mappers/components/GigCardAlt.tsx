@@ -19,12 +19,10 @@ interface GigProps extends Gig {
 }
 
 const GigCardAlt: FunctionComponent<GigProps> = ({
-  userId,
   date,
   description,
   id,
   payment,
-  gigLocation,
   detailsHash,
   user,
 }) => {
@@ -93,49 +91,6 @@ const GigCardAlt: FunctionComponent<GigProps> = ({
             </Typography>
           }
         />
-
-        {/* AUTHORIZE GIG OWNER */}
-        {/* {userId === bandLeader.id ? (
-        <>
-          <CardContent
-            // sx={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <Grid item xs={7}>
-              <Typography variant="caption">
-                <strong>You</strong> are the bandleader.
-              </Typography>
-            </Grid>
-            <Grid item xs={5}>
-              <div className="justify">
-                <LocationOn fontSize="small" color="error" />
-                <Typography variant="caption" display="inline">
-                  {gigLocation}
-                </Typography>
-              </div>
-            </Grid>
-          </CardContent>
-        </>
-      ) : (
-        <>
-          <CardContent
-            // sx={{ display: "flex", justifyContent: "space-between" }}
-          >
-            <Grid item xs={6}>
-              <Typography variant="caption">
-                <strong>{bandLeader.name}</strong> invited you.
-              </Typography>
-            </Grid>
-            <Grid item xs={6} display="flex" flexDirection="column">
-              <div className="justify">
-                <LocationOn fontSize="small" color="error" />
-                <Typography variant="caption" display="inline">
-                  {gigLocation}
-                </Typography>
-              </div>
-            </Grid>
-          </CardContent>
-        </>
-      )} */}
       </ListItem>
     </Link>
   ) : null;

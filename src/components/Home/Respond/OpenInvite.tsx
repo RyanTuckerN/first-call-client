@@ -42,12 +42,11 @@ class OpenInvite extends Component<OpenInviteProps, OpenInviteState> {
   handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     if (!formControl.validateName(this.props.name)) {
-      this.setState({error: true})
+      this.setState({ error: true });
       return;
     }
     this.props.handleRespond("accept");
-    this.handleClose()
-
+    this.handleClose();
   };
 
   handlePrompt = (): void => {
@@ -57,14 +56,6 @@ class OpenInvite extends Component<OpenInviteProps, OpenInviteState> {
   handleClose = () => this.setState({ showInput: false });
 
   render() {
-    // const buttonGridProps = {
-    //   display: "flex",
-    //   flexDirection: "row",
-    //   justifyContent: "center",
-    //   alignItems: "center",
-    //   minHeight: 400,
-    // };
-
     return (
       <Container
         sx={{ display: "flex", justifyContent: "center", marginTop: 10 }}
@@ -105,7 +96,6 @@ class OpenInvite extends Component<OpenInviteProps, OpenInviteState> {
               item
               xs={6}
             >
-              {/* {!this.state.showInput && ( */}
               <Button
                 onClick={this.handlePrompt}
                 variant="contained"
@@ -115,75 +105,41 @@ class OpenInvite extends Component<OpenInviteProps, OpenInviteState> {
               </Button>
               <Dialog open={this.state.showInput} onClose={this.handleClose}>
                 <DialogTitle>Accept</DialogTitle>
-                  <Box
-                component="form"
-                action="submit"
-                id="name"
-                onSubmit={this.handleSubmit}
-              >
-                <DialogContent>
-                  <DialogContentText>
-                    <Typography variant="inherit" color={this.state.error ? 'red' : ''}>
-                      Please enter your full name to accept this gig offer.
-                    </Typography>
-                  </DialogContentText>
-                  <TextField
-                    title="name"
-                    id="name"
-                    type="name"
-                    label="Name"
-                    autoFocus
-                    variant='standard'
-                    fullWidth
-                    onChange={this.props.handleName}
-                    placeholder="Please enter your full name!"
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={this.handleClose}>Cancel</Button>
-                  <Button type='submit'>Subscribe</Button>
-                </DialogActions>
+                <Box
+                  component="form"
+                  action="submit"
+                  id="name"
+                  onSubmit={this.handleSubmit}
+                >
+                  <DialogContent>
+                    <DialogContentText>
+                      <Typography
+                        variant="inherit"
+                        color={this.state.error ? "red" : ""}
+                      >
+                        Please enter your full name to accept this gig offer.
+                      </Typography>
+                    </DialogContentText>
+                    <TextField
+                      title="name"
+                      id="name"
+                      type="name"
+                      label="Name"
+                      autoFocus
+                      variant="standard"
+                      fullWidth
+                      onChange={this.props.handleName}
+                      placeholder="Please enter your full name!"
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={this.handleClose}>Cancel</Button>
+                    <Button type="submit">Subscribe</Button>
+                  </DialogActions>
                 </Box>
               </Dialog>
             </Grid>
           </Grid>
-          {/* <Grid item xs={12}>
-            {this.state.showInput && (
-              <Box
-                component="form"
-                action="submit"
-                id="gig-invite-name-field"
-                onSubmit={this.handleSubmit}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  margin: 1,
-                  padding: 1,
-                }}
-              >
-                <div>
-                  <Typography variant="overline">
-                    Please enter your full name to accept the gig!
-                  </Typography>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
-                    <TextField
-                      title="name"
-                      label="Name"
-                      autoFocus
-                      onChange={this.props.handleName}
-                      placeholder="Please enter your full name!"
-                    />
-                    <Button variant="contained" color="success" type="submit">
-                      Submit
-                    </Button>
-                  </div>
-                </div>
-              </Box>
-            )}
-          </Grid> */}
         </Paper>
       </Container>
     );

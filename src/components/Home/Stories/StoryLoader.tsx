@@ -31,7 +31,6 @@ class StoryLoader extends React.Component<StoryLoaderProps, StoryLoaderState> {
         url: `${API_URL}/story/id/${this.props.match.params.storyId}`,
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      // alert(message);
       success && this.setState({ story });
       return success;
     } catch (error) {
@@ -45,13 +44,13 @@ class StoryLoader extends React.Component<StoryLoaderProps, StoryLoaderState> {
   }
 
   render() {
-    return (
-      !!this.state.story ? (
-        <Story
-          storyId={parseInt(this.props.match.params.storyId)}
-          story={this.state.story}
-        />
-      ) : <div>Loading...</div>
+    return !!this.state.story ? (
+      <Story
+        storyId={parseInt(this.props.match.params.storyId)}
+        story={this.state.story}
+      />
+    ) : (
+      <div>Loading...</div>
     );
   }
 }

@@ -4,39 +4,28 @@ import { GigPageState } from "./GigPage";
 import {
   Grid,
   Paper,
-  Container,
   Box,
   Typography,
   Avatar,
   IconButton,
-  List,
   ListItem,
   ListItemAvatar,
   ListItemIcon,
-  ListItemButton,
-  ListItemText,
-  Divider,
 } from "@mui/material";
 import { properize, returnTime } from "../../../../../_helpers/helpers";
 import {
-  Settings,
   AttachMoney,
   LocationOn,
   CalendarToday,
-  ChevronRight,
   CheckCircleOutline,
-  Circle,
   ErrorOutline,
-  Build,
   AddBoxOutlined,
-  // Circle
 } from "@mui/icons-material";
 import { DetailedGig } from "../../Gig.types";
 import { Link } from "react-router-dom";
 import { stringAvatar } from "../../../Settings/Header";
 import { Gig, User } from "../../../../../../types/API.types";
 import * as _ from "lodash";
-import { Zoom, Fade } from "react-reveal";
 
 const avatarSize: number = 35;
 
@@ -77,7 +66,6 @@ const GigInfo: React.FunctionComponent<GigInfoProps> = ({
   const roles = Object.keys(callStack?.stackTable ?? {});
   const filled = roles.filter((r) => callStack?.stackTable[r].filled);
   const typoSx = { paddingTop: 1.5 };
-  console.log(bandMembers);
   const ids = roles.reduce((obj: any, role: any): any => {
     obj[role] = bandMembers.filter(
       (member) =>

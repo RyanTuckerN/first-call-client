@@ -4,20 +4,13 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Home/Home";
 import { UserCtx } from "./components/Context/MainContext";
-import {
-  UserSetter,
-  TokenSetter,
-  ColorSetter,
-  EmailSetter,
-  StateSetter,
-} from "./App.types";
+import { TokenSetter, ColorSetter } from "./App.types";
 import { User, UserAuth } from "./types/API.types";
 import { light, dark } from "./components/Theme/Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { fetchHandler } from "./components/_helpers/fetchHandler";
 import API_URL from "./components/_helpers/environment";
 import { Snackbar, Alert } from "@mui/material";
-import { smallImage } from "./components/_helpers/helpers";
 
 interface AppProps {}
 
@@ -46,17 +39,17 @@ class App extends Component<AppProps, AppState> {
     this.state = {
       user: null,
       token: "",
-      auth: null, //
-      darkModeOn: localStorage.getItem("darkModeOn") ?? "true", //
+      auth: null, 
+      darkModeOn: localStorage.getItem("darkModeOn") ?? "true", 
       snackBarOpen: false,
       snackMessage: "",
       snackSeverity: "info",
-      handleSnackBar: this.handleSnackBar, //
-      authenticate: this.authenticate, //
-      logout: this.logout, //
+      handleSnackBar: this.handleSnackBar, 
+      authenticate: this.authenticate, 
+      logout: this.logout, 
       toggleDark: this.toggleDark,
       setToken: this.setToken,
-      setAppState: this.setAppState, //
+      setAppState: this.setAppState, 
     };
   }
 
@@ -109,7 +102,11 @@ class App extends Component<AppProps, AppState> {
     snackMessage: string,
     snackSeverity?: "success" | "warning" | "error" | "info"
   ): void => {
-    this.setState({ snackMessage, snackSeverity: snackSeverity ?? 'info', snackBarOpen: true });
+    this.setState({
+      snackMessage,
+      snackSeverity: snackSeverity ?? "info",
+      snackBarOpen: true,
+    });
   };
 
   componentDidMount() {
@@ -124,15 +121,11 @@ class App extends Component<AppProps, AppState> {
   render() {
     return (
       <>
-        {/* Hello from App.tsx! */}
-        <Router
-        //  getUserConfirmation={()=>{}}
-        >
+        <Router>
           <ThemeProvider
             theme={this.state.darkModeOn === "true" ? dark : light}
           >
             <UserCtx.Provider value={this.state}>
-              {/* replace null with loading screen if load times increase! */}
               {typeof this.state.auth === "boolean" ? (
                 <Home {...this.state} />
               ) : null}
@@ -142,7 +135,7 @@ class App extends Component<AppProps, AppState> {
               autoHideDuration={4000}
               onClose={this.handleClose}
             >
-              <Alert severity={this.state.snackSeverity} variant='standard'>
+              <Alert severity={this.state.snackSeverity} variant="standard">
                 {this.state.snackMessage}
               </Alert>
             </Snackbar>

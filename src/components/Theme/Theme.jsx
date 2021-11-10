@@ -14,10 +14,6 @@ export const light = createTheme({
       default: "#ffeace35",
     },
     success: { main: "#46a46c" },
-
-    // error: {
-    //   main: '#006eedc9'
-    // }
   },
   typography: {
     fontFamily: "Oswald",
@@ -39,9 +35,6 @@ export const light = createTheme({
   shape: {
     borderRadius: 3,
   },
-  // breakpoints: {
-  //   values: {xs:0, scroll: 500, sm: 600, lg: 900, xl: 1306}
-  // },
   overrides: {
     MuiFab: {
       extended: {
@@ -54,7 +47,6 @@ export const light = createTheme({
   },
 });
 
-// export default theme;
 export const dark = createTheme({
   components: {
     MuiCssBaseline: {
@@ -71,12 +63,8 @@ export const dark = createTheme({
     secondary: {
       main: "#8031e8",
     },
-    // error: {
-    //   main: '#006eedc9'
-    // },
     background: {
       main: "#cfddccc9",
-      
     },
   },
   typography: {
@@ -87,17 +75,6 @@ export const dark = createTheme({
     body2: {
       fontFamily: "Lato",
     },
-    // },
-    // typography: {
-    // fontFamily: ["'Lato'", "Sans serif", "monospace"].toString(),
-    // h1: headingStyles,
-    // h2: headingStyles,
-    // h3: headingStyles,
-    // h4: headingStyles,
-    // h5: headingStyles,
-    // h6: {
-    // fontWeight: 800,
-    // },
     overline: {
       fontSize: "0.875rem",
       fontWeight: 500,
@@ -110,9 +87,6 @@ export const dark = createTheme({
   shape: {
     borderRadius: 3,
   },
-  // breakpoints: {
-  //   values: {xs:0, scroll: 500, sm: 600, lg: 900, xl: 1306}
-  // },
   overrides: {
     MuiFab: {
       extended: {

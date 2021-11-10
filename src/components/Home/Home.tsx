@@ -1,4 +1,3 @@
-// import * as React from "react";
 import { Component } from "react";
 import {
   Link,
@@ -20,7 +19,7 @@ import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, Grid, ListItemIcon } from "@mui/material";
+import { Avatar, ListItemIcon } from "@mui/material";
 import {
   Settings,
   Person,
@@ -42,11 +41,10 @@ import API_URL from "../_helpers/environment";
 import { WindowDimensions } from "./Home.types";
 import { Paper } from "@mui/material";
 import { AppState } from "../../App";
-import Story from "./Stories/Story";
 import StoryFeed from "./Stories/StoryFeed";
 import Logo from "../assets/Logo";
 import StoryLoader from "./Stories/StoryLoader";
-import { dark, light } from "../Theme/Theme";
+import { light } from "../Theme/Theme";
 import SearchBar from "./components/SearchBar";
 
 interface HomeProps extends RouteComponentProps {
@@ -127,15 +125,12 @@ class Home extends Component<HomeProps, HomeState> {
       });
   }
 
-  //protect unauthorized views
   authorize = (): void => {
     const { auth } = this.context;
     const pathRoot = this.props.location.pathname.split("/")[1];
-    //these paths are allowed
     if (pathRoot === "auth" || pathRoot === "respond") {
       return;
     }
-    //otherwise redirect to welcome screen
     !auth && this.props.history.push("/welcome");
   };
 
@@ -159,7 +154,6 @@ class Home extends Component<HomeProps, HomeState> {
     this.props.history.push("/");
   };
 
-  //for the backdrop:
   handleClose = () => this.setState({ open: false });
 
   render() {
@@ -171,7 +165,6 @@ class Home extends Component<HomeProps, HomeState> {
       minHeight: this.state.windowDimensions.height - this.appBarHeight - 50,
       zIndex: 1,
     };
-    console.log(dark);
 
     return (
       <>
@@ -186,7 +179,7 @@ class Home extends Component<HomeProps, HomeState> {
               zIndex: (theme) => theme.zIndex.drawer + 1,
             }}
             style={{ height: this.appBarHeight }}
-            >
+          >
             <Toolbar
               variant="dense"
               sx={{
@@ -218,7 +211,7 @@ class Home extends Component<HomeProps, HomeState> {
                 <Box
                   component="div"
                   id="search-bar-wrapper"
-                  sx={{width: 375, pl: 2}}
+                  sx={{ width: 375, pl: 2 }}
                 >
                   <SearchBar />
                 </Box>
@@ -299,14 +292,6 @@ class Home extends Component<HomeProps, HomeState> {
                     open={this.state.isMenuOpen}
                     onClose={this.handleMenuClose}
                   >
-                    {/* <Link to={`${this.props.match.path}main/`}>
-                      <MenuItem onClick={this.handleMenuClose}>
-                        <ListItemIcon>
-                          <HomeIcon />
-                        </ListItemIcon>
-                        Home
-                      </MenuItem>
-                    </Link> */}
                     <Link
                       to={`${this.props.match.path}main/profile/${
                         this.props.user?.id ?? this.context.user.id
@@ -384,7 +369,6 @@ class Home extends Component<HomeProps, HomeState> {
             </Route>
             <Route path="/main">
               {this.props.user ? (
-                // <Paper sx={routePaperSX}>
                 <MainView
                   {...this.props}
                   {...this.state}
@@ -393,8 +377,7 @@ class Home extends Component<HomeProps, HomeState> {
                   setHomeState={this.setHomeState}
                   user={this.props.user}
                 />
-              ) : // </Paper>
-              null}
+              ) : null}
             </Route>
 
             <Route path="/auth">
@@ -404,8 +387,8 @@ class Home extends Component<HomeProps, HomeState> {
             </Route>
           </Switch>
           <Route path="/welcome">
-              <Container maxWidth="xl" sx={{ height: "100%" }}>
-            <Welcome />
+            <Container maxWidth="xl" sx={{ height: "100%" }}>
+              <Welcome />
             </Container>
           </Route>
           <Route path="/story/:storyId">
