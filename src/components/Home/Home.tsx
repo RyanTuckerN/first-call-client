@@ -171,7 +171,7 @@ class Home extends Component<HomeProps, HomeState> {
       minHeight: this.state.windowDimensions.height - this.appBarHeight - 50,
       zIndex: 1,
     };
-    console.log(dark)
+    console.log(dark);
 
     return (
       <>
@@ -180,10 +180,13 @@ class Home extends Component<HomeProps, HomeState> {
             position="fixed"
             sx={{
               backgroundColor: "#000000",
+              minHeight: 50,
+              height: 50,
+              maxHeight: 50,
               zIndex: (theme) => theme.zIndex.drawer + 1,
             }}
             style={{ height: this.appBarHeight }}
-          >
+            >
             <Toolbar
               variant="dense"
               sx={{
@@ -194,7 +197,13 @@ class Home extends Component<HomeProps, HomeState> {
             >
               <Box
                 component="div"
-                sx={{ flexGrow: 1, zIndex: 9999, position: "relative", top: 8, display:'flex' }}
+                sx={{
+                  flexGrow: 1,
+                  zIndex: 9999,
+                  position: "relative",
+                  top: -9,
+                  display: "flex",
+                }}
               >
                 <Link to="/welcome">
                   <Logo
@@ -206,9 +215,12 @@ class Home extends Component<HomeProps, HomeState> {
               </Box>
               <div style={{ width: 10 }} />
               {auth && (
-                  <Box component='div' id='search-bar-wrapper' sx={{display: {xs: 'none', scroll: 'block'}}}> 
-                    <SearchBar />
-                  </Box>
+                <Box
+                  component="div"
+                  id="search-bar-wrapper"
+                >
+                  <SearchBar />
+                </Box>
               )}
               {auth ? (
                 <>
@@ -216,7 +228,7 @@ class Home extends Component<HomeProps, HomeState> {
                     sx={{
                       display: { xs: "flex" },
                       position: "relative",
-                      top: 10,
+                      top: -4,
                     }}
                   >
                     <Link to="/main/add" title="Create a Gig">
@@ -391,7 +403,9 @@ class Home extends Component<HomeProps, HomeState> {
             </Route>
           </Switch>
           <Route path="/welcome">
+              <Container maxWidth="xl" sx={{ height: "100%" }}>
             <Welcome />
+            </Container>
           </Route>
           <Route path="/story/:storyId">
             <StoryLoader />

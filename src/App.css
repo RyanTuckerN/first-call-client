@@ -3,18 +3,18 @@
   background-color: blueviolet;
 } */
 
-.MuiOutlinedInput-root{
+.MuiOutlinedInput-root {
   background-color: rgba(136, 136, 136, 0.097);
 }
 
-.list-link:hover{
+.list-link:hover {
   background-color: #449dbf60;
 }
 
-.list-link{
+.list-link {
   background-color: rgba(0, 0, 0, 0.535);
 }
 
-.MuiAvatar-root{
+.MuiAvatar-root {
   color: rgba(0, 0, 0, 0.755) !important;
 }

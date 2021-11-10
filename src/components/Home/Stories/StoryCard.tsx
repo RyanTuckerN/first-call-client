@@ -171,7 +171,7 @@ class StoryCard extends React.Component<StoryCardProps, StoryCardState> {
               ? {
                   width: "100%",
                   p: 0.5,
-                  maxHeight: 200,
+                  maxHeight: 300,
                   backgroundImage: `url(${imageUrl})`,
                   backgroundColor: "rgba(0,0,0,.7)",
                   backgroundPosition: "center",

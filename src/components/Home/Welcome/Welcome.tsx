@@ -54,13 +54,12 @@ class Welcome extends React.Component {
     super(props, context);
     this.state = {};
   }
-  
 
   render() {
     return (
       <>
         <Container maxWidth="lg">
-          <Paper>
+          <Paper sx={{ display: "flex", flexDirection: "column" }}>
             <Zoom delay={200}>
               <Grid container>
                 <Grid
@@ -93,12 +92,18 @@ class Welcome extends React.Component {
                       </Typography>
                     </Zoom>
                     <Zoom duration={300} delay={1500}>
-              <Grid item pt={2} xs={12} display="flex" justifyContent="center">
-                <HashLink smooth to={`#text-anchor`}>
-                  <ArrowDownward id={"hash-link"} />
-                </HashLink>
-              </Grid>
-            </Zoom>
+                      <Grid
+                        item
+                        pt={2}
+                        xs={12}
+                        display="flex"
+                        justifyContent="center"
+                      >
+                        <HashLink smooth to={`#text-anchor`}>
+                          <ArrowDownward id={"hash-link"} />
+                        </HashLink>
+                      </Grid>
+                    </Zoom>
                   </Grid>
                 </Grid>
                 <Grid
@@ -118,7 +123,7 @@ class Welcome extends React.Component {
                       filter:
                         this.context.darkModeOn === "true"
                           ? "invert(100%) sepia(7%) saturate(7%) hue-rotate(70deg) brightness(107%) contrast(100%)"
-                          : "invert(42%) sepia(0%) saturate(0%) hue-rotate(167deg) brightness(94%) contrast(91%)"
+                          : "invert(42%) sepia(0%) saturate(0%) hue-rotate(167deg) brightness(94%) contrast(91%)",
                     }}
                   />
                 </Grid>
@@ -127,7 +132,6 @@ class Welcome extends React.Component {
               </Grid>
             </Zoom>
             <div style={{ height: 40, width: "100%" }} />
-            
             {/* </Container> */}
             <div id="text-anchor" style={{ height: 1, width: "100%" }} />
             <div style={{ height: 100 }} /> {/* <Container maxWidth={"lg"}> */}
@@ -135,7 +139,7 @@ class Welcome extends React.Component {
               <Grid
                 item
                 xs={12}
-                md={5}
+                md={6}
                 textAlign="justify"
                 display="flex"
                 flexDirection="column"
@@ -170,7 +174,7 @@ class Welcome extends React.Component {
               <Grid
                 item
                 xs={12}
-                md={7}
+                md={6}
                 display="flex"
                 justifyContent="center"
                 sx={{ pt: 2 }}
@@ -218,7 +222,12 @@ class Welcome extends React.Component {
                     </Fade>
                   </Grid>
                 </Grid>
-                <Grid item xs={12} md={5} textAlign="justify">
+                <Grid
+                  item
+                  xs={12}
+                  md={5}
+                  textAlign="justify"
+                >
                   <Fade right duration={500}>
                     <Typography variant="overline">Core features</Typography>
                   </Fade>

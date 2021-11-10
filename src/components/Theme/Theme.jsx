@@ -39,10 +39,9 @@ export const light = createTheme({
   shape: {
     borderRadius: 3,
   },
-  breakpoints: {
-    values: {xs:0, scroll: 500, sm: 600, lg: 900, xl: 1306}
-
-  },
+  // breakpoints: {
+  //   values: {xs:0, scroll: 500, sm: 600, lg: 900, xl: 1306}
+  // },
   overrides: {
     MuiFab: {
       extended: {
@@ -111,9 +110,9 @@ export const dark = createTheme({
   shape: {
     borderRadius: 3,
   },
-  breakpoints: {
-    values: {xs:0, scroll: 500, sm: 600, lg: 900, xl: 1306}
-  },
+  // breakpoints: {
+  //   values: {xs:0, scroll: 500, sm: 600, lg: 900, xl: 1306}
+  // },
   overrides: {
     MuiFab: {
       extended: {

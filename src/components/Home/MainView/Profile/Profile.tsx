@@ -247,7 +247,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
   render() {
     const { user } = this.state;
     // const {token} = this.context
-    const avatarSize = 320;
+    const avatarSize = 280;
     const open = Boolean(this.state.anchorEl);
     const id = open ? "simple-popover" : undefined;
 

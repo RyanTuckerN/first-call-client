@@ -144,20 +144,22 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
 
         <Route exact path="/main/gig/:gigId">
           {this.state.detailsHash && this.state.user ? (
-            <GigPage
-              {...this.props}
-              {...this.state}
-              user={this.state.user}
-              detailsHash={this.state.detailsHash}
-              addGig={this.addGig}
-            />
+           
+                <GigPage
+                  {...this.props}
+                  {...this.state}
+                  user={this.state.user}
+                  detailsHash={this.state.detailsHash}
+                  addGig={this.addGig}
+                />
+              
           ) : null}
         </Route>
 
         <Route exact path="/main/add">
           {this.state.user ? (
-            <Container maxWidth={'lg'} sx={{height:'100%'}}>
-              <Paper sx={{height:'100%'}}>
+            <Container maxWidth={"xl"} sx={{ height: "100%" }}>
+              <Paper sx={{ height: "100%" }}>
                 <GigCreate
                   {...this.state.user}
                   followInfo={this.props.followInfo}

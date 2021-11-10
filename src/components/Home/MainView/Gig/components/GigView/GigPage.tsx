@@ -1,4 +1,4 @@
-import { Grid, Paper } from "@mui/material";
+import { Grid, Paper, Container } from "@mui/material";
 import * as React from "react";
 import { Component } from "react";
 // import { RouteComponentProps, withRouter } from 'react-router';
@@ -124,6 +124,14 @@ class GigPage extends Component<GigPageProps, GigPageState> {
               .includes(this.state.gig?.id ?? 0) ? (
               <Redirect to="" />
             ) : (
+
+              <Container maxWidth={"xl"} sx={{ minHeight: "100%" }}>
+              <Paper sx={{
+      padding: 2,
+      marginBottom: 2,
+      // minHeight: this.state.windowDimensions.height - this.appBarHeight - 30,
+      zIndex: 1,
+    }}>
               <Grid container>
                 {this.state.gig && (
                   <GigHeader
@@ -135,6 +143,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                 <Grid
                   container
                   display="flex"
+                  justifyContent='center'
                   flexWrap={
                     this.state.gig?.openCalls.includes(this.props.user.email)
                       ? "wrap-reverse"
@@ -197,7 +206,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                         xs={12}
                         display="flex"
                         justifyContent="center"
-                        sx={{ marginTop: 3 }}
+                        sx={{ my: 3 }}
                       >
                         <Board
                           posts={this.state.posts}
@@ -216,6 +225,8 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                   ) : null}
                 </Grid>
               </Grid>
+              </Paper>
+              </Container>
             );
           }}
         />

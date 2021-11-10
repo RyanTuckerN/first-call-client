@@ -16,7 +16,8 @@ import { AppState } from "../../../App";
 import "../Home.css";
 import { smallImage } from "../../_helpers/helpers";
 
-interface SearchBarProps extends RouteComponentProps {}
+interface SearchBarProps extends RouteComponentProps {
+}
 
 interface SearchBarState {
   searchResults: any[];
@@ -49,18 +50,20 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
   };
 
   componentDidUpdate(prevProps: SearchBarProps, prevState: SearchBarState) {
+    //fetch as user types
     prevState.query !== this.state.query &&
       !!this.state.query &&
       this.searchFetch();
-    prevState.query !== this.state.query &&
-      !this.state.query &&
-      this.setState({ searchResults: [] });
+
+      //clear the search suggestions when search empty
+    prevState.query && !this.state.query && this.setState({searchResults: []})
   }
 
   render() {
     return (
       <Autocomplete
-        clearOnBlur
+        freeSolo
+        // clearOnBlur
         className="search-bar"
         id="search-bar"
         isOptionEqualToValue={() => true}
@@ -70,21 +73,23 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
         value={this.state.query}
         getOptionLabel={(o) => this.state.query}
         options={this.state.searchResults}
+        //when option is selected
         onChange={(e: any, option: any) => {
           this.handleSearch(option?.url);
           this.setState({ searchResults: [] });
           this.setQuery("");
         }}
+        //as user types
         onInputChange={(e: any, query: string) => {
           this.setQuery(query);
         }}
+        //include entire array
         filterOptions={(x) => x}
         renderOption={(props, option) => (
-          <Box component="li" {...props} key={option.id}>
-            <Avatar src={smallImage(option.photo, 40)} alt="" />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <Typography variant="subtitle1">{option.name}</Typography>{" "}
-            &nbsp;&nbsp;
+          <Box component="li" {...props} key={option.id} sx={{}}>
+              <Avatar src={smallImage(option.photo, 40)} alt="" />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <Typography variant="subtitle1">{option.name}</Typography>{" "}
             <Typography variant="body1">{option.role}</Typography>
           </Box>
         )}

@@ -311,7 +311,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       >
         {["notifications", "gigs", "offers"].includes(dashboardRoute) ? (
           <>
-            <Grid item md={12} lg={12} xl={9} height="calc(100% - 30px)">
+            <Grid item md={12} lg={8} xl={8} height="calc(100% - 30px)">
               <Box
                 component="div"
                 sx={{ display: "flex", justifyContent: "space-between" }}
@@ -418,7 +418,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
               pl={1}
               pt={0}
               maxHeight={"100%"}
-              sx={{ display: { xs: "none", lg: "flex" } }}
+              sx={{ display: { xs: "none", xl: "flex" } }}
             >
               <Grid item xs={12} sx={{ maxHeight: "50%", overflowY: "hidden" }}>
                 <Box
