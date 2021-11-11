@@ -34,7 +34,6 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
   handleSearch = (url: string) => this.props.history.push(url);
   setQuery = (query: string): void => this.setState({ query });
   searchFetch = async (): Promise<boolean> => {
-    // if (this.state.query.length < 3) return false;
     try {
       const { users, message, success } = await fetchHandler({
         url: `${API_URL}/user/search/${this.state.query}`,
@@ -48,14 +47,12 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
     }
   };
 
-  //when option is selected
   onChange = (e: any, option: any) => {
     this.handleSearch(option?.url);
     this.setState({ searchResults: [] });
     this.setQuery("");
   };
 
-  //as user types
   inputChange = (e: any, query: string) => {
     this.setQuery(query);
   };
@@ -91,12 +88,10 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
   );
 
   componentDidUpdate(prevProps: SearchBarProps, prevState: SearchBarState) {
-    //fetch as user types
     prevState.query !== this.state.query &&
       !!this.state.query &&
       this.searchFetch();
 
-    //clear the search suggestions when search empty
     prevState.query &&
       !this.state.query &&
       this.setState({ searchResults: [] });
@@ -118,14 +113,12 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
         options={this.state.searchResults}
         onChange={this.onChange}
         onInputChange={this.inputChange}
-        //include entire array
         filterOptions={(x) => x}
         renderOption={this.renderOption}
         renderInput={(params) => (
           <TextField
             {...params}
             variant="outlined"
-            //clear query on focusout
             onBlur={() => this.setState({ query: "" })}
             InputProps={{
               ...params.InputProps,

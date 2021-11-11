@@ -217,6 +217,7 @@ class CallStackCreate extends Component<
                   freeSolo
                   openOnFocus
                   value={this.state.emailVal?.toLowerCase() ?? ""}
+                  getOptionLabel={() => this.state.emailVal}
                   options={this.props.followInfo.filter(
                     (user) =>
                       user.role?.toLowerCase() ===
@@ -232,7 +233,7 @@ class CallStackCreate extends Component<
                   }}
                   renderOption={(props, option) => {
                     return (
-                      <Box component="li" {...props}>
+                      <Box component="li" {...props} key={option.id}>
                         <Avatar src={option.photo} alt="" />
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <Typography variant="subtitle1">

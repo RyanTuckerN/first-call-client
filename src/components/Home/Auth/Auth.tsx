@@ -106,11 +106,9 @@ class Auth extends Component<AuthProps, AuthState> {
   };
 
   componentDidMount() {
-    const context = this.context;
     const { email, first, last } = returnParams();
     this.setState({
-      ...this.state,
-      email,
+      email: email ?? '',
       first: decodeURI(first ?? ""),
       last: decodeURI(last ?? ""),
     });

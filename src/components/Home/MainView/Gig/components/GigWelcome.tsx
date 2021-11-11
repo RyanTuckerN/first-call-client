@@ -384,7 +384,6 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
               lg={4}
               xl={4}
               flexDirection="column"
-              wrap={"nowrap"}
               pl={1}
               pt={0}
               maxHeight={"100%"}
@@ -464,7 +463,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                           followInfo?.filter((u: any) => u.id === userId)[0];
                         if (!u) return <React.Fragment />;
                         return (
-                          <Link to={`/main/profile/${u.id}`} key={u.id}>
+                          <Link to={`/main/profile/${u.id}`} key={userId}>
                             <Box
                               component="li"
                               display="flex"

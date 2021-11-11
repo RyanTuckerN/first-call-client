@@ -115,7 +115,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
         method: "post",
         auth: this.context.token ?? localStorage.getItem("token") ?? "",
       });
-      const { success, message, followers, following } = json;
+      const { success, followers, following } = json;
       this.setState({ user: { ...this.state.user!, followers } });
       this.context.setAppState("user", { ...this.context.user, following });
       return success;
@@ -453,7 +453,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                         .filter((u: any) => u.id === userId)[0];
                     if (!u) return <React.Fragment />;
                     return (
-                      <Link to={`/main/profile/${u.id}`} key={u.id}>
+                      <Link to={`/main/profile/${u.id}`} key={userId}>
                         <Box
                           component="li"
                           display="flex"
