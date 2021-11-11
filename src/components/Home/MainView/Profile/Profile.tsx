@@ -451,9 +451,9 @@ class Profile extends Component<ProfileProps, ProfileState> {
                       this.state.followInfo
                         ?.slice(0, 10)
                         .filter((u: any) => u.id === userId)[0];
-                    if (!u) return <React.Fragment />;
+                    if (!u) return <React.Fragment key={i} />;
                     return (
-                      <Link to={`/main/profile/${u.id}`} key={userId}>
+                      <Link to={`/main/profile/${u.id}`} key={i}>
                         <Box
                           component="li"
                           display="flex"
