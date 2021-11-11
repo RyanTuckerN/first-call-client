@@ -12,12 +12,6 @@ import {
   Divider,
   TextField,
 } from "@mui/material";
-import { Story, User } from "../../../../types/API.types";
-import { withRouter, RouteComponentProps, Link } from "react-router-dom";
-import { fetchHandler } from "../../../_helpers/fetchHandler";
-import API_URL from "../../../_helpers/environment";
-import { UserCtx } from "../../../Context/MainContext";
-import { AppState } from "../../../../App";
 import {
   PersonAdd,
   PersonRemove,
@@ -29,11 +23,17 @@ import {
   ChatBubble,
   Favorite,
 } from "@mui/icons-material";
+import { Story, User } from "../../../../types/API.types";
+import { withRouter, RouteComponentProps, Link } from "react-router-dom";
+import { fetchHandler } from "../../../_helpers/fetchHandler";
+import { UserCtx } from "../../../Context/MainContext";
+import { AppState } from "../../../../App";
+import { dark } from "../../../Theme/Theme";
+import API_URL from "../../../_helpers/environment";
 import BasicModal from "../../components/BasicModal";
-import "./Profile.css";
 import StoryComponent from "../../Stories/Story";
 import Swal from "sweetalert2";
-import { dark } from "../../../Theme/Theme";
+import "./Profile.css";
 
 interface RouteParams {
   userId: string;
@@ -69,14 +69,14 @@ class Profile extends Component<ProfileProps, ProfileState> {
       anchorEl: null,
       modalOpen: this.props.modalOpen ?? false,
       followInfo: [],
+      followModalOpen: null,
+      followAnchor: null,
+      stories: [],
       storyImage: "",
       storyText: "",
       storyError: "",
-      stories: [],
-      storyModalOpen: false,
       storyModalId: 0,
-      followModalOpen: null,
-      followAnchor: null,
+      storyModalOpen: false,
     };
   }
 
