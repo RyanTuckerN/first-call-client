@@ -613,7 +613,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 <img
                   src={this.state.storyImage}
                   alt="new-story-post-image"
-                  style={{ height: 280, width: 280, objectFit: "cover" }}
+                  style={{ height: 280, width: 280, maxWidth: '100%', objectFit: "cover" }}
                 />
               ) : (
                 <>
@@ -631,7 +631,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                       htmlFor="add-story-post"
                       id="add-image"
                     >
-                      <Image sx={{ height: 280, width: 280 }} />
+                      <Image sx={{ height: 280, width: 280, maxWidth: '100%' }} />
                     </Box>
                   </Button>
                 </>

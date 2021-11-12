@@ -69,16 +69,20 @@ export const GigSidebar: React.FunctionComponent<GigSidebarProps> = ({
 };
 
 interface BottomNavProps extends GigIndexState {
-  setRoute: any;
   route: RouteOption;
+  setRoute: any;
+  windowDimensions?: {height: number, width: number};
   setMainState: (key: string, value: any) => void;
 }
 
 export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
-  setRoute,
-  setMainState,
   route,
+  setRoute,
+  windowDimensions,
+  setMainState,
 }) => {
+
+  const {width} = windowDimensions!
   return (
     <Paper
       sx={{
@@ -91,14 +95,15 @@ export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
       elevation={0}
     >
       <BottomNavigation
-        showLabels
+        showLabels={width>=600}
         sx={{
           backgroundColor: dark.palette.background.default,
           color: "white",
+          pb:1
         }}
       >
         <BottomNavigationAction
-          sx={{ color: "#ffffff" }}
+          sx={{ color: "#ffffff", position:'relative', left:4, bottom:1 }}
           label="Add Gig"
           icon={<Add />}
           onClick={() => setRoute("addGig")}
@@ -134,7 +139,7 @@ export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
           sx={{
             backgroundColor: route === "addGig" ? activeColor : "",
             color: "#ffffff",
-            display: { xs: "none", sm: "flex" },
+            // display: { xs: "none", sm: "flex" },
           }}
           label="Add Story"
           icon={<AddPhotoAlternate />}
@@ -144,6 +149,7 @@ export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
           }}
         />
       </BottomNavigation>
+
     </Paper>
   );
 };
