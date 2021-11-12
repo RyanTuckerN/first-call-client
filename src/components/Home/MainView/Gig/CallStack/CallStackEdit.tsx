@@ -218,7 +218,8 @@ class CallStackEdit extends React.Component<
                     )}
                   />
                 </Grid>
-                <Grid item xs={12} sm={7} pl={1}>
+                <Grid item xs={12} sm={7} sx={{pl: {xs: 0, sm:1}, mt: {xs: 1, sm:0}}}>
+
                   <Autocomplete
                     id="email-input"
                     freeSolo

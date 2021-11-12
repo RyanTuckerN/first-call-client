@@ -176,9 +176,9 @@ class CallStackCreate extends Component<
               display="flex"
               justifyContent="space-between"
               xs={12}
-              sx={{ marginTop: 1 }}
+              sx={{ marginTop: 1, }}
             >
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={5} sx={{}}>
                 <Autocomplete
                   id="instrument-input"
                   freeSolo
@@ -211,7 +211,7 @@ class CallStackCreate extends Component<
                   )}
                 />
               </Grid>
-              <Grid item xs={6} pl={1}>
+              <Grid item xs={12} sm={7} sx={{pl: {xs: 0, sm:1}, mt: {xs: 1, sm:0}}}>
                 <Autocomplete
                   id="email-input"
                   freeSolo
@@ -256,6 +256,7 @@ class CallStackCreate extends Component<
                             <InputAdornment position="end">
                               <Button
                                 type="submit"
+                                sx={{position:'relative', left:50}}
                                 disabled={
                                   !this.state.emailVal || !this.state.roleVal
                                 }

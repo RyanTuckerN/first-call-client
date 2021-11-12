@@ -349,10 +349,10 @@ class GigEdit extends Component {
                     value={this.state.optionalKey}
                     placeholder="Any category"
                     fullWidth
-                    sx={{ pr: 1 }}
+                    
                   />
                 </Grid>
-                <Grid item xs={12} sm={7}>
+                <Grid item xs={12} sm={7} sx={{pl: {xs: 0, sm:1}, mt: {xs: 1, sm:0}}}>
                   <TextField
                     label="Info"
                     onChange={this.handleVal}
@@ -361,9 +361,19 @@ class GigEdit extends Component {
                     placeholder="Some details"
                     InputProps={{
                       endAdornment: (
-                        <IconButton type="submit">
-                          <Add />
-                        </IconButton>
+                        <>
+                              <InputAdornment position="end">
+                                <Button
+                                  type="submit"
+                                  sx={{ position: "relative", left: 24 }}
+                                  disabled={
+                                    !this.state.optionalKey || !this.state.optionalVal
+                                  }
+                                >
+                                  Add
+                                </Button>
+                              </InputAdornment>
+                            </>
                       ),
                     }}
                   />
