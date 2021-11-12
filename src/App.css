@@ -2,15 +2,15 @@
   background-color: rgba(136, 136, 136, 0.097);
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
-    display: block;
-    box-shadow: 0 0 0 30px #449dbf inset !important;
-    -webkit-box-shadow: 0 0 0 30px #449dbf inset !important;
-    background-color: #449dbf !important;
-    background-clip: content-box !important;
+input.MuiOutlinedInput-root:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  display: block;
+  box-shadow: 0 0 0 30px #449dbf inset !important;
+  -webkit-box-shadow: 0 0 0 30px #449dbf inset !important;
+  background-color: #449dbf !important;
+  background-clip: content-box !important;
 }
 
 .list-link:hover,
