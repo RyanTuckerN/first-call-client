@@ -9,6 +9,8 @@ input:-webkit-autofill:active{
     display: block;
     box-shadow: 0 0 0 30px rgb(3, 94, 106) inset !important;
     -webkit-box-shadow: 0 0 0 30px rgba(3, 94, 106) inset !important;
+    background-color: #040000 !important;
+    background-clip: content-box !important;
 }
 
 .list-link:hover,
