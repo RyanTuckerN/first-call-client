@@ -43,6 +43,7 @@ const Signup = (props: SignupProps) => {
           alignItems: "center",
         }}
       >
+        <div style={{width:'100%', height: 40}} />
         <Logo
           height={75}
           mainfill={

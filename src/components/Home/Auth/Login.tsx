@@ -37,6 +37,7 @@ const Login = (props: LoginProps) => {
           alignItems: "center",
         }}
       >
+        <div style={{width:'100%', height: 40}} />
         <Logo
           height={75}
           mainfill={
@@ -50,7 +51,7 @@ const Login = (props: LoginProps) => {
         <Typography component="h1" variant="h5" mt={5}>
           Sign in
         </Typography>
-        <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleLogin} sx={{ mt: 1 }}>
           <TextField
             margin="normal"
             required
