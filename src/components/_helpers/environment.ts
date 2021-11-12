@@ -5,7 +5,7 @@ switch (window.location.hostname) {
     API_URL = "http://localhost:3333";
     break;
   case "firstcallapp.herokuapp.com":
-    API_URL = "https://api-firstcall.herokuapp.com/";
+    API_URL = "https://api-firstcall.herokuapp.com";
 }
 
 export default API_URL;

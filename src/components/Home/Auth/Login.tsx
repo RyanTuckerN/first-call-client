@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -10,6 +11,10 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import logoPng from "./assets/FC-favicon.png";
+import Logo from "../../assets/Logo";
+import { UserCtx } from "../../Context/MainContext";
+import { dark, light } from "../../Theme/Theme";
 
 interface LoginProps {
   functions: any;
@@ -19,6 +24,7 @@ interface LoginProps {
 const Login = (props: LoginProps) => {
   const { handleEmail, handlePassword, handleLogin, clearState } =
     props.functions;
+  const context = useContext(UserCtx);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -31,10 +37,17 @@ const Login = (props: LoginProps) => {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
+        <Logo
+          height={75}
+          mainfill={
+            context!.darkModeOn === "true"
+              ? dark.palette.text.primary
+              : "#00000098"
+          }
+          secfill={light.palette.primary.main}
+        />
+
+        <Typography component="h1" variant="h5" mt={5}>
           Sign in
         </Typography>
         <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
@@ -68,7 +81,7 @@ const Login = (props: LoginProps) => {
             type="submit"
             fullWidth
             variant="contained"
-            color="secondary"
+            color="primary"
             sx={{ mt: 3, mb: 2, color: "white" }}
           >
             Sign In

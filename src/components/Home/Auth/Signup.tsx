@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -7,9 +8,11 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Logo from "../../assets/Logo";
+import { UserCtx } from "../../Context/MainContext";
+import { dark, light } from "../../Theme/Theme";
 
 interface SignupProps {
   functions: any;
@@ -27,6 +30,7 @@ const Signup = (props: SignupProps) => {
   } = props.functions;
 
   const { first, last, email, password } = props.authState;
+  const context = useContext(UserCtx);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -39,10 +43,16 @@ const Signup = (props: SignupProps) => {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
+        <Logo
+          height={75}
+          mainfill={
+            context!.darkModeOn === "true"
+              ? dark.palette.text.primary
+              : "#00000098"
+          }
+          secfill={light.palette.primary.main}
+        />
+        <Typography component="h1" variant="h5" mt={5}>
           Sign up
         </Typography>
         <Box component="form" noValidate onSubmit={handleSignup} sx={{ mt: 3 }}>
@@ -103,18 +113,18 @@ const Signup = (props: SignupProps) => {
                 InputProps={{ required: true }}
               />
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
                 label="I want to receive inspiration, marketing promotions and updates via email."
               />
-            </Grid>
+            </Grid> */}
           </Grid>
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            color="secondary"
+            color="primary"
             sx={{ mt: 3, mb: 2, color: "white" }}
           >
             Sign Up

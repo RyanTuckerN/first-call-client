@@ -1,3 +1,0 @@
-1. Date picker - will sometimes break on manually changing minutes
-2. Gig photo layout
-3. !!Update user/gig info when creating/updating/accepting gig.
