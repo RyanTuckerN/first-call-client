@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Button,
   Container,
@@ -19,23 +20,20 @@ import {
   KeyboardReturn,
   SentimentSatisfied,
 } from "@mui/icons-material";
+import API_URL from "../../_helpers/environment";
+import Picker from "emoji-picker-react";
+import Swal from "sweetalert2";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
 import { returnTimeDifference, smallImage } from "../../_helpers/helpers";
 import { Box } from "@mui/system";
-
-import React from "react";
 import { RouteComponentProps, withRouter, Link } from "react-router-dom";
 import { AppState } from "../../../App";
 import { Story } from "../../../types/API.types";
 import { UserCtx } from "../../Context/MainContext";
-import API_URL from "../../_helpers/environment";
 import { fetchHandler } from "../../_helpers/fetchHandler";
-import Picker from "emoji-picker-react";
 import "./Stories.css";
 import "./Dark.css";
-import Swal from "sweetalert2";
 
 interface StoryComponentProps extends RouteComponentProps {
   storyId: number;
@@ -215,7 +213,7 @@ class StoryComponent extends React.Component<
         maxWidth={"xl"}
         sx={{ display: "flex", justifyContent: "center" }}
       >
-        <Paper sx={{ width: "100%", minWidth: 320, mb: 0 }} elevation={4}>
+        <Paper sx={{ width: "100%", minWidth: 320, mb: 3 }} elevation={4}>
           <Grid container border={1} borderColor="divider">
             <Grid
               container
@@ -245,7 +243,7 @@ class StoryComponent extends React.Component<
                 fullWidth
                 maxWidth="xl"
                 onClose={() => this.setState({ photoDialogOpen: false })}
-                sx={{ overflow: "scroll" }}
+                sx={{ overflow: "auto" }}
               >
                 <Box
                   sx={{
@@ -276,7 +274,7 @@ class StoryComponent extends React.Component<
               display="block"
               sx={{
                 width: "100%",
-                height: "75vh",
+                height: { xs: "", lg: "75vh" },
                 alignSelf: "flex-start",
                 position: "relative",
               }}
@@ -293,8 +291,7 @@ class StoryComponent extends React.Component<
                     height: "100%",
                     width: "100%",
                     maxHeight: "71vh",
-                    overflowY: "scroll",
-                    mb: 7,
+                    overflowY: "auto",
                     pt: 0,
                     p: 0,
                   }}
@@ -465,6 +462,9 @@ class StoryComponent extends React.Component<
                           {i !== arr.length - 1 && (
                             <Divider sx={{ opacity: 0.53, my: 1 }} />
                           )}
+                          {i === arr.length - 1 && (
+                            <div style={{ width: "100%", height: 32 }} />
+                          )}
                         </Grid>
                       ))
                   ) : (
@@ -503,6 +503,7 @@ class StoryComponent extends React.Component<
                     this.context.darkModeOn === "true" ? "black" : "white",
                   width: "100%",
                   overflowY: "hidden",
+                  pb: 2,
                 }}
               >
                 <Box

@@ -18,17 +18,10 @@ import invitation from "./assets/invitation.png";
 import profile from "./assets/profile.png";
 import board from "./assets/board.png";
 import { UserCtx } from "../../Context/MainContext";
-import { Zoom, Fade } from "react-reveal";
+import { Zoom, Fade, LightSpeed } from "react-reveal";
 import { AppState } from "../../../App";
 import Logo from "../../assets/Logo";
 import { dark, light } from "../../Theme/Theme";
-
-const duration = 300;
-
-const defaultStyle = {
-  transition: `opacity ${duration}ms ease-in-out`,
-  opacity: 0,
-};
 
 interface WelcomeProps {}
 
@@ -42,9 +35,9 @@ class Welcome extends React.Component {
   render() {
     return (
       <>
-        <Container maxWidth="lg">
-          <Zoom delay={200}>
-            <Grid container height={"40vh"}>
+        <Container maxWidth="md">
+          <LightSpeed left cascade >
+            <Grid container  height={"45vh"}>
               <Grid
                 item
                 xs={12}
@@ -54,7 +47,7 @@ class Welcome extends React.Component {
               >
                 <div style={{ height: 120 }} />{" "}
                 <Logo
-                  height={160}
+                  height={140}
                   mainfill={
                     this.context.darkModeOn === "true"
                       ? dark.palette.text.primary
@@ -63,7 +56,7 @@ class Welcome extends React.Component {
                   secfill={light.palette.primary.main}
                 />
                 <Grid item xs={10}>
-                  <Zoom duration={300} delay={1500}>
+                  <Zoom duration={300} delay={1000}>
                     <Typography
                       variant="body2"
                       fontWeight={600}
@@ -88,7 +81,7 @@ class Welcome extends React.Component {
                   </Zoom>
                 </Grid>
               </Grid>
-              {/* <Grid
+              <Grid
                   item
                   xs={12}
                   display="flex"
@@ -101,36 +94,37 @@ class Welcome extends React.Component {
                     alt="sihloutte of a band"
                     style={{
                       maxHeight: 350,
+                      maxWidth: '90vw',
                       filter:
                         this.context.darkModeOn === "true"
                           ? "invert(100%) sepia(7%) saturate(7%) hue-rotate(70deg) brightness(107%) contrast(100%)"
                           : "invert(42%) sepia(0%) saturate(0%) hue-rotate(167deg) brightness(94%) contrast(91%)",
                         }}
                         />
-                </Grid> */}
+                </Grid>
               
             </Grid>
-          </Zoom>
+          </LightSpeed>
+            <div style={this.context.darkModeOn === "true" ?{display: 'none'}:{}}>
+              <div style={{ height: '40vh', width: "100%" }} />
+              <div style={{ height: '10vh', width: "100%" }} />
+            </div>
           <Paper sx={{ display: "flex", flexDirection: "column" }}>
+            <div style={this.context.darkModeOn !== "true" ?{display: 'none'}:{}}>
             <div style={{ height: 0 }}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
                 <path
                   fill="#121212"
-                  fillOpacity="1"
+                  fillOpacity={1}
                   d="M0,224L0,224L37.9,224L37.9,160L75.8,160L75.8,128L113.7,128L113.7,224L151.6,224L151.6,288L189.5,288L189.5,160L227.4,160L227.4,320L265.3,320L265.3,64L303.2,64L303.2,32L341.1,32L341.1,256L378.9,256L378.9,320L416.8,320L416.8,96L454.7,96L454.7,128L492.6,128L492.6,224L530.5,224L530.5,96L568.4,96L568.4,224L606.3,224L606.3,64L644.2,64L644.2,128L682.1,128L682.1,288L720,288L720,224L757.9,224L757.9,64L795.8,64L795.8,256L833.7,256L833.7,160L871.6,160L871.6,128L909.5,128L909.5,0L947.4,0L947.4,64L985.3,64L985.3,288L1023.2,288L1023.2,256L1061.1,256L1061.1,64L1098.9,64L1098.9,288L1136.8,288L1136.8,288L1174.7,288L1174.7,128L1212.6,128L1212.6,192L1250.5,192L1250.5,192L1288.4,192L1288.4,128L1326.3,128L1326.3,160L1364.2,160L1364.2,32L1402.1,32L1402.1,256L1440,256L1440,0L1402.1,0L1402.1,0L1364.2,0L1364.2,0L1326.3,0L1326.3,0L1288.4,0L1288.4,0L1250.5,0L1250.5,0L1212.6,0L1212.6,0L1174.7,0L1174.7,0L1136.8,0L1136.8,0L1098.9,0L1098.9,0L1061.1,0L1061.1,0L1023.2,0L1023.2,0L985.3,0L985.3,0L947.4,0L947.4,0L909.5,0L909.5,0L871.6,0L871.6,0L833.7,0L833.7,0L795.8,0L795.8,0L757.9,0L757.9,0L720,0L720,0L682.1,0L682.1,0L644.2,0L644.2,0L606.3,0L606.3,0L568.4,0L568.4,0L530.5,0L530.5,0L492.6,0L492.6,0L454.7,0L454.7,0L416.8,0L416.8,0L378.9,0L378.9,0L341.1,0L341.1,0L303.2,0L303.2,0L265.3,0L265.3,0L227.4,0L227.4,0L189.5,0L189.5,0L151.6,0L151.6,0L113.7,0L113.7,0L75.8,0L75.8,0L37.9,0L37.9,0L0,0L0,0Z"
                 ></path>
               </svg>
-              {/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-                <path
-                  fill="#121212"
-                  fillOpacity="0.5"
-                  d="M0,32L0,192L51.4,192L51.4,288L102.9,288L102.9,96L154.3,96L154.3,0L205.7,0L205.7,64L257.1,64L257.1,64L308.6,64L308.6,256L360,256L360,320L411.4,320L411.4,96L462.9,96L462.9,32L514.3,32L514.3,32L565.7,32L565.7,128L617.1,128L617.1,64L668.6,64L668.6,64L720,64L720,224L771.4,224L771.4,0L822.9,0L822.9,256L874.3,256L874.3,224L925.7,224L925.7,96L977.1,96L977.1,160L1028.6,160L1028.6,160L1080,160L1080,192L1131.4,192L1131.4,192L1182.9,192L1182.9,192L1234.3,192L1234.3,224L1285.7,224L1285.7,256L1337.1,256L1337.1,128L1388.6,128L1388.6,160L1440,160L1440,0L1388.6,0L1388.6,0L1337.1,0L1337.1,0L1285.7,0L1285.7,0L1234.3,0L1234.3,0L1182.9,0L1182.9,0L1131.4,0L1131.4,0L1080,0L1080,0L1028.6,0L1028.6,0L977.1,0L977.1,0L925.7,0L925.7,0L874.3,0L874.3,0L822.9,0L822.9,0L771.4,0L771.4,0L720,0L720,0L668.6,0L668.6,0L617.1,0L617.1,0L565.7,0L565.7,0L514.3,0L514.3,0L462.9,0L462.9,0L411.4,0L411.4,0L360,0L360,0L308.6,0L308.6,0L257.1,0L257.1,0L205.7,0L205.7,0L154.3,0L154.3,0L102.9,0L102.9,0L51.4,0L51.4,0L0,0L0,0Z"
-                ></path>
-              </svg> */}
+          
             </div>
-            <div style={{ height: '20vh', width: "100%" }} />
-            <div id="text-anchor" style={{ height: 1, width: "100%" }} />
-            <div style={{ height: '30vh', width: "100%" }} />
+              <div style={{ height: '40vh', width: "100%" }} />
+              <div id="text-anchor" style={{ height: 1, width: "100%" }} />
+              <div style={{ height: '10vh', width: "100%" }} />
+            </div>
             <Grid container p={2}>
               <Grid
                 item
@@ -141,10 +135,10 @@ class Welcome extends React.Component {
                 flexDirection="column"
                 justifyContent="center"
               >
-                <Fade left duration={500}>
+                <Fade left duration={800}>
                   <Typography variant="overline">Mission</Typography>
                 </Fade>
-                <Fade left duration={500}>
+                <Fade left duration={800}>
                   <Typography sx={{ textIndent: 22 }}>
                     {`Are you sick of keeping track of countless
                   email, text, and messaging-app threads? Do you
@@ -155,7 +149,7 @@ class Welcome extends React.Component {
                   `}
                   </Typography>
                 </Fade>
-                <Fade left duration={500}>
+                <Fade left duration={800}>
                   <Typography sx={{ textIndent: 22 }}>
                     {`Our aim is to be the
                   #1 software solution for independant
@@ -173,7 +167,7 @@ class Welcome extends React.Component {
                 justifyContent="center"
                 sx={{ pt:4}}
               >
-                <Fade right duration={500}>
+                <Fade right duration={800}>
                   <img
                     src={gigPage}
                     alt="View of an example gig page"
@@ -200,14 +194,14 @@ class Welcome extends React.Component {
                   justifyContent="center"
                 >
                   <Grid display="flex" flexWrap="wrap" justifyContent="center">
-                    <Fade left duration={500}>
+                    <Fade left duration={800}>
                       <img
                         src={invitation}
                         alt="View of the main app dashboard"
                         style={{ height: 400, borderRadius: 9, padding: 5 }}
                       />
                     </Fade>
-                    <Fade left duration={500}>
+                    <Fade left duration={800}>
                       <img
                         src={gigsMapped}
                         alt="View of the main app dashboard"
@@ -217,10 +211,10 @@ class Welcome extends React.Component {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} md={5} textAlign="justify">
-                  <Fade right duration={500}>
+                  <Fade right duration={800}>
                     <Typography variant="overline">Core features</Typography>
                   </Fade>
-                  <Fade right duration={500}>
+                  <Fade right duration={800}>
                     <Typography sx={{ textIndent: 22 }}>
                       {`Using FirstCall's platform, musicians can free
                     themselves of the stresses that come along with
@@ -233,7 +227,7 @@ class Welcome extends React.Component {
                     `}
                     </Typography>
                   </Fade>
-                  <Fade right duration={500}>
+                  <Fade right duration={800}>
                     <Typography sx={{ textIndent: 22 }}>
                       {`Lead a big band, or ad-hoc orchestra? Don't waste your
                     time chasing down a third trombone or bassoonist, let us
@@ -261,10 +255,10 @@ class Welcome extends React.Component {
                 flexDirection="column"
                 justifyContent="center"
               >
-                <Fade left duration={500}>
+                <Fade left duration={800}>
                   <Typography variant="overline">Bonus features</Typography>
                 </Fade>
-                <Fade left duration={500}>
+                <Fade left duration={800}>
                   <Typography sx={{ textIndent: 22 }}>
                     In addition to the core features, FirstCall also serves as a
                     communication hub. Every gig has its own private messaging
@@ -277,7 +271,7 @@ class Welcome extends React.Component {
                     </strong>
                   </Typography>
                 </Fade>
-                <Fade left duration={500}>
+                <Fade left duration={800}>
                   <Typography sx={{ textIndent: 22 }}>
                     You also are given a profile page where you can share gig
                     photos with short captions. Think{" "}
@@ -297,7 +291,7 @@ class Welcome extends React.Component {
                 justifyContent="center"
                 sx={{ pt: 2 }}
               >
-                <Fade right duration={500}>
+                <Fade right duration={800}>
                   <img
                     src={board}
                     alt="View of an example gig messageboard"
@@ -312,7 +306,7 @@ class Welcome extends React.Component {
                 justifyContent="center"
                 sx={{ pt: 2 }}
               >
-                <Fade bottom duration={500}>
+                <Fade bottom duration={800}>
                   <img
                     src={profile}
                     alt="View of an example profile page"
@@ -333,7 +327,6 @@ class Welcome extends React.Component {
                 </Grid>
               </Fade>
             )}
-            <div style={{ height: 80, width: "100%" }} />
           </Paper>
         </Container>
         <div style={{ height: 40, width: "100%" }} />

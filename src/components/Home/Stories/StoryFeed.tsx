@@ -98,7 +98,7 @@ class StoryFeed extends React.Component<StoryFeedProps, StoryFeedState> {
                     textAlign="center"
                     fontWeight={200}
                   >
-                    <i>No more messages</i>
+                    <i>No more posts!</i>
                   </Typography>
                 </Box>
               }

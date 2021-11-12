@@ -28,6 +28,7 @@ import {
   Add,
   Dashboard,
   DynamicFeed,
+  Search,
 } from "@mui/icons-material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -225,13 +226,26 @@ class Home extends Component<HomeProps, HomeState> {
                       top: -4,
                     }}
                   >
+                    {auth && (
+                      <IconButton
+                      size="small"
+                      color="inherit"
+                      id="appbar-search"
+                      aria-label="search the app"
+                      sx={{ position: "relative", top: 3 }}
+                    >
+                      <Link to="/search" title="Search the app">
+                        <Search />
+                      </Link>
+                      </IconButton>
+                    )}
                     <Link to="/main/add" title="Create a Gig">
                       <IconButton
                         size="small"
                         color="inherit"
                         id="add-new-gig"
                         aria-label="create a new gig"
-                        style={{ position: "relative", top: 3 }}
+                        sx={{ position: "relative", top: 3 }}
                       >
                         <Add />
                       </IconButton>
@@ -386,10 +400,14 @@ class Home extends Component<HomeProps, HomeState> {
               </Container>
             </Route>
           </Switch>
-          <Route path="/welcome">
-            <Container maxWidth="xl" sx={{ height: "100%" }}>
-              <Welcome />
+          <Route path="/search">
+            <Container>
+              <SearchBar />
             </Container>
+          </Route>
+          <Route path="/welcome">
+            <Welcome />
+            {/* </Container> */}
           </Route>
           <Route path="/story/:storyId">
             <StoryLoader />
