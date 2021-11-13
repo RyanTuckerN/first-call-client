@@ -7,6 +7,7 @@ import API_URL from "../../../_helpers/environment";
 import { UserCtx } from "../../../Context/MainContext";
 import { formControl } from "../../../_helpers/helpers";
 import { AppState } from "../../../../App";
+import { Box } from "@mui/system";
 
 interface ChangePassProps extends RouteComponentProps {}
 
@@ -41,7 +42,10 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
     this.setState(stateObj);
   };
 
-  handleSubmit = async (): Promise<boolean> => {
+  handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<boolean> => {
+    e.preventDefault();
     if (!formControl.validatePasswordsMatch(this.state.new1, this.state.new2)) {
       this.setState({ snackBarOpen: true });
       return false;
@@ -105,74 +109,78 @@ class ChangePass extends Component<ChangePassProps, ChangePassState> {
 
   render() {
     return (
-      <Grid container justifyContent="center">
-        <Typography variant="h5">Change Your Password</Typography>
-        <Grid item container xs={10} justifyContent="center">
-          <Grid item xs={9} sx={{ paddingTop: 3 }}>
-            <Typography variant="caption">Enter your password*</Typography>
-            <TextField
-              id="currentPass"
-              required
-              aria-required
-              fullWidth
-              onChange={this.handleInput}
-              type="password"
-            />
-          </Grid>
-          <Grid item xs={4} sx={{ paddingTop: 3 }}>
-            <Typography variant="caption">New password*</Typography>
-            <TextField
-              id="new1"
-              fullWidth
-              required
-              aria-required
-              onChange={this.handleInput}
-              type="password"
-            />
-          </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={4} sx={{ paddingTop: 3 }}>
-            <Typography
-              variant="caption"
-              color={this.state.passwordsMatch === false ? "red" : "inherit"}
-            >
-              {this.state.passwordsMatch === false
-                ? "Passwords must match*"
-                : "Repeat password*"}
-            </Typography>
-            <TextField
-              id="new2"
-              fullWidth
-              required
-              variant="outlined"
-              aria-required
-              color={this.state.passwordsMatch === false ? "error" : "primary"}
-              onChange={this.handleInput}
-              type="password"
-            />
-          </Grid>
-          <Grid
-            container
-            item
-            xs={9}
-            justifyContent="flex-end"
-            sx={{ paddingTop: 1 }}
-          >
-            <Grid item xs={12}>
-              <Typography variant="caption">Required*</Typography>
+      <Box component="form" noValidate={false} onSubmit={this.handleSubmit}>
+        <Grid container justifyContent="center">
+          <Grid item container xs={12} lg={8} justifyContent="center">
+          <Typography variant="h5">Change Your Password</Typography> 
+            <Grid item xs={12} md={10} sx={{ paddingTop: 3 }}>
+              <TextField
+                id="currentPass"
+                required
+                aria-required
+                label="Enter your password"
+                fullWidth
+                onChange={this.handleInput}
+                type="password"
+              />
             </Grid>
-            <Grid item xs={3}>
-              <Button
-                variant="contained"
-                color="success"
-                onClick={this.handleSubmit}
-              >
-                Submit
-              </Button>
+            <Grid item xs={12} md={5} lg={5} sx={{ paddingTop: 1 }}>
+              <Typography variant="caption"></Typography>
+              <TextField
+                id="new1"
+                fullWidth
+                label="New password"
+                required
+                aria-required
+                onChange={this.handleInput}
+                type="password"
+              />
+            </Grid>
+            <Grid item xs={12} md={5} lg={5} sx={{ paddingTop: 1 }}>
+              <TextField
+                id="new2"
+                fullWidth
+                sx={{ pl: { xs: 0, md: 1 } }}
+                required
+                InputLabelProps={{
+                  sx: {
+                    pl: { xs: 0, md: 1 },
+                    color:
+                      this.state.passwordsMatch === null
+                        ? ""
+                        : this.state.passwordsMatch === false
+                        ? "red"
+                        : "inherit",
+                  },
+                }}
+                variant="outlined"
+                label={
+                  this.state.passwordsMatch === false
+                    ? "Passwords must match"
+                    : "Repeat password"
+                }
+                aria-required
+                color={
+                  this.state.passwordsMatch === false ? "error" : "primary"
+                }
+                onChange={this.handleInput}
+                type="password"
+              />
+            </Grid>
+            <Grid
+              container
+              item
+              xs={12} md={10}
+              justifyContent="flex-end"
+              sx={{ paddingTop: 1 }}
+            >
+                <Button variant="contained" color="success" type="submit">
+                  Submit
+                </Button>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </Box>
     );
   }
 }

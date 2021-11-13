@@ -11,6 +11,8 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #449dbf inset !important;
   background-color: #449dbf !important;
   background-clip: content-box !important;
+  -webkit-text-fill-color: #333;
+  color: #333;
 }
 
 .list-link:hover,
