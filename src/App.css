@@ -2,8 +2,8 @@
   background-color: rgba(136, 136, 136, 0.097);
 }
 
-input.MuiOutlinedInput-root:-webkit-autofill,
-input.MuiOutlinedInput-root:autofill,
+input:autofill,
+input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
