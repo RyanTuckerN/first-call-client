@@ -8,6 +8,7 @@ import {
   Paper,
   BottomNavigation,
   BottomNavigationAction,
+  Divider,
 } from "@mui/material";
 import {
   Event,
@@ -84,72 +85,75 @@ export const BottomNav: React.FunctionComponent<BottomNavProps> = ({
 
   const {width} = windowDimensions!
   return (
-    <Paper
-      sx={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        color: "white",
-      }}
-      elevation={0}
-    >
-      <BottomNavigation
-        showLabels={width>=600}
+    <>
+      <Paper
         sx={{
-          backgroundColor: dark.palette.background.default,
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
           color: "white",
-          pb:1
         }}
+        elevation={0}
       >
-        <BottomNavigationAction
-          sx={{ color: "#ffffff", position:'relative', left:4, bottom:1 }}
-          label="Add Gig"
-          icon={<Add />}
-          onClick={() => setRoute("addGig")}
-        />
-        <BottomNavigationAction
+        <Divider sx={{mb: 1}} />
+        <BottomNavigation
+          showLabels={width>=600}
           sx={{
-            backgroundColor: route === "offers" ? activeColor : "",
-            color: "#ffffff",
+      
+            backgroundColor: dark.palette.background.default,
+            color: "white",
+            pb:1
           }}
-          label="Offers"
-          icon={<Event />}
-          onClick={() => setRoute("offers")}
-        />
-        <BottomNavigationAction
-          sx={{
-            backgroundColor: route === "gigs" ? activeColor : "",
-            color: "#ffffff",
-          }}
-          label="Gigs"
-          icon={<DeviceHub />}
-          onClick={() => setRoute("gigs")}
-        />
-        <BottomNavigationAction
-          sx={{
-            backgroundColor: route === "notifications" ? activeColor : "",
-            color: "#ffffff",
-          }}
-          label="Alerts"
-          icon={<Notifications />}
-          onClick={() => setRoute("notifications")}
-        />
-        <BottomNavigationAction
-          sx={{
-            backgroundColor: route === "addGig" ? activeColor : "",
-            color: "#ffffff",
-            // display: { xs: "none", sm: "flex" },
-          }}
-          label="Add Story"
-          icon={<AddPhotoAlternate />}
-          onClick={() => {
-            setMainState("profileModalOpen", true);
-            setRoute("addStory");
-          }}
-        />
-      </BottomNavigation>
-
-    </Paper>
+        >
+          <BottomNavigationAction
+            sx={{ color: "#ffffff", position:'relative', left:4, bottom:1 }}
+            label="Add Gig"
+            icon={<Add />}
+            onClick={() => setRoute("addGig")}
+          />
+          <BottomNavigationAction
+            sx={{
+              backgroundColor: route === "offers" ? activeColor : "",
+              color: "#ffffff",
+            }}
+            label="Offers"
+            icon={<Event />}
+            onClick={() => setRoute("offers")}
+          />
+          <BottomNavigationAction
+            sx={{
+              backgroundColor: route === "gigs" ? activeColor : "",
+              color: "#ffffff",
+            }}
+            label="Gigs"
+            icon={<DeviceHub />}
+            onClick={() => setRoute("gigs")}
+          />
+          <BottomNavigationAction
+            sx={{
+              backgroundColor: route === "notifications" ? activeColor : "",
+              color: "#ffffff",
+            }}
+            label="Alerts"
+            icon={<Notifications />}
+            onClick={() => setRoute("notifications")}
+          />
+          <BottomNavigationAction
+            sx={{
+              backgroundColor: route === "addGig" ? activeColor : "",
+              color: "#ffffff",
+              // display: { xs: "none", sm: "flex" },
+            }}
+            label="Add Story"
+            icon={<AddPhotoAlternate />}
+            onClick={() => {
+              setMainState("profileModalOpen", true);
+              setRoute("addStory");
+            }}
+          />
+        </BottomNavigation>
+      </Paper>
+    </>
   );
 };

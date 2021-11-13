@@ -348,7 +348,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                         const platform = p;
                         const handle = user.paymentPreference![p];
                         return (
-                          <Paper sx={{ p: 2 }} key={i}>
+                          <Paper sx={{ p: 2 }} key={`plat${i}`}>
                             <Typography variant="body1">
                               {platform}: &nbsp; {handle}
                             </Typography>
@@ -453,7 +453,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
                         .filter((u: any) => u.id === userId)[0];
                     if (!u) return <React.Fragment key={i} />;
                     return (
-                      <Link to={`/main/profile/${u.id}`} key={i}>
+                      <Link to={`/main/profile/${u.id}`} key={`user${i}`}>
                         <Box
                           component="li"
                           display="flex"
@@ -523,7 +523,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
             {this.state.stories.length ? (
               this.state.stories.reverse().map((story, i) => (
                 <Grid
-                  key={i}
+                  key={`story${i}`}
                   item
                   xs={12}
                   sm={6}
