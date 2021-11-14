@@ -521,67 +521,69 @@ class Profile extends Component<ProfileProps, ProfileState> {
             justifyContent="space-around"
           >
             {this.state.stories.length ? (
-              this.state.stories.map((story, i) => (
-                <Grid
-                  key={`story${i}`}
-                  item
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  sx={{ p: 2 }}
-                  display="flex"
-                  flexDirection="column"
-                  alignItems="center"
-                >
-                  <Link
-                    to={`/story/${story.id}`}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      flexWrap: "wrap",
-                      height: 300,
-                      width: 300,
-                      overflow: "hidden",
-                    }}
+              this.state.stories
+                .sort((a, b) => b.id - a.id)
+                .map((story, i) => (
+                  <Grid
+                    key={`story${i}`}
+                    item
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    sx={{ p: 2 }}
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
                   >
-                    <img
-                      className="image-thumbnail"
-                      src={story.imageUrl}
-                      alt={story.text}
+                    <Link
+                      to={`/story/${story.id}`}
                       style={{
-                        zIndex: 999,
-                        objectFit: "cover",
-                        height: 300,
-                        width: 300,
-                      }}
-                    />
-                    <div
-                      style={{
-                        backgroundColor: "white",
-                        zIndex: 997,
-                        objectFit: "cover",
-                        position: "absolute",
-                        height: 300,
-                        width: 300,
                         display: "flex",
-                        justifyContent: "center",
+                        flexDirection: "column",
                         alignItems: "center",
+                        flexWrap: "wrap",
+                        height: 300,
+                        width: 300,
+                        overflow: "hidden",
                       }}
                     >
-                      <Typography
-                        variant="h5"
-                        fontWeight={700}
-                        sx={{ zIndex: 1000, color: "#00000060" }}
+                      <img
+                        className="image-thumbnail"
+                        src={story.imageUrl}
+                        alt={story.text}
+                        style={{
+                          zIndex: 999,
+                          objectFit: "cover",
+                          height: 300,
+                          width: 300,
+                        }}
+                      />
+                      <div
+                        style={{
+                          backgroundColor: "white",
+                          zIndex: 997,
+                          objectFit: "cover",
+                          position: "absolute",
+                          height: 300,
+                          width: 300,
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
                       >
-                        {story.likers.length} <Favorite />{" "}
-                        &nbsp;&nbsp;&nbsp;&nbsp; {story.posts?.length ?? 0}{" "}
-                        <ChatBubble />
-                      </Typography>
-                    </div>
-                  </Link>
-                </Grid>
-              ))
+                        <Typography
+                          variant="h5"
+                          fontWeight={700}
+                          sx={{ zIndex: 1000, color: "#00000060" }}
+                        >
+                          {story.likers.length} <Favorite />{" "}
+                          &nbsp;&nbsp;&nbsp;&nbsp; {story.posts?.length ?? 0}{" "}
+                          <ChatBubble />
+                        </Typography>
+                      </div>
+                    </Link>
+                  </Grid>
+                ))
             ) : (
               <Grid display="flex" flexDirection="column" alignItems="center">
                 <Typography variant="overline" fontWeight={300}>
@@ -613,7 +615,12 @@ class Profile extends Component<ProfileProps, ProfileState> {
                 <img
                   src={this.state.storyImage}
                   alt="new-story-post-image"
-                  style={{ height: 280, width: 280, maxWidth: '100%', objectFit: "cover" }}
+                  style={{
+                    height: 280,
+                    width: 280,
+                    maxWidth: "100%",
+                    objectFit: "cover",
+                  }}
                 />
               ) : (
                 <>
@@ -631,7 +638,9 @@ class Profile extends Component<ProfileProps, ProfileState> {
                       htmlFor="add-story-post"
                       id="add-image"
                     >
-                      <Image sx={{ height: 280, width: 280, maxWidth: '100%' }} />
+                      <Image
+                        sx={{ height: 280, width: 280, maxWidth: "100%" }}
+                      />
                     </Box>
                   </Button>
                 </>
