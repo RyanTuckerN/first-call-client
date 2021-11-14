@@ -67,6 +67,8 @@ class GigPage extends Component<GigPageProps, GigPageState> {
     return json.success;
   };
 
+  setPosts = (posts: Post[]):void => this.setState({posts})
+
   toggleEditMode = (): void =>
     this.setState({ editMode: !this.state.editMode });
 
@@ -205,6 +207,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
                               posts={this.state.posts}
                               fetchPosts={this.fetchPosts}
                               gigId={this.state.gigId}
+                              setPosts={this.setPosts}
                             />
                           </Grid>
                         ) : this.state.gig.callStack && this.state.editMode ? (

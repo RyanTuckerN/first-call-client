@@ -13,6 +13,7 @@ import { Loading } from "../../../../../Skeletons";
 interface BoardProps {
   posts: Post[];
   gigId: string | number;
+  setPosts: (posts: Post[]) => void;
   fetchPosts: () => Promise<boolean>;
 }
 
@@ -59,10 +60,11 @@ class Board extends Component<BoardProps, BoardState> {
       auth: this.context.token ?? localStorage.getItem("token") ?? "",
       body: { text: this.state.text },
     });
-    this.setState({
-      posts: [...this.state.posts, { ...json.post, user: json.user }],
-      text: "",
-    });
+    this.setState({ text: "" });
+    this.props.setPosts([
+      ...this.state.posts,
+      { ...json.post, user: json.user },
+    ]);
     return json.success;
   };
 
@@ -76,9 +78,8 @@ class Board extends Component<BoardProps, BoardState> {
   }
 
   componentDidMount() {
-    this.setState({posts: this.props.posts})
+    this.setState({ posts: this.props.posts });
   }
-  
 
   render() {
     return this.state.posts ? (
