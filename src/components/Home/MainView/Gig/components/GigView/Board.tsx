@@ -18,7 +18,6 @@ interface BoardProps {
 }
 
 interface BoardState {
-  posts: Post[];
   emptyBoard: boolean;
   organizedPosts: Post[];
   text: string;
@@ -29,7 +28,6 @@ class Board extends Component<BoardProps, BoardState> {
   constructor(props: BoardProps) {
     super(props);
     this.state = {
-      posts: this.props.posts,
       emptyBoard: _.isEmpty(this.props.posts),
       organizedPosts: postOrganizer(this.props.posts),
       text: "",
@@ -62,7 +60,7 @@ class Board extends Component<BoardProps, BoardState> {
     });
     this.setState({ text: "" });
     this.props.setPosts([
-      ...this.state.posts,
+      ...this.props.posts,
       { ...json.post, user: json.user },
     ]);
     return json.success;
@@ -72,17 +70,10 @@ class Board extends Component<BoardProps, BoardState> {
     if (prevProps.posts !== this.props.posts) {
       this.setState({ organizedPosts: postOrganizer(this.props.posts) });
     }
-    if (prevState.posts !== this.state.posts) {
-      this.setState({ organizedPosts: postOrganizer(this.state.posts) });
-    }
-  }
-
-  componentDidMount() {
-    this.setState({ posts: this.props.posts });
   }
 
   render() {
-    return this.state.posts ? (
+    return this.state.organizedPosts ? (
       <Grid
         container
         item
