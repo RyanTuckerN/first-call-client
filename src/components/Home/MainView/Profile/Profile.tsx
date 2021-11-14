@@ -521,7 +521,7 @@ class Profile extends Component<ProfileProps, ProfileState> {
             justifyContent="space-around"
           >
             {this.state.stories.length ? (
-              this.state.stories.reverse().map((story, i) => (
+              this.state.stories.map((story, i) => (
                 <Grid
                   key={`story${i}`}
                   item
