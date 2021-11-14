@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": "15.x"
+    "node": "15.x",
+    "npm": "6.x"
   },
   "dependencies": {
     "@date-io/moment": "^2.11.0",
