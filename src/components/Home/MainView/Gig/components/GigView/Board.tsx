@@ -75,6 +75,11 @@ class Board extends Component<BoardProps, BoardState> {
     }
   }
 
+  componentDidMount() {
+    this.setState({posts: this.props.posts})
+  }
+  
+
   render() {
     return this.state.posts ? (
       <Grid
