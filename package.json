@@ -2,6 +2,9 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "15.x"
+  },
   "dependencies": {
     "@date-io/moment": "^2.11.0",
     "@emotion/react": "^11.4.1",
