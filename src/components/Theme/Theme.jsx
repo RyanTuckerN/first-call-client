@@ -97,12 +97,4 @@ export const dark = createTheme({
       },
     },
   },
-  MuiOutlinedInput: {
-    input: {
-      "&:-webkit-autofill": {
-        "-webkit-box-shadow": "0 0 0 100px #449dbf inset",
-        "-webkit-text-fill-color": "white",
-      },
-    },
-  },
 });
