@@ -239,7 +239,7 @@ class PostComponent extends React.Component<
               <Arrow fillColor="#ff450000" borderColor={this.context.darkModeOn === 'true' ? "#ffffff80" : '#00000080'} />
             )}
           </IconButton>
-          <Typography variant="caption" fontFamily='monospace' fontSize={12}>
+          <Typography variant="caption" fontFamily="'Azeret Mono', monospace" fontSize={12}>
             {post.upvotes}{" "}
           </Typography>
           <IconButton
