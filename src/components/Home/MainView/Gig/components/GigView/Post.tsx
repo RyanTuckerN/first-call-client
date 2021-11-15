@@ -23,6 +23,7 @@ import { returnTimeDifference } from "../../../../../_helpers/helpers";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
 import API_URL from "../../../../../_helpers/environment";
 import ReplyIcon from "./assets/replySmall.png";
+import Arrow from "./assets/Arrow";
 
 interface PostComponentProps {
   post: Post;
@@ -106,6 +107,7 @@ class PostComponent extends React.Component<
           ...(this.state.post?.children ?? []),
         ],
       },
+      replyText: ''
     });
     this.setState({ showInput: false });
     return json.success;
@@ -183,10 +185,7 @@ class PostComponent extends React.Component<
           ) : (
             <ArrowRight sx={{ padding: 0.5, color: "rgba(0,0,0,0)" }} />
           )}
-          <Typography
-            variant={i === 1 ? "subtitle1" : "subtitle2"}
-            fontWeight={i === 1 ? 500 : 400}
-          >
+          <Typography variant={"subtitle2"} fontWeight={300}>
             &nbsp;
             <Link to={`/main/profile/${this.props.post.author}`}>
               {post.user?.name}
@@ -227,7 +226,7 @@ class PostComponent extends React.Component<
           xs={12}
           sx={{
             position: "relative",
-            left: -2,
+            left: 12,
             display: "flex",
             alignItems: "center",
             marginTop: -1.1,
@@ -235,14 +234,13 @@ class PostComponent extends React.Component<
         >
           <IconButton onClick={this.handleLike}>
             {post.voters.includes(user.id) ? (
-              <Favorite sx={{ height: 16 }} color="error" />
+              <Arrow fillColor="#ff4500" borderColor={"#00000000"} />
             ) : (
-              <FavoriteBorder sx={{ height: 16 }} fontSize="inherit" />
+              <Arrow fillColor="#ff450000" borderColor={this.context.darkModeOn === 'true' ? "#ffffff80" : '#00000080'} />
             )}
           </IconButton>
-          <Typography fontSize={15}>{post.upvotes} </Typography>
-          <Typography variant="caption">
-            &nbsp;{post.upvotes === 1 ? "like" : "likes"}
+          <Typography variant="caption" fontFamily='monospace' fontSize={12}>
+            {post.upvotes}{" "}
           </Typography>
           <IconButton
             onClick={() =>
@@ -293,17 +291,16 @@ class PostComponent extends React.Component<
             }}
           >
             <Box
+              component="form"
               action="submit"
               id="reply-input"
+              noValidate
               onSubmit={
                 this.state.editing ? this.handleEditSubmit : this.handleReply
               }
-              component="form"
-              noValidate
             >
               <TextField
                 autoFocus
-                fullWidth
                 value={
                   this.state.editing
                     ? this.state.editingText
@@ -313,13 +310,18 @@ class PostComponent extends React.Component<
                 style={{
                   zIndex: 9999,
                 }}
-              />
+                InputProps={{
+                  endAdornment:
               <Button
                 type="submit"
+                disabled={this.state.editing ? !this.state.editingText : !this.state.replyText }
                 color={this.state.editing ? "success" : "primary"}
               >
                 {this.state.editing ? "SAVE" : "REPLY"}
               </Button>
+                  
+                  }}
+              />
             </Box>
           </Grid>
         ) : null}

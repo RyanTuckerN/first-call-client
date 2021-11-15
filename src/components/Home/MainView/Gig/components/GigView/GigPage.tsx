@@ -115,7 +115,7 @@ class GigPage extends Component<GigPageProps, GigPageState> {
               .includes(this.state.gig?.id ?? 0) ? (
               <Redirect to="" />
             ) : (
-              <Container maxWidth={"xl"} sx={{ minHeight: "100%" }}>
+              <Container maxWidth={"xl"} >
                 <Paper
                   sx={{
                     padding: 2,

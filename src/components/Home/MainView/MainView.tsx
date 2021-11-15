@@ -84,7 +84,7 @@ class MainView extends Component<MainViewProps, MainViewState> {
           </Route>
           <Route path={`${this.props.match.path}/settings`}>
             <Container maxWidth="lg" sx={{ height: "100%" }}>
-              <Paper sx={{ p: 2, height: "100%" }}>
+              <Paper sx={{ p: 2 }}>
                 <Settings {...this.props} />
               </Paper>
             </Container>

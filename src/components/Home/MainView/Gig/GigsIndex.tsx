@@ -149,7 +149,7 @@ class GigIndex extends Component<GigIndexProps, GigIndexState> {
         <Route exact path="/main/add">
           {this.state.user ? (
             <Container maxWidth={"xl"} sx={{ height: "100%" }}>
-              <Paper sx={{ height: "100%" }}>
+              <Paper>
                 <GigCreate
                   {...this.state.user}
                   followInfo={this.props.followInfo}

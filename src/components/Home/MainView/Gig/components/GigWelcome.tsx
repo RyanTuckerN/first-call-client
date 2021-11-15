@@ -281,7 +281,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       <Grid
         container
         width={`calc(100vw - ${drawerWidth + 30}px)`}
-        height={"calc(100vh - 150px)"}
+        height={"calc(100vh - 104px)"}
         sx={{ ml: `${drawerWidth + 15}px`, mr: "15px" }}
       >
         {["notifications", "gigs", "offers"].includes(dashboardRoute) ? (
