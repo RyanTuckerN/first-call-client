@@ -120,7 +120,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
       <Grid container spacing={2} display="flex" justifyContent="center">
         <Grid item xs={12} sm={10} height={"100%"}>
           {routes[dashboardRoute]?.body}
-          <Box display="flex" justifyContent="center" p={1}>
+          <Box display="flex" justifyContent="center" p={1} sx={{mb: 3}}>
             {dashboardRoute === "notifications" && notifications.length ? (
               <>
                 <Button
@@ -171,7 +171,7 @@ const GigWelcome: React.FunctionComponent<GigWelcomeProps> = (
                 </Button>
               </>
             ) : dashboardRoute === "notifications" ? (
-              <Button disabled sx={{ marginTop: 4 }}>
+              <Button disabled sx={{ mt: 4 }}>
                 No Notifications!
               </Button>
             ) : null}

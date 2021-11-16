@@ -1,15 +1,15 @@
 import { Component } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import "./App.css";
-import Home from "./components/Home/Home";
 import { UserCtx } from "./components/Context/MainContext";
 import { TokenSetter, ColorSetter } from "./App.types";
 import { User, UserAuth } from "./types/API.types";
 import { light, dark } from "./components/Theme/Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { fetchHandler } from "./components/_helpers/fetchHandler";
-import API_URL from "./components/_helpers/environment";
 import { Snackbar, Alert } from "@mui/material";
+import API_URL from "./components/_helpers/environment";
+import Home from "./components/Home/Home";
+import "./App.css";
 
 interface AppProps {}
 

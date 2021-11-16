@@ -469,7 +469,7 @@ class StoryComponent extends React.Component<
                       ))
                   ) : (
                     <Typography
-                      sx={{ ml: 2 }}
+                      sx={{ ml: 2, mb: 6 }}
                       color="GrayText"
                       variant="subtitle2"
                     >
