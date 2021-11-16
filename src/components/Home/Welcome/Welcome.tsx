@@ -145,7 +145,7 @@ const Welcome: FunctionComponent = () => {
                   #1 software solution for independant
                   musicians and bandleaders. We know the
                   stresses of freelancing, and want to fill
-                  in at least one of the gaps. `}
+                  in some of the gaps. `}
                 </Typography>
               </Fade>
             </Grid>
@@ -209,7 +209,7 @@ const Welcome: FunctionComponent = () => {
                     {`Using FirstCall's platform, musicians can free
                     themselves of the stresses that come along with
                     booking an ensemble. Give us the what/when/where/how
-                    much and we will take care of 'who'. All you need to
+                    much and we will take care of who. All you need to
                     do is provide a list of instruments and email addresses.
                     We will contact your calls in the order you list them.
                     Your first call can't make the gig? We will immediately
@@ -221,9 +221,7 @@ const Welcome: FunctionComponent = () => {
                   <Typography sx={{ textIndent: 22 }}>
                     {`Lead a big band, or ad-hoc orchestra? Don't waste your
                     time chasing down a third trombone or bassoonist, let us
-                    do it for you! We will even remember the email addresses
-                    you give us to save you time the next time you create a gig.
-                    Best of all, our platform is deliberatly usable. The folks
+                    do it for you! Best of all, our platform is deliberatly usable. The folks
                     you invite to play don't even have to have a FirstCall account
                     to accept or decline! We will send a link to the email address
                     you provide and they will be given a simple choice of 'Accept'
@@ -251,7 +249,7 @@ const Welcome: FunctionComponent = () => {
               <Fade left duration={800}>
                 <Typography sx={{ textIndent: 22 }}>
                   In addition to the core features, FirstCall also serves as a
-                  communication hub. Every gig has its own private messaging
+                  communication hub. Every gig has its own private message
                   board. Band members can use this to communicate any necessary
                   planning. Post something, and hopefully after a while someone
                   will have{" "}
@@ -294,7 +292,7 @@ const Welcome: FunctionComponent = () => {
               xs={12}
               display="flex"
               justifyContent="center"
-              sx={{ pt: 2 }}
+              sx={{ pt: 10 }}
             >
               <Fade bottom duration={800}>
                 <img
