@@ -16,8 +16,6 @@ import {
   ArrowRight,
   Close,
   Edit,
-  Favorite,
-  FavoriteBorder,
 } from "@mui/icons-material";
 import { returnTimeDifference } from "../../../../../_helpers/helpers";
 import { fetchHandler } from "../../../../../_helpers/fetchHandler";
