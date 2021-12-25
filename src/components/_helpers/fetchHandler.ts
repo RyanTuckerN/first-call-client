@@ -25,8 +25,7 @@ interface FetchOptions {
  * @returns Promise: json response
  */
 
-export async function fetchHandler(options: FetchOptions): Promise<any> {
-  const { url, method, body, auth } = options;
+export async function fetchHandler({ url, method, body, auth }: FetchOptions): Promise<any> {
 
   const results =
     method?.toUpperCase() === "GET" || !method

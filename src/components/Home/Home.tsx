@@ -19,7 +19,6 @@ import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import { Avatar, ListItemIcon } from "@mui/material";
 import {
   Settings,
   Person,
@@ -35,18 +34,19 @@ import MenuItem from "@mui/material/MenuItem";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { UserCtx } from "../Context/MainContext";
-import { Notification, User } from "../../types/API.types";
-import { fetchHandler } from "../_helpers/fetchHandler";
+import SearchBar from "./components/SearchBar";
 import API_URL from "../_helpers/environment";
-import { WindowDimensions } from "./Home.types";
-import { Paper } from "@mui/material";
-import { AppState } from "../../App";
 import StoryFeed from "./Stories/StoryFeed";
 import Logo from "../assets/Logo";
 import StoryLoader from "./Stories/StoryLoader";
+import { Avatar, ListItemIcon } from "@mui/material";
+import { UserCtx } from "../Context/MainContext";
+import { Notification, User } from "../../types/API.types";
+import { fetchHandler } from "../_helpers/fetchHandler";
+import { WindowDimensions } from "./Home.types";
+import { Paper } from "@mui/material";
+import { AppState } from "../../App";
 import { light } from "../Theme/Theme";
-import SearchBar from "./components/SearchBar";
 
 interface HomeProps extends RouteComponentProps {
   logout: VoidFunction;

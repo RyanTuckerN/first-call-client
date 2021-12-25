@@ -226,6 +226,7 @@ class GigEdit extends Component {
 
           <Grid item xs={12} sm={9} lg={12}>
             <TextField
+              autoFocus
               fullWidth
               label="Title"
               placeholder="Add a short, clear title"
@@ -349,10 +350,14 @@ class GigEdit extends Component {
                     value={this.state.optionalKey}
                     placeholder="Any category"
                     fullWidth
-                    
                   />
                 </Grid>
-                <Grid item xs={12} sm={7} sx={{pl: {xs: 0, sm:1}, mt: {xs: 1, sm:0}}}>
+                <Grid
+                  item
+                  xs={12}
+                  sm={7}
+                  sx={{ pl: { xs: 0, sm: 1 }, mt: { xs: 1, sm: 0 } }}
+                >
                   <TextField
                     label="Info"
                     onChange={this.handleVal}
@@ -362,18 +367,19 @@ class GigEdit extends Component {
                     InputProps={{
                       endAdornment: (
                         <>
-                              <InputAdornment position="end">
-                                <Button
-                                  type="submit"
-                                  sx={{ position: "relative", left: 24 }}
-                                  disabled={
-                                    !this.state.optionalKey || !this.state.optionalVal
-                                  }
-                                >
-                                  Add
-                                </Button>
-                              </InputAdornment>
-                            </>
+                          <InputAdornment position="end">
+                            <Button
+                              type="submit"
+                              sx={{ position: "relative", left: 24 }}
+                              disabled={
+                                !this.state.optionalKey ||
+                                !this.state.optionalVal
+                              }
+                            >
+                              Add
+                            </Button>
+                          </InputAdornment>
+                        </>
                       ),
                     }}
                   />
@@ -391,6 +397,7 @@ class GigEdit extends Component {
                 color="success"
                 variant="contained"
                 onClick={this.handleSave}
+                id='create'
               >
                 {this.state.gigCreate ? `CREATE GIG` : `SAVE`}
               </Button>
